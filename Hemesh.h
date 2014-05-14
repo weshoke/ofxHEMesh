@@ -143,6 +143,13 @@ public:
 	// Geometric elements
 	const Property<Point>& getPoints() const { return *points; }
 	/////////////////////////////////////////////////////////
+	
+	/////////////////////////////////////////////////////////
+	// Debugging
+	string halfedgeString(Halfedge h) const;
+	void printFace(Face f) const;
+	void printVertexOneHood(Vertex v) const;
+	/////////////////////////////////////////////////////////
 
 protected:
 

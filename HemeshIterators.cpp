@@ -103,7 +103,7 @@ EdgeIterator& EdgeIterator::operator++() {
 	int n = hemesh->halfedgeAdjacency->size();
 	do {
 		h.idx += 2;
-		if(hemesh->halfedgeFace(h).isValid()) {
+		if(hemesh->halfedgeVertex(h).isValid()) {
 			break;
 		}
 	} while(h.idx < n);
@@ -120,7 +120,7 @@ EdgeIterator EdgeIterator::operator++(int) {
 EdgeIterator& EdgeIterator::operator--() {
 	do {
 		h.idx -= 2;
-		if(hemesh->halfedgeFace(h).isValid()) {
+		if(hemesh->halfedgeVertex(h).isValid()) {
 			break;
 		}
 	} while(h.idx > 0);

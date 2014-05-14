@@ -37,9 +37,11 @@ struct Halfedge : public Node {
 	explicit Halfedge(int idx=Invalid) : Node(idx)
 	{}
 };
-struct Edge : public Node {
-	explicit Edge(int idx=Invalid) : Node(idx)
+struct Edge {
+	explicit Edge(const Halfedge& h) : h(h)
 	{}
+	
+	Halfedge h;
 };
 struct Face : public Node {
 	enum Winding{

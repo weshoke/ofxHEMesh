@@ -35,4 +35,23 @@ void vertexNormalVectors(const Hemesh& hemesh, vector<ofVec3f> &points, Hemesh::
 	}
 }
 
+void borderEdges(const Hemesh& hemesh, vector<ofIndexType>& indices) {
+	EdgeIterator eit = hemesh.edgesBegin();
+	EdgeIterator eite = hemesh.edgesEnd();
+	for(; eit != eite; ++eit) {
+		Halfedge h = *eit;
+		Halfedge ho = hemesh.halfedgeOpposite(h);
+		if(!hemesh.halfedgeFace(h).isValid()) {
+			indices.push_back(hemesh.halfedgeSource(h).idx);
+			indices.push_back(hemesh.halfedgeSink(h).idx);
+			//std::cout << hemesh.vertexPoint(hemesh.halfedgeSource(h)) << " - " << hemesh.vertexPoint(hemesh.halfedgeSink(h)) << "\n";
+		}
+		if(!hemesh.halfedgeFace(ho).isValid()) {
+			indices.push_back(hemesh.halfedgeSource(ho).idx);
+			indices.push_back(hemesh.halfedgeSink(ho).idx);
+			//std::cout << hemesh.vertexPoint(hemesh.halfedgeSource(ho)) << " - " << hemesh.vertexPoint(hemesh.halfedgeSink(ho)) << "\n";
+		}
+	}
+}
+
 } // hemesh::

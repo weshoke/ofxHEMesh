@@ -1,4 +1,5 @@
 #include "Hemesh.h"
+#include <sstream>
 
 
 #define WRAP_NEXT(idx, n) (((idx)+1)%(n))
@@ -144,9 +145,11 @@ void Hemesh::addMesh(const ofMesh& mesh) {
 	const vector<ofVec3f>& vertices = mesh.getVertices();
 	vector<ofVec3f>::const_iterator vit = vertices.begin();
 	vector<ofVec3f>::const_iterator vite = vertices.end();
+
 	for(; vit != vite; ++vit) {
 		addVertex(*vit);
 	}
+	
 	
 	// Assume triangles for now
 	// TOOD: use mesh.getMode()
@@ -159,7 +162,8 @@ void Hemesh::addMesh(const ofMesh& mesh) {
 	while(iit != iite) {
 		vector<Vertex> face(3);
 		for(int i=0; i < 3; ++i) {
-			face[i] = Vertex((*iit)+vstart.idx);
+			Vertex v = Vertex((*iit)+vstart.idx);
+			face[i] = v;
 			++iit;
 		}
 		faces.push_back(face);
@@ -197,6 +201,7 @@ void Hemesh::addFaces(const vector<ExplicitFace>& faces) {
 	int i, j;
 	
 	// Create any edges that don't yet exist
+	set<Halfedge> allHalfedges;
 	for(i=0; i < faces.size(); ++i) {
 		const vector<Vertex>& face = faces[i];
 		int nv = int(face.size());
@@ -206,11 +211,14 @@ void Hemesh::addFaces(const vector<ExplicitFace>& faces) {
 			orderVertices(v1, v2);
 			if(explicitEdgeMap.find(ExplicitEdge(v1, v2)) == explicitEdgeMap.end()) {
 				Halfedge h1 = addEdge();
+				Halfedge h1o = halfedgeOpposite(h1);
 				setHalfedgeVertex(h1, v2);
-				setHalfedgeVertex(halfedgeOpposite(h1), v1);
+				setHalfedgeVertex(h1o, v1);
 				setVertexHalfedge(v2, h1);
-				setVertexHalfedge(v1, halfedgeOpposite(h1));
+				setVertexHalfedge(v1, h1o);
 				explicitEdgeMap.insert(std::pair<ExplicitEdge, Halfedge>(ExplicitEdge(v1, v2), h1));
+				allHalfedges.insert(h1);
+				allHalfedges.insert(h1o);
 			}
 		}
 	}
@@ -236,10 +244,34 @@ void Hemesh::addFaces(const vector<ExplicitFace>& faces) {
 		for(j=0; j < nv; ++j) {
 			Halfedge h1 = halfedges[j];
 			Halfedge h2 = halfedges[WRAP_NEXT(j, nv)];
+			allHalfedges.erase(allHalfedges.find(h1));
 			setHalfedgeNext(h1, h2);
 			setHalfedgePrev(h2, h1);
 			setHalfedgeFace(h1, f);
 		}
+	}
+	
+	set<Halfedge>::const_iterator ahit = allHalfedges.begin();
+	set<Halfedge>::const_iterator ahite = allHalfedges.end();
+	map<Vertex, Halfedge> sinks;
+	map<Vertex, Halfedge> sources;
+	for(; ahit != ahite; ++ahit) {
+		Halfedge h = *ahit;
+		sinks.insert(std::pair<Vertex, Halfedge>(halfedgeSink(h), h));
+		sources.insert(std::pair<Vertex, Halfedge>(halfedgeSource(h), h));
+	}
+	
+	map<Vertex, Halfedge>::const_iterator sink_it = sinks.begin();
+	map<Vertex, Halfedge>::const_iterator sink_ite = sinks.end();
+	map<Vertex, Halfedge>::const_iterator source_ite = sources.end();
+	for(; sink_it != sink_ite; ++sink_it) {
+		map<Vertex, Halfedge>::const_iterator source_it = sources.find(sink_it->first);
+		if(source_it == source_ite) {
+			std::cout << halfedgeString(sink_it->second) << " doesn't have a source\n";
+			continue;
+		}
+		setHalfedgeNext(sink_it->second, source_it->second);
+		setHalfedgePrev(source_it->second, sink_it->second);
 	}
 }
 
@@ -342,7 +374,7 @@ Face Hemesh::addFace(const vector<Vertex>& vertices) {
 
 
 void Hemesh::removeVertex(Vertex v) {
-	if(v.isValid()) throw std::invalid_argument("attempting to remove invalid vertex");
+	if(!v.isValid()) throw std::invalid_argument("attempting to remove invalid vertex");
 	
 	Halfedge h = vertexHalfedge(v);
 	if(h.isValid()) {
@@ -629,8 +661,12 @@ Hemesh::Direction Hemesh::angleWeightedVertexNormal(Vertex v) const {
 	Direction n(0, 0, 0);
 	do {
 		Halfedge& h = *vc;
+		
 		Scalar theta = angleAtVertex(h);
-		n += faceNormal(halfedgeFace(h))*theta;
+		Face f = halfedgeFace(h);
+		if(f.isValid()) {
+			n += faceNormal(f)*theta;
+		}
 		++vc;
 	} while(vc != vce);
 	// TODO: check for NaNs
@@ -715,4 +751,30 @@ Hemesh::Scalar Hemesh::angleAtVertex(Halfedge h) const {
 
 Hemesh::Scalar Hemesh::halfedgeAngle(Halfedge h) const {
 
+}
+
+string Hemesh::halfedgeString(Halfedge h) const {
+	std::stringstream ss;
+	ss << halfedgeSource(h).idx << "-" << halfedgeSink(h).idx;
+	return ss.str();
+}
+
+void Hemesh::printFace(Face f) const {
+	FaceCirculator fc = faceCirculate(f);
+	FaceCirculator fce = fc;
+	do {
+		std::cout << halfedgeVertex(*fc).idx << "-";
+		++fc;
+	} while(fc != fce);
+	std::cout << "\n";
+}
+
+void Hemesh::printVertexOneHood(Vertex v) const {
+	VertexCirculator vc = vertexCirculate(v);
+	VertexCirculator vce = vc;
+	do {
+		std::cout << halfedgeSource(*vc).idx << "-";
+		++vc;
+	} while(vc != vce);
+	std::cout << "\n";
 }
