@@ -720,7 +720,7 @@ Hemesh::Direction Hemesh::faceNormal(Face f) const {
 
 Hemesh::Point Hemesh::halfedgeLerp(Halfedge h, Scalar t) const {
 	Point p1 = vertexPoint(halfedgeSource(h));
-	Point p2 = vertexPoint(halfedgeSource(h));
+	Point p2 = vertexPoint(halfedgeSink(h));
 	return p1+(p2-p1)*t;
 }
 
