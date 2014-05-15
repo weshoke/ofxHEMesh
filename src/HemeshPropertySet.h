@@ -60,8 +60,8 @@ public:
 		mValues[idx2] = tmp;
 	}
 	
-	T* ptr() { return mValues.ptr(); }
-	const T* ptr() const { return mValues.ptr(); }
+	T* ptr() { return &mValues[0]; }
+	const T* ptr() const { return &mValues[0]; }
 	
 	vector<T>& getValues() { return mValues; }
 	const vector<T>& getValues() const { return mValues; }

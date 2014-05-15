@@ -456,6 +456,22 @@ void Hemesh::removeFace(Face f) {
 	setFaceHalfedge(f, Halfedge());
 }
 
+int Hemesh::getNumVertices() const {
+	return (int)vertexAdjacency->size();
+}
+
+int Hemesh::getNumEdges() const {
+	return ((int)halfedgeAdjacency->size())/2;
+}
+
+int Hemesh::getNumHalfedges() const {
+	return (int)halfedgeAdjacency->size();
+}
+
+int Hemesh::getNumFaces() const {
+	return (int)faceAdjacency->size();
+}
+
 FaceIterator Hemesh::facesBegin() const {
 	Face f(0);
 	if(faceAdjacency->size() > 0) {

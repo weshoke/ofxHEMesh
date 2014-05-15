@@ -58,6 +58,12 @@ public:
 	bool removeHalfedge(Halfedge h);
 	void removeFace(Face f);
 	
+	// Number of combinatorial elements (some could be inactive)
+	int getNumVertices() const;
+	int getNumEdges() const;
+	int getNumHalfedges() const;
+	int getNumFaces() const;
+	
 	// Iterate combinatorial elements
 	FaceIterator facesBegin() const;
 	FaceIterator facesEnd() const;
