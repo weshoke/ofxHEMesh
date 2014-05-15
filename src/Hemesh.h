@@ -109,6 +109,7 @@ public:
 	
 	Point vertexPoint(Vertex v) const;
 	Direction angleWeightedVertexNormal(Vertex v) const;
+	Scalar vertexArea(Vertex v) const;
 	
 	Scalar faceArea(Face f) const;
 	Point faceCentroid(Face f) const;
