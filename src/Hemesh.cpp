@@ -690,8 +690,28 @@ Hemesh::Direction Hemesh::angleWeightedVertexNormal(Vertex v) const {
 	return n;
 }
 
+Hemesh::Scalar Hemesh::vertexArea(Vertex v) const {
+	Scalar A = 0;
+	VertexCirculator vc = vertexCirculate(v);
+	VertexCirculator vce = vc;
+	do {
+		Halfedge h = *vc;
+		Face f = halfedgeFace(h);
+		A += faceArea(f);
+		h = halfedgeSinkCCW(h);
+	} while(vc != vce);
+	// TODO: check for NaN
+	return A*0.333333333333333;
+}
+
 Hemesh::Scalar Hemesh::faceArea(Face f) const {
 	// TODO: general case vs. Triangle case
+	Halfedge h1 = faceHalfedge(f);
+	Halfedge h2 = halfedgeNext(h1);
+	Direction v1 = halfedgeDirection(h1);
+	Direction v2 = halfedgeDirection(h2);
+	Direction n = v1.cross(v2);
+	return 0.5*n.length();
 }
 
 Hemesh::Point Hemesh::faceCentroid(Face f) const {
