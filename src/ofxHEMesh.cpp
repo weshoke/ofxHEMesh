@@ -177,6 +177,7 @@ ofxHEMeshVertex ofxHEMesh::addVertex(const Point& p) {
 	vertexProperties.extend();
 	points->set(idx, p);
 	ofxHEMeshVertex v(idx);
+	topologyDirty = true;
 	return v;
 }
 
@@ -273,6 +274,7 @@ void ofxHEMesh::addFaces(const vector<ExplicitFace>& faces) {
 		setHalfedgeNext(sink_it->second, source_it->second);
 		setHalfedgePrev(source_it->second, sink_it->second);
 	}
+	topologyDirty = true;
 }
 
 
@@ -306,7 +308,7 @@ ofxHEMeshFace ofxHEMesh::addFace(const vector<ofxHEMeshVertex>& vertices) {
 	
 	ofxHEMeshFace f(faceProperties.size());
 	faceAdjacency->extend();
-	
+	topologyDirty = true;
 
 	// set the face of halfedges and create any new ones necessary
 	vector<ofxHEMeshHalfedge> halfedgesPrev;
@@ -388,6 +390,7 @@ void ofxHEMesh::removeVertex(ofxHEMeshVertex v) {
 		while(h.isValid());
 	}
 	setVertexHalfedge(v, ofxHEMeshHalfedge());
+	topologyDirty = true;
 }
 
 
@@ -416,6 +419,7 @@ bool ofxHEMesh::removeHalfedge(ofxHEMeshHalfedge h) {
 	
 	halfedgeAdjacency->set(h.idx, ofxHEMeshHalfedgeAdjacency());
 	halfedgeAdjacency->set(ho.idx, ofxHEMeshHalfedgeAdjacency());
+	topologyDirty = true;
 
 	if(f.idx == f2.idx) {
 		// belong to the same face, last edge linking vertex to mesh
@@ -454,6 +458,7 @@ void ofxHEMesh::removeFace(ofxHEMeshFace f) {
 	}
 	while(h != hstart);
 	setFaceHalfedge(f, ofxHEMeshHalfedge());
+	topologyDirty = true;
 }
 
 int ofxHEMesh::getNumVertices() const {
@@ -651,6 +656,7 @@ int ofxHEMesh::vertexValence(ofxHEMeshVertex v) const {
 
 void ofxHEMesh::vertexMoveTo(ofxHEMeshVertex v, const Point& p) {
 	points->set(v.idx, p);
+	geometryDirty = true;
 }
 
 ofxHEMesh::Point ofxHEMesh::centroid() const {

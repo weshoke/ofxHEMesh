@@ -152,6 +152,14 @@ public:
 	/////////////////////////////////////////////////////////
 	
 	/////////////////////////////////////////////////////////
+	// Flags
+	bool getTopologyDirty() const { return topologyDirty; }
+	void setTopologyDirty(bool v) { topologyDirty = v; }
+	bool getGeometryDirty() const { return geometryDirty; }
+	void setGeometryDirty(bool v) { geometryDirty = v; }
+	/////////////////////////////////////////////////////////
+	
+	/////////////////////////////////////////////////////////
 	// Debugging
 	string halfedgeString(ofxHEMeshHalfedge h) const;
 	void printFace(ofxHEMeshFace f) const;
@@ -170,4 +178,6 @@ protected:
 	ofxHEMeshProperty<ofxHEMeshFaceAdjacency> *faceAdjacency;
 	
 	ofxHEMeshProperty<Point>* points;
+	bool topologyDirty;
+	bool geometryDirty;
 };
