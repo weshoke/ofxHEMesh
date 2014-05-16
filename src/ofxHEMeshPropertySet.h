@@ -36,40 +36,40 @@ template <typename T>
 class ofxHEMeshProperty : public ofxHEMeshPropertyBase {
 public:
 	ofxHEMeshProperty(const string &name, T def=T())
-	:	mName(name), mDef(def)
+	:	name(name), def(def)
 	{}
 	
 	~ofxHEMeshProperty() {}
 	
-	int capacity() { return int(mValues.capacity()); }
-	void clear() { mValues.clear(); }
-	void extend() { mValues.push_back(mDef); }
-	T& get(int idx) { return mValues[idx]; }
-	const T& get(int idx) const { return mValues[idx]; }
+	int capacity() { return int(values.capacity()); }
+	void clear() { values.clear(); }
+	void extend() { values.push_back(def); }
+	T& get(int idx) { return values[idx]; }
+	const T& get(int idx) const { return values[idx]; }
 	T& last() { return get(size()-1); }
 	const T& last() const { return get(size()-1); }
-	void reserve(int n) { mValues.reserve(n); }
-	void resize(int n) { mValues.resize(n, mDef); }
+	void reserve(int n) { values.reserve(n); }
+	void resize(int n) { values.resize(n, def); }
 	void set(int idx, const T &v) {
-		mValues[idx] = v;
+		values[idx] = v;
 	}
-	int size() const { return int(mValues.size()); }
+	int size() const { return int(values.size()); }
 	void swapItems(int idx1, int idx2) {
-		T tmp = mValues[idx1];
-		mValues[idx1] = mValues[idx2];
-		mValues[idx2] = tmp;
+		T tmp = values[idx1];
+		values[idx1] = values[idx2];
+		values[idx2] = tmp;
 	}
 	
-	T* ptr() { return &mValues[0]; }
-	const T* ptr() const { return &mValues[0]; }
+	T* ptr() { return &values[0]; }
+	const T* ptr() const { return &values[0]; }
 	
-	vector<T>& getValues() { return mValues; }
-	const vector<T>& getValues() const { return mValues; }
+	vector<T>& getValues() { return values; }
+	const vector<T>& getValues() const { return values; }
 
 protected:
-	string mName;
-	vector<T> mValues;
-	T mDef;
+	string name;
+	vector<T> values;
+	T def;
 };
 
 class ofxHEMeshPropertySet {
@@ -94,10 +94,19 @@ public:
 	
 	template <typename T>
 	ofxHEMeshProperty<T> * add(const string &name, T def) {
-		ofxHEMeshProperty<T> *prop = new ofxHEMeshProperty<T>(name);
+		ofxHEMeshProperty<T>* prop = new ofxHEMeshProperty<T>(name);
 		properties.insert(std::pair<string, ofxHEMeshPropertyBase*>(name, prop));
 		prop->resize(size());
 		return prop;
+	}
+	
+	void remove(const string &name) {
+		PropertyMapIterator it = properties.find(name);
+		if(it != properties.end()) {
+			ofxHEMeshPropertyBase *prop = it->second;
+			properties.erase(it);
+			delete prop;
+		}
 	}
 	
 	void extend() {

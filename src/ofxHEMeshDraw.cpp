@@ -46,7 +46,6 @@ void ofxHEMeshDraw::draw() {
 			glEnable(GL_POLYGON_OFFSET_FILL);
 				glPolygonOffset(1, 1);
 				faces.drawElements(GL_TRIANGLES, faces.getNumIndices());
-			
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		glDisable(GL_LIGHTING);
 	}
