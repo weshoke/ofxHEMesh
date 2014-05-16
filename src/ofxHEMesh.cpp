@@ -1,4 +1,4 @@
-#include "Hemesh.h"
+#include "ofxHEMesh.h"
 #include <sstream>
 
 
@@ -10,25 +10,25 @@ using std::ofstream;
 using std::queue;
 using std::set;
 
-Hemesh::Hemesh()
+ofxHEMesh::ofxHEMesh()
 :	points(0)
 {
-	vertexAdjacency = addVertexProperty<VertexAdjacency>("vertex-adjacency", VertexAdjacency());
-	halfedgeAdjacency = addHalfedgeProperty<HalfedgeAdjacency>("halfedge-adjacency", HalfedgeAdjacency());
-	faceAdjacency = addFaceProperty<FaceAdjacency>("face-adjacency", FaceAdjacency());
+	vertexAdjacency = addVertexProperty<ofxHEMeshVertexAdjacency>("vertex-adjacency", ofxHEMeshVertexAdjacency());
+	halfedgeAdjacency = addHalfedgeProperty<ofxHEMeshHalfedgeAdjacency>("halfedge-adjacency", ofxHEMeshHalfedgeAdjacency());
+	faceAdjacency = addFaceProperty<ofxHEMeshFaceAdjacency>("face-adjacency", ofxHEMeshFaceAdjacency());
 	points = addVertexProperty<Point>("points", Point());
 }
 
 // Assumes the mesh is a triangulation
-void Hemesh::subdivideLoop() {
+void ofxHEMesh::subdivideLoop() {
 
 	// Get the new location of existing vertices in the subd mesh
-	VertexIterator vit = verticesBegin();
-	VertexIterator vite = verticesEnd();
-	map<Vertex, Point> newPositions;
+	ofxHEMeshVertexIterator vit = verticesBegin();
+	ofxHEMeshVertexIterator vite = verticesEnd();
+	map<ofxHEMeshVertex, Point> newPositions;
 	for(; vit != vite; ++vit) {
-		VertexCirculator vc = vertexCirculate(*vit);
-		VertexCirculator vce = vc;
+		ofxHEMeshVertexCirculator vc = vertexCirculate(*vit);
+		ofxHEMeshVertexCirculator vce = vc;
 		int valence = vertexValence(*vit);
 		Scalar beta;
 		if(valence == 3) {
@@ -44,28 +44,28 @@ void Hemesh::subdivideLoop() {
 			++vc;
 		} while(vc != vce);
 		
-		newPositions.insert(std::pair<Vertex, Point>(*vit, nPt));
+		newPositions.insert(std::pair<ofxHEMeshVertex, Point>(*vit, nPt));
 	}
 
 	// Get the location of new vertices dividing edges in the subd mesh
-	map<Halfedge, Vertex> edgeVertices;
-	EdgeIterator eit = edgesBegin();
-	EdgeIterator eite = edgesEnd();
+	map<ofxHEMeshHalfedge, ofxHEMeshVertex> edgeVertices;
+	ofxHEMeshEdgeIterator eit = edgesBegin();
+	ofxHEMeshEdgeIterator eite = edgesEnd();
 	for(; eit != eite; ++eit) {
-		Halfedge h = *eit;
-		Halfedge hn = halfedgeNext(h);
-		Halfedge hon = halfedgeNext(halfedgeOpposite(h));
+		ofxHEMeshHalfedge h = *eit;
+		ofxHEMeshHalfedge hn = halfedgeNext(h);
+		ofxHEMeshHalfedge hon = halfedgeNext(halfedgeOpposite(h));
 		Point pt =
 			(vertexPoint(halfedgeSource(h)) + vertexPoint(halfedgeSink(h)))*0.375 +
 			(vertexPoint(halfedgeSink(hn)) + vertexPoint(halfedgeSink(hon)))*0.125;
-		Vertex v = addVertex(pt);
-		edgeVertices.insert(std::pair<Halfedge, Vertex>(h, v));
-		edgeVertices.insert(std::pair<Halfedge, Vertex>(halfedgeOpposite(h), v));
+		ofxHEMeshVertex v = addVertex(pt);
+		edgeVertices.insert(std::pair<ofxHEMeshHalfedge, ofxHEMeshVertex>(h, v));
+		edgeVertices.insert(std::pair<ofxHEMeshHalfedge, ofxHEMeshVertex>(halfedgeOpposite(h), v));
 	}
 	
 	// Move the existing vertices to their subd mesh positions
-	map<Vertex, Point>::const_iterator npt_it = newPositions.begin();
-	map<Vertex, Point>::const_iterator npt_ite = newPositions.end();
+	map<ofxHEMeshVertex, Point>::const_iterator npt_it = newPositions.begin();
+	map<ofxHEMeshVertex, Point>::const_iterator npt_ite = newPositions.end();
 	for(; npt_it != npt_ite; ++npt_it) {
 		vertexMoveTo(npt_it->first, npt_it->second);
 	}
@@ -73,17 +73,17 @@ void Hemesh::subdivideLoop() {
 	// Calculate the subd mesh faces
 	vector<ExplicitFace> faces;
 	faces.reserve(faceAdjacency->size()*4);
-	FaceIterator fit = facesBegin();
-	FaceIterator fite = facesEnd();
+	ofxHEMeshFaceIterator fit = facesBegin();
+	ofxHEMeshFaceIterator fite = facesEnd();
 	for(; fit != fite; ++fit) {
-		FaceCirculator fc = faceCirculate(*fit);
-		FaceCirculator fce = fc;
+		ofxHEMeshFaceCirculator fc = faceCirculate(*fit);
+		ofxHEMeshFaceCirculator fce = fc;
 		
 		ExplicitFace innerFace(3);
 		int i=0;
 		do {
 			ExplicitFace cornerFace(3);
-			Halfedge h = *fc;
+			ofxHEMeshHalfedge h = *fc;
 			cornerFace[0] = halfedgeSink(h);
 			cornerFace[1] = edgeVertices[halfedgeNext(h)];
 			cornerFace[2] = edgeVertices[h];
@@ -100,38 +100,38 @@ void Hemesh::subdivideLoop() {
 }
 
 // Assumes no boundaries
-void Hemesh::subdivideCatmullClark() {
-	map<Face, Point> facePoints;
-	FaceIterator fit = facesBegin();
-	FaceIterator fite = facesEnd();
+void ofxHEMesh::subdivideCatmullClark() {
+	map<ofxHEMeshFace, Point> facePoints;
+	ofxHEMeshFaceIterator fit = facesBegin();
+	ofxHEMeshFaceIterator fite = facesEnd();
 	for(; fit != fite; ++fit) {
-		facePoints.insert(std::pair<Face, Point>(*fit, faceCentroid(*fit)));
+		facePoints.insert(std::pair<ofxHEMeshFace, Point>(*fit, faceCentroid(*fit)));
 	}
 	
-	map<Halfedge, Point> edgePoints;
-	EdgeIterator eit = edgesBegin();
-	EdgeIterator eite = edgesEnd();
+	map<ofxHEMeshHalfedge, Point> edgePoints;
+	ofxHEMeshEdgeIterator eit = edgesBegin();
+	ofxHEMeshEdgeIterator eite = edgesEnd();
 	for(; eit != eite; ++eit) {
-		Halfedge h = *eit;
-		Halfedge ho = halfedgeOpposite(h);
+		ofxHEMeshHalfedge h = *eit;
+		ofxHEMeshHalfedge ho = halfedgeOpposite(h);
 		Point pt = 0.25*(
 			vertexPoint(halfedgeSink(h)) + vertexPoint(halfedgeSink(ho)) +
 			facePoints[halfedgeFace(h)] + facePoints[halfedgeFace(ho)]
 		);
-		edgePoints.insert(std::pair<Halfedge, Point>(h, pt));
-		edgePoints.insert(std::pair<Halfedge, Point>(ho, pt));
+		edgePoints.insert(std::pair<ofxHEMeshHalfedge, Point>(h, pt));
+		edgePoints.insert(std::pair<ofxHEMeshHalfedge, Point>(ho, pt));
 	}
 	
-	VertexIterator vit = verticesBegin();
-	VertexIterator vite = verticesEnd();
+	ofxHEMeshVertexIterator vit = verticesBegin();
+	ofxHEMeshVertexIterator vite = verticesEnd();
 	for(; vit != vite; ++vit) {
 		Point Q(0, 0, 0);
 		Point R(0, 0, 0);
 		Scalar valence = 0;
-		VertexCirculator vc = vertexCirculate(*vit);
-		VertexCirculator vce = vc;
+		ofxHEMeshVertexCirculator vc = vertexCirculate(*vit);
+		ofxHEMeshVertexCirculator vce = vc;
 		do {
-			Halfedge h = *vc;
+			ofxHEMeshHalfedge h = *vc;
 			Q += facePoints[halfedgeFace(h)];
 			R += edgePoints[h];
 			++valence;
@@ -139,8 +139,8 @@ void Hemesh::subdivideCatmullClark() {
 	}
 }
 
-void Hemesh::addMesh(const ofMesh& mesh) {
-	Vertex vstart(vertexAdjacency->size());
+void ofxHEMesh::addMesh(const ofMesh& mesh) {
+	ofxHEMeshVertex vstart(vertexAdjacency->size());
 	
 	const vector<ofVec3f>& vertices = mesh.getVertices();
 	vector<ofVec3f>::const_iterator vit = vertices.begin();
@@ -153,16 +153,16 @@ void Hemesh::addMesh(const ofMesh& mesh) {
 	
 	// Assume triangles for now
 	// TOOD: use mesh.getMode()
-	vector< vector<Vertex> > faces;
+	vector< vector<ofxHEMeshVertex> > faces;
 	const vector<ofIndexType>& indices = mesh.getIndices();
 	vector<ofIndexType>::const_iterator iit = indices.begin();
 	vector<ofIndexType>::const_iterator iite = indices.end();
 	
 	faces.reserve(indices.size()/3);
 	while(iit != iite) {
-		vector<Vertex> face(3);
+		vector<ofxHEMeshVertex> face(3);
 		for(int i=0; i < 3; ++i) {
-			Vertex v = Vertex((*iit)+vstart.idx);
+			ofxHEMeshVertex v = ofxHEMeshVertex((*iit)+vstart.idx);
 			face[i] = v;
 			++iit;
 		}
@@ -172,51 +172,51 @@ void Hemesh::addMesh(const ofMesh& mesh) {
 	addFaces(faces);
 }
 
-Vertex Hemesh::addVertex(const Point& p) {
+ofxHEMeshVertex ofxHEMesh::addVertex(const Point& p) {
 	int idx = vertexProperties.size();
 	vertexProperties.extend();
 	points->set(idx, p);
-	Vertex v(idx);
+	ofxHEMeshVertex v(idx);
 	return v;
 }
 
-Halfedge Hemesh::addEdge() {
+ofxHEMeshHalfedge ofxHEMesh::addEdge() {
 	halfedgeProperties.extend();
 	halfedgeProperties.extend();
-	return Halfedge(halfedgeProperties.size()-2);
+	return ofxHEMeshHalfedge(halfedgeProperties.size()-2);
 }
 
-static bool orderVertices(Vertex& v1, Vertex& v2) {
+static bool orderVertices(ofxHEMeshVertex& v1, ofxHEMeshVertex& v2) {
 	bool swap = v1 > v2;
 	if(swap) {
-		Vertex v = v2;
+		ofxHEMeshVertex v = v2;
 		v2 = v1;
 		v1 = v;
 	}
 	return swap;
 }
 
-void Hemesh::addFaces(const vector<ExplicitFace>& faces) {
-	map<ExplicitEdge, Halfedge> explicitEdgeMap;
+void ofxHEMesh::addFaces(const vector<ExplicitFace>& faces) {
+	map<ExplicitEdge, ofxHEMeshHalfedge> explicitEdgeMap;
 	int i, j;
 	
 	// Create any edges that don't yet exist
-	set<Halfedge> allHalfedges;
+	set<ofxHEMeshHalfedge> allHalfedges;
 	for(i=0; i < faces.size(); ++i) {
-		const vector<Vertex>& face = faces[i];
+		const vector<ofxHEMeshVertex>& face = faces[i];
 		int nv = int(face.size());
 		for(j=0; j < nv; ++j) {
-			Vertex v1 = face[j];
-			Vertex v2 = face[WRAP_NEXT(j, nv)];
+			ofxHEMeshVertex v1 = face[j];
+			ofxHEMeshVertex v2 = face[WRAP_NEXT(j, nv)];
 			orderVertices(v1, v2);
 			if(explicitEdgeMap.find(ExplicitEdge(v1, v2)) == explicitEdgeMap.end()) {
-				Halfedge h1 = addEdge();
-				Halfedge h1o = halfedgeOpposite(h1);
+				ofxHEMeshHalfedge h1 = addEdge();
+				ofxHEMeshHalfedge h1o = halfedgeOpposite(h1);
 				setHalfedgeVertex(h1, v2);
 				setHalfedgeVertex(h1o, v1);
 				setVertexHalfedge(v2, h1);
 				setVertexHalfedge(v1, h1o);
-				explicitEdgeMap.insert(std::pair<ExplicitEdge, Halfedge>(ExplicitEdge(v1, v2), h1));
+				explicitEdgeMap.insert(std::pair<ExplicitEdge, ofxHEMeshHalfedge>(ExplicitEdge(v1, v2), h1));
 				allHalfedges.insert(h1);
 				allHalfedges.insert(h1o);
 			}
@@ -225,15 +225,15 @@ void Hemesh::addFaces(const vector<ExplicitFace>& faces) {
 	
 	// Link Halfedges around faces
 	for(i=0; i < faces.size(); ++i) {
-		Face f(faceProperties.size());
+		ofxHEMeshFace f(faceProperties.size());
 		faceAdjacency->extend();
 	
-		const vector<Vertex>& face = faces[i];
+		const vector<ofxHEMeshVertex>& face = faces[i];
 		int nv = int(face.size());
-		vector<Halfedge> halfedges;
+		vector<ofxHEMeshHalfedge> halfedges;
 		for(j=0; j < nv; ++j) {
-			Vertex v1 = face[j];
-			Vertex v2 = face[WRAP_NEXT(j, nv)];
+			ofxHEMeshVertex v1 = face[j];
+			ofxHEMeshVertex v2 = face[WRAP_NEXT(j, nv)];
 			bool didSwap = orderVertices(v1, v2);
 			auto iter = explicitEdgeMap.find(ExplicitEdge(v1, v2));
 			if(didSwap) halfedges.push_back(halfedgeOpposite(iter->second));
@@ -242,8 +242,8 @@ void Hemesh::addFaces(const vector<ExplicitFace>& faces) {
 		
 		setFaceHalfedge(f, halfedges[0]);
 		for(j=0; j < nv; ++j) {
-			Halfedge h1 = halfedges[j];
-			Halfedge h2 = halfedges[WRAP_NEXT(j, nv)];
+			ofxHEMeshHalfedge h1 = halfedges[j];
+			ofxHEMeshHalfedge h2 = halfedges[WRAP_NEXT(j, nv)];
 			allHalfedges.erase(allHalfedges.find(h1));
 			setHalfedgeNext(h1, h2);
 			setHalfedgePrev(h2, h1);
@@ -251,21 +251,21 @@ void Hemesh::addFaces(const vector<ExplicitFace>& faces) {
 		}
 	}
 	
-	set<Halfedge>::const_iterator ahit = allHalfedges.begin();
-	set<Halfedge>::const_iterator ahite = allHalfedges.end();
-	map<Vertex, Halfedge> sinks;
-	map<Vertex, Halfedge> sources;
+	set<ofxHEMeshHalfedge>::const_iterator ahit = allHalfedges.begin();
+	set<ofxHEMeshHalfedge>::const_iterator ahite = allHalfedges.end();
+	map<ofxHEMeshVertex, ofxHEMeshHalfedge> sinks;
+	map<ofxHEMeshVertex, ofxHEMeshHalfedge> sources;
 	for(; ahit != ahite; ++ahit) {
-		Halfedge h = *ahit;
-		sinks.insert(std::pair<Vertex, Halfedge>(halfedgeSink(h), h));
-		sources.insert(std::pair<Vertex, Halfedge>(halfedgeSource(h), h));
+		ofxHEMeshHalfedge h = *ahit;
+		sinks.insert(std::pair<ofxHEMeshVertex, ofxHEMeshHalfedge>(halfedgeSink(h), h));
+		sources.insert(std::pair<ofxHEMeshVertex, ofxHEMeshHalfedge>(halfedgeSource(h), h));
 	}
 	
-	map<Vertex, Halfedge>::const_iterator sink_it = sinks.begin();
-	map<Vertex, Halfedge>::const_iterator sink_ite = sinks.end();
-	map<Vertex, Halfedge>::const_iterator source_ite = sources.end();
+	map<ofxHEMeshVertex, ofxHEMeshHalfedge>::const_iterator sink_it = sinks.begin();
+	map<ofxHEMeshVertex, ofxHEMeshHalfedge>::const_iterator sink_ite = sinks.end();
+	map<ofxHEMeshVertex, ofxHEMeshHalfedge>::const_iterator source_ite = sources.end();
 	for(; sink_it != sink_ite; ++sink_it) {
-		map<Vertex, Halfedge>::const_iterator source_it = sources.find(sink_it->first);
+		map<ofxHEMeshVertex, ofxHEMeshHalfedge>::const_iterator source_it = sources.find(sink_it->first);
 		if(source_it == source_ite) {
 			std::cout << halfedgeString(sink_it->second) << " doesn't have a source\n";
 			continue;
@@ -276,17 +276,17 @@ void Hemesh::addFaces(const vector<ExplicitFace>& faces) {
 }
 
 
-Face Hemesh::addFace(const vector<Vertex>& vertices) {
-	vector<Halfedge> halfedges;
+ofxHEMeshFace ofxHEMesh::addFace(const vector<ofxHEMeshVertex>& vertices) {
+	vector<ofxHEMeshHalfedge> halfedges;
 	vector<bool> exists;
 	
 	size_t nv = vertices.size();
 	size_t i;
 	for(i=0; i < nv; ++i) {
-		Vertex v1 = vertices[i];
-		Vertex v2 = vertices[WRAP_NEXT(i, nv)];
+		ofxHEMeshVertex v1 = vertices[i];
+		ofxHEMeshVertex v2 = vertices[WRAP_NEXT(i, nv)];
 		
-		Halfedge h = findHalfedge(v1, v2);
+		ofxHEMeshHalfedge h = findHalfedge(v1, v2);
 		bool hExists = h.isValid();
 
 		if(hExists && !halfedgeIsOnBoundary(h)) {
@@ -297,30 +297,30 @@ Face Hemesh::addFace(const vector<Vertex>& vertices) {
 				ss << vertices[j].idx << "-";
 			}
 			throw std::invalid_argument(ss.str());
-			return Face();
+			return ofxHEMeshFace();
 		}
 		
 		halfedges.push_back(h);
 		exists.push_back(hExists);
 	}
 	
-	Face f(faceProperties.size());
+	ofxHEMeshFace f(faceProperties.size());
 	faceAdjacency->extend();
 	
 
 	// set the face of halfedges and create any new ones necessary
-	vector<Halfedge> halfedgesPrev;
-	vector<Halfedge> halfedgesNext;
+	vector<ofxHEMeshHalfedge> halfedgesPrev;
+	vector<ofxHEMeshHalfedge> halfedgesNext;
 	for(i=0; i < nv; ++i) {
 		if(exists[i]) {
 			setHalfedgeFace(halfedges[i], f);
 		}
 		else {
-			Halfedge h1 = addEdge();
-			Halfedge h2 = Halfedge(h1.idx+1);
+			ofxHEMeshHalfedge h1 = addEdge();
+			ofxHEMeshHalfedge h2 = ofxHEMeshHalfedge(h1.idx+1);
 			
-			Vertex v1 = vertices[i];
-			Vertex v2 = vertices[WRAP_NEXT(i, nv)];
+			ofxHEMeshVertex v1 = vertices[i];
+			ofxHEMeshVertex v2 = vertices[WRAP_NEXT(i, nv)];
 			setHalfedgeVertex(h1, v2);
 			setHalfedgeVertex(h2, v1);
 			setHalfedgeFace(h1, f);
@@ -335,21 +335,21 @@ Face Hemesh::addFace(const vector<Vertex>& vertices) {
 	
 	// link halfedges together
 	for(i=0; i < nv; ++i) {
-		Halfedge h = halfedges[i];
+		ofxHEMeshHalfedge h = halfedges[i];
 		
 		// inner loop
 		auto pidx = WRAP_PREV(i, nv);
 		auto nidx = WRAP_NEXT(i, nv);
-		Halfedge p = halfedges[pidx];
-		Halfedge n = halfedges[nidx];
+		ofxHEMeshHalfedge p = halfedges[pidx];
+		ofxHEMeshHalfedge n = halfedges[nidx];
 		setHalfedgePrev(h, p);
 		setHalfedgeNext(h, n);
 		
 		if(!exists[i]) {
 			// outer loop
-			Halfedge ho = halfedgeOpposite(h);
+			ofxHEMeshHalfedge ho = halfedgeOpposite(h);
 			if(exists[nidx]) {
-				Halfedge np = halfedgesPrev[nidx];
+				ofxHEMeshHalfedge np = halfedgesPrev[nidx];
 				setHalfedgePrev(ho, np);
 				setHalfedgeNext(np, ho);
 			}
@@ -358,7 +358,7 @@ Face Hemesh::addFace(const vector<Vertex>& vertices) {
 			}
 			
 			if(exists[pidx]) {
-				Halfedge nn = halfedgesNext[pidx];
+				ofxHEMeshHalfedge nn = halfedgesNext[pidx];
 				setHalfedgeNext(ho, nn);
 				setHalfedgePrev(nn, ho);
 			}
@@ -373,13 +373,13 @@ Face Hemesh::addFace(const vector<Vertex>& vertices) {
 }
 
 
-void Hemesh::removeVertex(Vertex v) {
+void ofxHEMesh::removeVertex(ofxHEMeshVertex v) {
 	if(!v.isValid()) throw std::invalid_argument("attempting to remove invalid vertex");
 	
-	Halfedge h = vertexHalfedge(v);
+	ofxHEMeshHalfedge h = vertexHalfedge(v);
 	if(h.isValid()) {
 		do {
-			Halfedge hh = halfedgeSinkCCW(h);
+			ofxHEMeshHalfedge hh = halfedgeSinkCCW(h);
 			if(removeHalfedge(h)) {
 				break;
 			}
@@ -387,24 +387,24 @@ void Hemesh::removeVertex(Vertex v) {
 		}
 		while(h.isValid());
 	}
-	setVertexHalfedge(v, Halfedge());
+	setVertexHalfedge(v, ofxHEMeshHalfedge());
 }
 
 
-bool Hemesh::removeHalfedge(Halfedge h) {
-	Face f = halfedgeFace(h);
-	Halfedge ho = halfedgeOpposite(h);
-	Face f2 = halfedgeFace(ho);
+bool ofxHEMesh::removeHalfedge(ofxHEMeshHalfedge h) {
+	ofxHEMeshFace f = halfedgeFace(h);
+	ofxHEMeshHalfedge ho = halfedgeOpposite(h);
+	ofxHEMeshFace f2 = halfedgeFace(ho);
 
-	Vertex v = halfedgeVertex(h);
-	Vertex v2 = halfedgeVertex(ho);
+	ofxHEMeshVertex v = halfedgeVertex(h);
+	ofxHEMeshVertex v2 = halfedgeVertex(ho);
 
-	Halfedge h1p = halfedgePrev(h);
-	Halfedge h1n = halfedgeSourceCW(h);
-	Halfedge h2p = halfedgePrev(ho);
-	Halfedge h2n = halfedgeSourceCW(ho);
+	ofxHEMeshHalfedge h1p = halfedgePrev(h);
+	ofxHEMeshHalfedge h1n = halfedgeSourceCW(h);
+	ofxHEMeshHalfedge h2p = halfedgePrev(ho);
+	ofxHEMeshHalfedge h2n = halfedgeSourceCW(ho);
 	
-	Vertex vrem;
+	ofxHEMeshVertex vrem;
 	if(h1p == ho) vrem = v2;
 	else vrem = v;
 	
@@ -414,12 +414,12 @@ bool Hemesh::removeHalfedge(Halfedge h) {
 	setHalfedgePrev(h2n, h2p);
 	setHalfedgeNext(h2p, h2n);
 	
-	halfedgeAdjacency->set(h.idx, HalfedgeAdjacency());
-	halfedgeAdjacency->set(ho.idx, HalfedgeAdjacency());
+	halfedgeAdjacency->set(h.idx, ofxHEMeshHalfedgeAdjacency());
+	halfedgeAdjacency->set(ho.idx, ofxHEMeshHalfedgeAdjacency());
 
 	if(f.idx == f2.idx) {
 		// belong to the same face, last edge linking vertex to mesh
-		setVertexHalfedge(vrem, Halfedge());
+		setVertexHalfedge(vrem, ofxHEMeshHalfedge());
 		if(vrem != v2) {
 			setVertexHalfedge(v2, h1p);
 		}
@@ -431,11 +431,11 @@ bool Hemesh::removeHalfedge(Halfedge h) {
 	else {
 		setVertexHalfedge(v, h2p);
 		setVertexHalfedge(v2, h1p);
-		setFaceHalfedge(f, Halfedge());
+		setFaceHalfedge(f, ofxHEMeshHalfedge());
 		setFaceHalfedge(f2, h1p);
 	
 		// set all halfedges to the common face
-		Halfedge hh = h1p;
+		ofxHEMeshHalfedge hh = h1p;
 		do {
 			setHalfedgeFace(hh, f2);
 			hh = halfedgeNext(hh);
@@ -445,185 +445,185 @@ bool Hemesh::removeHalfedge(Halfedge h) {
 }
 
 
-void Hemesh::removeFace(Face f) {
-	Halfedge h = faceHalfedge(f);
-	Halfedge hstart = h;
+void ofxHEMesh::removeFace(ofxHEMeshFace f) {
+	ofxHEMeshHalfedge h = faceHalfedge(f);
+	ofxHEMeshHalfedge hstart = h;
 	do {
-		setHalfedgeFace(h, Face());
+		setHalfedgeFace(h, ofxHEMeshFace());
 		h = halfedgeNext(h);
 	}
 	while(h != hstart);
-	setFaceHalfedge(f, Halfedge());
+	setFaceHalfedge(f, ofxHEMeshHalfedge());
 }
 
-int Hemesh::getNumVertices() const {
+int ofxHEMesh::getNumVertices() const {
 	return (int)vertexAdjacency->size();
 }
 
-int Hemesh::getNumEdges() const {
+int ofxHEMesh::getNumEdges() const {
 	return ((int)halfedgeAdjacency->size())/2;
 }
 
-int Hemesh::getNumHalfedges() const {
+int ofxHEMesh::getNumHalfedges() const {
 	return (int)halfedgeAdjacency->size();
 }
 
-int Hemesh::getNumFaces() const {
+int ofxHEMesh::getNumFaces() const {
 	return (int)faceAdjacency->size();
 }
 
-FaceIterator Hemesh::facesBegin() const {
-	Face f(0);
+ofxHEMeshFaceIterator ofxHEMesh::facesBegin() const {
+	ofxHEMeshFace f(0);
 	if(faceAdjacency->size() > 0) {
 		while(!faceHalfedge(f).isValid()) {
 			++f.idx;
 		}
 	}
-	return FaceIterator(this, f);
+	return ofxHEMeshFaceIterator(this, f);
 }
 
-FaceIterator Hemesh::facesEnd() const {
-	return FaceIterator(this, Face(faceAdjacency->size()));
+ofxHEMeshFaceIterator ofxHEMesh::facesEnd() const {
+	return ofxHEMeshFaceIterator(this, ofxHEMeshFace(faceAdjacency->size()));
 }
 
-EdgeIterator Hemesh::edgesBegin() const {
-	Halfedge h(0);
+ofxHEMeshEdgeIterator ofxHEMesh::edgesBegin() const {
+	ofxHEMeshHalfedge h(0);
 	if(halfedgeAdjacency->size() > 0) {
 		while(!halfedgeFace(h).isValid()) {
 			++h.idx;
 		}
 	}
-	return EdgeIterator(this, h);
+	return ofxHEMeshEdgeIterator(this, h);
 }
 
-EdgeIterator Hemesh::edgesEnd() const {
-	return EdgeIterator(this, Halfedge(halfedgeAdjacency->size()));
+ofxHEMeshEdgeIterator ofxHEMesh::edgesEnd() const {
+	return ofxHEMeshEdgeIterator(this, ofxHEMeshHalfedge(halfedgeAdjacency->size()));
 }
 
-VertexIterator Hemesh::verticesBegin() const {
-	Vertex v(0);
+ofxHEMeshVertexIterator ofxHEMesh::verticesBegin() const {
+	ofxHEMeshVertex v(0);
 	if(vertexAdjacency->size() > 0) {
 		while(!vertexHalfedge(v).isValid()) {
 			++v.idx;
 		}
 	}
-	return VertexIterator(this, v);
+	return ofxHEMeshVertexIterator(this, v);
 }
 
-VertexIterator Hemesh::verticesEnd() const {
-	return VertexIterator(this, Vertex(vertexAdjacency->size()));
+ofxHEMeshVertexIterator ofxHEMesh::verticesEnd() const {
+	return ofxHEMeshVertexIterator(this, ofxHEMeshVertex(vertexAdjacency->size()));
 }
 
-FaceCirculator Hemesh::faceCirculate(const Face& f) const {
-	return FaceCirculator(this, faceHalfedge(f));
+ofxHEMeshFaceCirculator ofxHEMesh::faceCirculate(const ofxHEMeshFace& f) const {
+	return ofxHEMeshFaceCirculator(this, faceHalfedge(f));
 }
 
-VertexCirculator Hemesh::vertexCirculate(const Vertex& v) const {
-	return VertexCirculator(this, vertexHalfedge(v));
+ofxHEMeshVertexCirculator ofxHEMesh::vertexCirculate(const ofxHEMeshVertex& v) const {
+	return ofxHEMeshVertexCirculator(this, vertexHalfedge(v));
 }
 
-Halfedge Hemesh::vertexHalfedge(Vertex v) const {
+ofxHEMeshHalfedge ofxHEMesh::vertexHalfedge(ofxHEMeshVertex v) const {
 	return vertexAdjacency->get(v.idx).he;
 }
 
 
-void Hemesh::setVertexHalfedge(Vertex v, Halfedge h) {
+void ofxHEMesh::setVertexHalfedge(ofxHEMeshVertex v, ofxHEMeshHalfedge h) {
 	vertexAdjacency->get(v.idx).he = h;
 }
 
 
-Halfedge Hemesh::faceHalfedge(Face f) const {
+ofxHEMeshHalfedge ofxHEMesh::faceHalfedge(ofxHEMeshFace f) const {
 	return faceAdjacency->get(f.idx).he;
 }
 
 
-void Hemesh::setFaceHalfedge(Face f, Halfedge h) {
+void ofxHEMesh::setFaceHalfedge(ofxHEMeshFace f, ofxHEMeshHalfedge h) {
 	faceAdjacency->get(f.idx).he = h;
 }
 
 
-Halfedge Hemesh::halfedgeOpposite(Halfedge h) const {
-	if((h.idx & 1) == 1) return Halfedge(h.idx-1);
-	else return Halfedge(h.idx+1);
+ofxHEMeshHalfedge ofxHEMesh::halfedgeOpposite(ofxHEMeshHalfedge h) const {
+	if((h.idx & 1) == 1) return ofxHEMeshHalfedge(h.idx-1);
+	else return ofxHEMeshHalfedge(h.idx+1);
 }
 
 
-Vertex Hemesh::halfedgeVertex(Halfedge h) const {
+ofxHEMeshVertex ofxHEMesh::halfedgeVertex(ofxHEMeshHalfedge h) const {
 	return halfedgeAdjacency->get(h.idx).v;
 }
 
 
-void Hemesh::setHalfedgeVertex(Halfedge h, Vertex v) {
+void ofxHEMesh::setHalfedgeVertex(ofxHEMeshHalfedge h, ofxHEMeshVertex v) {
 	halfedgeAdjacency->get(h.idx).v = v;
 }
 
 
-Face Hemesh::halfedgeFace(Halfedge h) const {
+ofxHEMeshFace ofxHEMesh::halfedgeFace(ofxHEMeshHalfedge h) const {
 	return halfedgeAdjacency->get(h.idx).f;
 }
 
 
-void Hemesh::setHalfedgeFace(Halfedge h, Face f) {
+void ofxHEMesh::setHalfedgeFace(ofxHEMeshHalfedge h, ofxHEMeshFace f) {
 	halfedgeAdjacency->get(h.idx).f = f;
 }
 
 
-Vertex Hemesh::halfedgeSource(Halfedge h) const {
+ofxHEMeshVertex ofxHEMesh::halfedgeSource(ofxHEMeshHalfedge h) const {
 	return halfedgeVertex(halfedgeOpposite(h));
 }
 
 
-Vertex Hemesh::halfedgeSink(Halfedge h) const {
+ofxHEMeshVertex ofxHEMesh::halfedgeSink(ofxHEMeshHalfedge h) const {
 	return halfedgeVertex(h);
 }
 
 
-Halfedge Hemesh::halfedgeNext(Halfedge h) const {
+ofxHEMeshHalfedge ofxHEMesh::halfedgeNext(ofxHEMeshHalfedge h) const {
 	return halfedgeAdjacency->get(h.idx).next;
 }
 
 
-void Hemesh::setHalfedgeNext(Halfedge h, Halfedge next) {
+void ofxHEMesh::setHalfedgeNext(ofxHEMeshHalfedge h, ofxHEMeshHalfedge next) {
 	halfedgeAdjacency->get(h.idx).next = next;
 }
 
 
-Halfedge Hemesh::halfedgePrev(Halfedge h) const {
+ofxHEMeshHalfedge ofxHEMesh::halfedgePrev(ofxHEMeshHalfedge h) const {
 	return halfedgeAdjacency->get(h.idx).prev;
 }
 
 
-void Hemesh::setHalfedgePrev(Halfedge h, Halfedge prev) {
+void ofxHEMesh::setHalfedgePrev(ofxHEMeshHalfedge h, ofxHEMeshHalfedge prev) {
 	halfedgeAdjacency->get(h.idx).prev = prev;
 }
 
 
-Halfedge Hemesh::halfedgeSourceCW(Halfedge h) const {
+ofxHEMeshHalfedge ofxHEMesh::halfedgeSourceCW(ofxHEMeshHalfedge h) const {
 	return halfedgeNext(halfedgeOpposite(h));
 }
 
 
-Halfedge Hemesh::halfedgeSourceCCW(Halfedge h) const {
+ofxHEMeshHalfedge ofxHEMesh::halfedgeSourceCCW(ofxHEMeshHalfedge h) const {
 	return halfedgeOpposite(halfedgePrev(h));
 }
 
 
-Halfedge Hemesh::halfedgeSinkCW(Halfedge h) const {
+ofxHEMeshHalfedge ofxHEMesh::halfedgeSinkCW(ofxHEMeshHalfedge h) const {
 	return halfedgeOpposite(halfedgeNext(h));
 }
 
 
-Halfedge Hemesh::halfedgeSinkCCW(Halfedge h) const {
+ofxHEMeshHalfedge ofxHEMesh::halfedgeSinkCCW(ofxHEMeshHalfedge h) const {
 	return halfedgePrev(halfedgeOpposite(h));
 }
 
 
 
-Halfedge Hemesh::findHalfedge(Vertex v1, Vertex v2) const {
-	Halfedge h1 = vertexHalfedge(v1);
-	Halfedge h2 = vertexHalfedge(v2);
+ofxHEMeshHalfedge ofxHEMesh::findHalfedge(ofxHEMeshVertex v1, ofxHEMeshVertex v2) const {
+	ofxHEMeshHalfedge h1 = vertexHalfedge(v1);
+	ofxHEMeshHalfedge h2 = vertexHalfedge(v2);
 	if(h1.isValid() && h2.isValid()) {
-		Halfedge hStart = h2;
+		ofxHEMeshHalfedge hStart = h2;
 		do {
 			if(halfedgeSource(h2) == v1) {
 				return h2;
@@ -631,17 +631,17 @@ Halfedge Hemesh::findHalfedge(Vertex v1, Vertex v2) const {
 			h2 = halfedgeSinkCCW(h2);
 		} while(h2 != hStart);
 	}
-	return Halfedge();
+	return ofxHEMeshHalfedge();
 }
 
-bool Hemesh::halfedgeIsOnBoundary(Halfedge h) const {
+bool ofxHEMesh::halfedgeIsOnBoundary(ofxHEMeshHalfedge h) const {
 	return !halfedgeFace(h).isValid();
 }
 
-int Hemesh::vertexValence(Vertex v) const {
+int ofxHEMesh::vertexValence(ofxHEMeshVertex v) const {
 	int n=0;
-	VertexCirculator vc = vertexCirculate(v);
-	VertexCirculator vce = vc;
+	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
+	ofxHEMeshVertexCirculator vce = vc;
 	do {
 		++n;
 		++vc;
@@ -649,15 +649,15 @@ int Hemesh::vertexValence(Vertex v) const {
 	return n;
 }
 
-void Hemesh::vertexMoveTo(Vertex v, const Point& p) {
+void ofxHEMesh::vertexMoveTo(ofxHEMeshVertex v, const Point& p) {
 	points->set(v.idx, p);
 }
 
-Hemesh::Point Hemesh::centroid() const {
+ofxHEMesh::Point ofxHEMesh::centroid() const {
 	Point c(0, 0, 0);
 	Scalar n = 0;
-	VertexIterator vit = verticesBegin();
-	VertexIterator vite = verticesEnd();
+	ofxHEMeshVertexIterator vit = verticesBegin();
+	ofxHEMeshVertexIterator vite = verticesEnd();
 	for(; vit != vite; ++vit) {
 		c += vertexPoint(*vit);
 		++n;
@@ -666,20 +666,20 @@ Hemesh::Point Hemesh::centroid() const {
 	return c;
 }
 
-Hemesh::Point Hemesh::vertexPoint(Vertex v) const {
+ofxHEMesh::Point ofxHEMesh::vertexPoint(ofxHEMeshVertex v) const {
 	return points->get(v.idx);
 }
 
-Hemesh::Direction Hemesh::angleWeightedVertexNormal(Vertex v) const {
-	VertexCirculator vc = vertexCirculate(v);
-	VertexCirculator vce = vc;
+ofxHEMesh::Direction ofxHEMesh::angleWeightedVertexNormal(ofxHEMeshVertex v) const {
+	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
+	ofxHEMeshVertexCirculator vce = vc;
 	
 	Direction n(0, 0, 0);
 	do {
-		Halfedge& h = *vc;
+		ofxHEMeshHalfedge& h = *vc;
 		
 		Scalar theta = angleAtVertex(h);
-		Face f = halfedgeFace(h);
+		ofxHEMeshFace f = halfedgeFace(h);
 		if(f.isValid()) {
 			n += faceNormal(f)*theta;
 		}
@@ -690,13 +690,13 @@ Hemesh::Direction Hemesh::angleWeightedVertexNormal(Vertex v) const {
 	return n;
 }
 
-Hemesh::Scalar Hemesh::vertexArea(Vertex v) const {
+ofxHEMesh::Scalar ofxHEMesh::vertexArea(ofxHEMeshVertex v) const {
 	Scalar A = 0;
-	VertexCirculator vc = vertexCirculate(v);
-	VertexCirculator vce = vc;
+	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
+	ofxHEMeshVertexCirculator vce = vc;
 	do {
-		Halfedge h = *vc;
-		Face f = halfedgeFace(h);
+		ofxHEMeshHalfedge h = *vc;
+		ofxHEMeshFace f = halfedgeFace(h);
 		A += faceArea(f);
 		h = halfedgeSinkCCW(h);
 	} while(vc != vce);
@@ -704,21 +704,21 @@ Hemesh::Scalar Hemesh::vertexArea(Vertex v) const {
 	return A*0.333333333333333;
 }
 
-Hemesh::Scalar Hemesh::faceArea(Face f) const {
+ofxHEMesh::Scalar ofxHEMesh::faceArea(ofxHEMeshFace f) const {
 	// TODO: general case vs. Triangle case
-	Halfedge h1 = faceHalfedge(f);
-	Halfedge h2 = halfedgeNext(h1);
+	ofxHEMeshHalfedge h1 = faceHalfedge(f);
+	ofxHEMeshHalfedge h2 = halfedgeNext(h1);
 	Direction v1 = halfedgeDirection(h1);
 	Direction v2 = halfedgeDirection(h2);
 	Direction n = v1.cross(v2);
 	return 0.5*n.length();
 }
 
-Hemesh::Point Hemesh::faceCentroid(Face f) const {
+ofxHEMesh::Point ofxHEMesh::faceCentroid(ofxHEMeshFace f) const {
 	Point centroid(0, 0, 0);
 	float n = 0;
-	FaceCirculator fc = faceCirculate(f);
-	FaceCirculator fce = fc;
+	ofxHEMeshFaceCirculator fc = faceCirculate(f);
+	ofxHEMeshFaceCirculator fce = fc;
 	do {
 		centroid += vertexPoint(halfedgeVertex(*fc));
 		++n;
@@ -728,9 +728,9 @@ Hemesh::Point Hemesh::faceCentroid(Face f) const {
 	return centroid*(1/n);
 }
 
-Hemesh::Direction Hemesh::faceNormal(Face f) const {
-	Halfedge h1 = faceHalfedge(f);
-	Halfedge h2 = halfedgeNext(h1);
+ofxHEMesh::Direction ofxHEMesh::faceNormal(ofxHEMeshFace f) const {
+	ofxHEMeshHalfedge h1 = faceHalfedge(f);
+	ofxHEMeshHalfedge h2 = halfedgeNext(h1);
 	Direction v1 = halfedgeDirection(h1);
 	Direction v2 = halfedgeDirection(h2);
 	Direction n = v1.cross(v2);
@@ -738,22 +738,22 @@ Hemesh::Direction Hemesh::faceNormal(Face f) const {
 	return n;
 }
 
-Hemesh::Point Hemesh::halfedgeLerp(Halfedge h, Scalar t) const {
+ofxHEMesh::Point ofxHEMesh::halfedgeLerp(ofxHEMeshHalfedge h, Scalar t) const {
 	Point p1 = vertexPoint(halfedgeSource(h));
 	Point p2 = vertexPoint(halfedgeSink(h));
 	return p1+(p2-p1)*t;
 }
 
-Hemesh::Point Hemesh::halfedgeMidpoint(Halfedge h) const {
+ofxHEMesh::Point ofxHEMesh::halfedgeMidpoint(ofxHEMeshHalfedge h) const {
 	return halfedgeLerp(h, 0.5);
 }
 
-Hemesh::Scalar Hemesh::halfedgeCotan(Halfedge h) const {
-	Halfedge h2 = halfedgeNext(h);
-	Halfedge h3 = halfedgeNext(h2);
-	Vertex v1 = halfedgeVertex(h2);
-	Vertex v2 = halfedgeVertex(h3);
-	Vertex v3 = halfedgeVertex(h);
+ofxHEMesh::Scalar ofxHEMesh::halfedgeCotan(ofxHEMeshHalfedge h) const {
+	ofxHEMeshHalfedge h2 = halfedgeNext(h);
+	ofxHEMeshHalfedge h3 = halfedgeNext(h2);
+	ofxHEMeshVertex v1 = halfedgeVertex(h2);
+	ofxHEMeshVertex v2 = halfedgeVertex(h3);
+	ofxHEMeshVertex v3 = halfedgeVertex(h);
 	Point p0 = vertexPoint(v1);
 	Point p1 = vertexPoint(v2);
 	Point p2 = vertexPoint(v3 );
@@ -766,15 +766,15 @@ Hemesh::Scalar Hemesh::halfedgeCotan(Halfedge h) const {
 	return res;
 }
 
-Hemesh::Scalar Hemesh::halfedgeLengthSquared(Halfedge h) const {
+ofxHEMesh::Scalar ofxHEMesh::halfedgeLengthSquared(ofxHEMeshHalfedge h) const {
 	return halfedgeDirection(h).lengthSquared();
 }
 
-Hemesh::Direction Hemesh::halfedgeDirection(Halfedge h) const {
+ofxHEMesh::Direction ofxHEMesh::halfedgeDirection(ofxHEMeshHalfedge h) const {
 	return vertexPoint(halfedgeSink(h)) - vertexPoint(halfedgeSource(h));
 }
 
-Hemesh::Scalar Hemesh::angleAtVertex(Halfedge h) const {
+ofxHEMesh::Scalar ofxHEMesh::angleAtVertex(ofxHEMeshHalfedge h) const {
 	Direction v1 = -halfedgeDirection(h);
 	Direction v2 = halfedgeDirection(halfedgeNext(h));
 	v1.normalize();
@@ -785,19 +785,19 @@ Hemesh::Scalar Hemesh::angleAtVertex(Halfedge h) const {
 	return res;
 }
 
-Hemesh::Scalar Hemesh::halfedgeAngle(Halfedge h) const {
+ofxHEMesh::Scalar ofxHEMesh::halfedgeAngle(ofxHEMeshHalfedge h) const {
 
 }
 
-string Hemesh::halfedgeString(Halfedge h) const {
+string ofxHEMesh::halfedgeString(ofxHEMeshHalfedge h) const {
 	std::stringstream ss;
 	ss << halfedgeSource(h).idx << "-" << halfedgeSink(h).idx;
 	return ss.str();
 }
 
-void Hemesh::printFace(Face f) const {
-	FaceCirculator fc = faceCirculate(f);
-	FaceCirculator fce = fc;
+void ofxHEMesh::printFace(ofxHEMeshFace f) const {
+	ofxHEMeshFaceCirculator fc = faceCirculate(f);
+	ofxHEMeshFaceCirculator fce = fc;
 	do {
 		std::cout << halfedgeVertex(*fc).idx << "-";
 		++fc;
@@ -805,9 +805,9 @@ void Hemesh::printFace(Face f) const {
 	std::cout << "\n";
 }
 
-void Hemesh::printVertexOneHood(Vertex v) const {
-	VertexCirculator vc = vertexCirculate(v);
-	VertexCirculator vce = vc;
+void ofxHEMesh::printVertexOneHood(ofxHEMeshVertex v) const {
+	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
+	ofxHEMeshVertexCirculator vce = vc;
 	do {
 		std::cout << halfedgeSource(*vc).idx << "-";
 		++vc;

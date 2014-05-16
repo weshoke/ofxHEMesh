@@ -1,39 +1,39 @@
-#include "HemeshIterators.h"
-#include "Hemesh.h"
+#include "ofxHEMeshIterators.h"
+#include "ofxHEMesh.h"
 
-FaceIterator::FaceIterator()
+ofxHEMeshFaceIterator::ofxHEMeshFaceIterator()
 : hemesh(NULL), f()
 {}
 
-FaceIterator::FaceIterator(const Hemesh* hemesh)
+ofxHEMeshFaceIterator::ofxHEMeshFaceIterator(const ofxHEMesh* hemesh)
 : hemesh(hemesh), f()
 {}
 
-FaceIterator::FaceIterator(const Hemesh* hemesh, Face f)
+ofxHEMeshFaceIterator::ofxHEMeshFaceIterator(const ofxHEMesh* hemesh, ofxHEMeshFace f)
 : hemesh(hemesh), f(f)
 {}
 
-FaceIterator::FaceIterator(const FaceIterator& src)
+ofxHEMeshFaceIterator::ofxHEMeshFaceIterator(const ofxHEMeshFaceIterator& src)
 : hemesh(src.hemesh), f(src.f)
 {}
 
-bool FaceIterator::operator==(const FaceIterator& right) {
+bool ofxHEMeshFaceIterator::operator==(const ofxHEMeshFaceIterator& right) {
 	return hemesh == right.hemesh && f == right.f;
 }
 
-bool FaceIterator::operator!=(const FaceIterator& right) {
+bool ofxHEMeshFaceIterator::operator!=(const ofxHEMeshFaceIterator& right) {
 	return !((*this) == right);
 }
 
-Face& FaceIterator::operator*() {
+ofxHEMeshFace& ofxHEMeshFaceIterator::operator*() {
 	return f;
 }
 
-Face* FaceIterator::operator->() {
+ofxHEMeshFace* ofxHEMeshFaceIterator::operator->() {
 	return &f;
 }
 
-FaceIterator& FaceIterator::operator++() {
+ofxHEMeshFaceIterator& ofxHEMeshFaceIterator::operator++() {
 	int n = hemesh->faceAdjacency->size();
 	do {
 		++f.idx;
@@ -44,13 +44,13 @@ FaceIterator& FaceIterator::operator++() {
 	return *this;
 }
 
-FaceIterator FaceIterator::operator++(int) {
-	FaceIterator it(*this);
+ofxHEMeshFaceIterator ofxHEMeshFaceIterator::operator++(int) {
+	ofxHEMeshFaceIterator it(*this);
 	++(*this);
 	return it;
 }
 
-FaceIterator& FaceIterator::operator--() {
+ofxHEMeshFaceIterator& ofxHEMeshFaceIterator::operator--() {
 	do {
 		--f.idx;
 		if(hemesh->faceHalfedge(f).isValid()) {
@@ -60,46 +60,46 @@ FaceIterator& FaceIterator::operator--() {
 	return *this;
 }
 
-FaceIterator FaceIterator::operator--(int) {
-	FaceIterator it(*this);
+ofxHEMeshFaceIterator ofxHEMeshFaceIterator::operator--(int) {
+	ofxHEMeshFaceIterator it(*this);
 	--(*this);
 	return it;
 }
 
 
-EdgeIterator::EdgeIterator()
+ofxHEMeshEdgeIterator::ofxHEMeshEdgeIterator()
 : hemesh(NULL), h()
 {}
 
-EdgeIterator::EdgeIterator(const Hemesh* hemesh)
+ofxHEMeshEdgeIterator::ofxHEMeshEdgeIterator(const ofxHEMesh* hemesh)
 : hemesh(hemesh), h()
 {}
 
-EdgeIterator::EdgeIterator(const Hemesh* hemesh, Halfedge h)
+ofxHEMeshEdgeIterator::ofxHEMeshEdgeIterator(const ofxHEMesh* hemesh, ofxHEMeshHalfedge h)
 : hemesh(hemesh), h(h)
 {}
 
-EdgeIterator::EdgeIterator(const EdgeIterator& src)
+ofxHEMeshEdgeIterator::ofxHEMeshEdgeIterator(const ofxHEMeshEdgeIterator& src)
 : hemesh(src.hemesh), h(src.h)
 {}
 
-bool EdgeIterator::operator==(const EdgeIterator& right) {
+bool ofxHEMeshEdgeIterator::operator==(const ofxHEMeshEdgeIterator& right) {
 	return hemesh == right.hemesh && h == right.h;
 }
 
-bool EdgeIterator::operator!=(const EdgeIterator& right) {
+bool ofxHEMeshEdgeIterator::operator!=(const ofxHEMeshEdgeIterator& right) {
 	return !((*this) == right);
 }
 
-Halfedge& EdgeIterator::operator*() {
+ofxHEMeshHalfedge& ofxHEMeshEdgeIterator::operator*() {
 	return h;
 }
 
-Halfedge* EdgeIterator::operator->() {
+ofxHEMeshHalfedge* ofxHEMeshEdgeIterator::operator->() {
 	return &h;
 }
 
-EdgeIterator& EdgeIterator::operator++() {
+ofxHEMeshEdgeIterator& ofxHEMeshEdgeIterator::operator++() {
 	int n = hemesh->halfedgeAdjacency->size();
 	do {
 		h.idx += 2;
@@ -111,13 +111,13 @@ EdgeIterator& EdgeIterator::operator++() {
 	return *this;
 }
 
-EdgeIterator EdgeIterator::operator++(int) {
-	EdgeIterator it(*this);
+ofxHEMeshEdgeIterator ofxHEMeshEdgeIterator::operator++(int) {
+	ofxHEMeshEdgeIterator it(*this);
 	++(*this);
 	return it;
 }
 
-EdgeIterator& EdgeIterator::operator--() {
+ofxHEMeshEdgeIterator& ofxHEMeshEdgeIterator::operator--() {
 	do {
 		h.idx -= 2;
 		if(hemesh->halfedgeVertex(h).isValid()) {
@@ -128,45 +128,45 @@ EdgeIterator& EdgeIterator::operator--() {
 	return *this;
 }
 
-EdgeIterator EdgeIterator::operator--(int) {
-	EdgeIterator it(*this);
+ofxHEMeshEdgeIterator ofxHEMeshEdgeIterator::operator--(int) {
+	ofxHEMeshEdgeIterator it(*this);
 	--(*this);
 	return it;
 }
 
-VertexIterator::VertexIterator()
+ofxHEMeshVertexIterator::ofxHEMeshVertexIterator()
 : hemesh(NULL), v()
 {}
 
-VertexIterator::VertexIterator(const Hemesh* hemesh)
+ofxHEMeshVertexIterator::ofxHEMeshVertexIterator(const ofxHEMesh* hemesh)
 : hemesh(hemesh), v()
 {}
 
-VertexIterator::VertexIterator(const Hemesh* hemesh, Vertex v)
+ofxHEMeshVertexIterator::ofxHEMeshVertexIterator(const ofxHEMesh* hemesh, ofxHEMeshVertex v)
 : hemesh(hemesh), v(v)
 {}
 
-VertexIterator::VertexIterator(const VertexIterator& src)
+ofxHEMeshVertexIterator::ofxHEMeshVertexIterator(const ofxHEMeshVertexIterator& src)
 : hemesh(src.hemesh), v(src.v)
 {}
 
-bool VertexIterator::operator==(const VertexIterator& right) {
+bool ofxHEMeshVertexIterator::operator==(const ofxHEMeshVertexIterator& right) {
 	return hemesh == right.hemesh && v == right.v;
 }
 
-bool VertexIterator::operator!=(const VertexIterator& right) {
+bool ofxHEMeshVertexIterator::operator!=(const ofxHEMeshVertexIterator& right) {
 	return !((*this) == right);
 }
 
-Vertex& VertexIterator::operator*() {
+ofxHEMeshVertex& ofxHEMeshVertexIterator::operator*() {
 	return v;
 }
 
-Vertex* VertexIterator::operator->() {
+ofxHEMeshVertex* ofxHEMeshVertexIterator::operator->() {
 	return &v;
 }
 
-VertexIterator& VertexIterator::operator++() {
+ofxHEMeshVertexIterator& ofxHEMeshVertexIterator::operator++() {
 	int n = hemesh->vertexAdjacency->size();
 	do {
 		++v.idx;
@@ -177,13 +177,13 @@ VertexIterator& VertexIterator::operator++() {
 	return *this;
 }
 
-VertexIterator VertexIterator::operator++(int) {
-	VertexIterator it(*this);
+ofxHEMeshVertexIterator ofxHEMeshVertexIterator::operator++(int) {
+	ofxHEMeshVertexIterator it(*this);
 	++(*this);
 	return it;
 }
 
-VertexIterator& VertexIterator::operator--() {
+ofxHEMeshVertexIterator& ofxHEMeshVertexIterator::operator--() {
 	do {
 		--v.idx;
 		if(hemesh->vertexHalfedge(v).isValid()) {
@@ -193,118 +193,118 @@ VertexIterator& VertexIterator::operator--() {
 	return *this;
 }
 
-VertexIterator VertexIterator::operator--(int) {
-	VertexIterator it(*this);
+ofxHEMeshVertexIterator ofxHEMeshVertexIterator::operator--(int) {
+	ofxHEMeshVertexIterator it(*this);
 	--(*this);
 	return it;
 }
 
 
-FaceCirculator::FaceCirculator()
+ofxHEMeshFaceCirculator::ofxHEMeshFaceCirculator()
 : hemesh(NULL), h()
 {}
 
-FaceCirculator::FaceCirculator(const Hemesh* hemesh)
+ofxHEMeshFaceCirculator::ofxHEMeshFaceCirculator(const ofxHEMesh* hemesh)
 : hemesh(hemesh), h()
 {}
 
-FaceCirculator::FaceCirculator(const Hemesh* hemesh, Halfedge h)
+ofxHEMeshFaceCirculator::ofxHEMeshFaceCirculator(const ofxHEMesh* hemesh, ofxHEMeshHalfedge h)
 : hemesh(hemesh), h(h)
 {}
 
-FaceCirculator::FaceCirculator(const FaceCirculator& src)
+ofxHEMeshFaceCirculator::ofxHEMeshFaceCirculator(const ofxHEMeshFaceCirculator& src)
 : hemesh(src.hemesh), h(src.h)
 {}
 
-bool FaceCirculator::operator==(const FaceCirculator& right) {
+bool ofxHEMeshFaceCirculator::operator==(const ofxHEMeshFaceCirculator& right) {
 	return hemesh == right.hemesh && h == right.h;
 }
-bool FaceCirculator::operator!=(const FaceCirculator& right) {
+bool ofxHEMeshFaceCirculator::operator!=(const ofxHEMeshFaceCirculator& right) {
 	return !(*this == right);
 }
 
-Halfedge& FaceCirculator::operator*() {
+ofxHEMeshHalfedge& ofxHEMeshFaceCirculator::operator*() {
 	return h;
 }
 
-Halfedge* FaceCirculator::operator->() {
+ofxHEMeshHalfedge* ofxHEMeshFaceCirculator::operator->() {
 	return &h;
 }
 
-FaceCirculator& FaceCirculator::operator++() {
+ofxHEMeshFaceCirculator& ofxHEMeshFaceCirculator::operator++() {
 	h = hemesh->halfedgeNext(h);
 	return *this;
 }
 
-FaceCirculator FaceCirculator::operator++(int) {
-	FaceCirculator it(*this);
+ofxHEMeshFaceCirculator ofxHEMeshFaceCirculator::operator++(int) {
+	ofxHEMeshFaceCirculator it(*this);
 	++(*this);
 	return it;
 }
 
-FaceCirculator& FaceCirculator::operator--() {
+ofxHEMeshFaceCirculator& ofxHEMeshFaceCirculator::operator--() {
 	h = hemesh->halfedgePrev(h);
 	return *this;
 }
 
-FaceCirculator FaceCirculator::operator--(int) {
-	FaceCirculator it(*this);
+ofxHEMeshFaceCirculator ofxHEMeshFaceCirculator::operator--(int) {
+	ofxHEMeshFaceCirculator it(*this);
 	--(*this);
 	return it;
 }
 
 
 
-VertexCirculator::VertexCirculator()
+ofxHEMeshVertexCirculator::ofxHEMeshVertexCirculator()
 : hemesh(NULL), h()
 {}
 
-VertexCirculator::VertexCirculator(const Hemesh* hemesh)
+ofxHEMeshVertexCirculator::ofxHEMeshVertexCirculator(const ofxHEMesh* hemesh)
 : hemesh(hemesh), h()
 {}
 
-VertexCirculator::VertexCirculator(const Hemesh* hemesh, Halfedge h)
+ofxHEMeshVertexCirculator::ofxHEMeshVertexCirculator(const ofxHEMesh* hemesh, ofxHEMeshHalfedge h)
 : hemesh(hemesh), h(h)
 {}
 
-VertexCirculator::VertexCirculator(const VertexCirculator& src)
+ofxHEMeshVertexCirculator::ofxHEMeshVertexCirculator(const ofxHEMeshVertexCirculator& src)
 : hemesh(src.hemesh), h(src.h)
 {}
 
-bool VertexCirculator::operator==(const VertexCirculator& right) {
+bool ofxHEMeshVertexCirculator::operator==(const ofxHEMeshVertexCirculator& right) {
 	return hemesh == right.hemesh && h == right.h;
 }
 
-bool VertexCirculator::operator!=(const VertexCirculator& right) {
+bool ofxHEMeshVertexCirculator::operator!=(const ofxHEMeshVertexCirculator& right) {
 	return !(*this == right);
 }
 
-Halfedge& VertexCirculator::operator*() {
+ofxHEMeshHalfedge& ofxHEMeshVertexCirculator::operator*() {
 	return h;
 }
 
-Halfedge* VertexCirculator::operator->() {
+ofxHEMeshHalfedge* ofxHEMeshVertexCirculator::operator->() {
 	return &h;
 }
 
-VertexCirculator& VertexCirculator::operator++() {
+ofxHEMeshVertexCirculator& ofxHEMeshVertexCirculator::operator++() {
 	h = hemesh->halfedgeSinkCCW(h);
 	return *this;
 }
 
-VertexCirculator VertexCirculator::operator++(int) {
-	VertexCirculator it(*this);
+ofxHEMeshVertexCirculator ofxHEMeshVertexCirculator::operator++(int) {
+	ofxHEMeshVertexCirculator it(*this);
 	++(*this);
 	return it;
 }
 
-VertexCirculator& VertexCirculator::operator--() {
+ofxHEMeshVertexCirculator& ofxHEMeshVertexCirculator::operator--() {
 	h = hemesh->halfedgeSinkCW(h);
 	return *this;
 }
 
-VertexCirculator VertexCirculator::operator--(int) {
-	VertexCirculator it(*this);
+ofxHEMeshVertexCirculator ofxHEMeshVertexCirculator::operator--(int) {
+	ofxHEMeshVertexCirculator it(*this);
 	--(*this);
 	return it;
 }

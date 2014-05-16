@@ -1,13 +1,13 @@
-#include "HemeshDraw.h"
+#include "ofxHEMeshDraw.h"
 
 namespace hemesh {
 
-void faceIndices(const Hemesh& hemesh, vector<ofIndexType>& indices) {
-	FaceIterator fit = hemesh.facesBegin();
-	FaceIterator fite = hemesh.facesEnd();
+void faceIndices(const ofxHEMesh& hemesh, vector<ofIndexType>& indices) {
+	ofxHEMeshFaceIterator fit = hemesh.facesBegin();
+	ofxHEMeshFaceIterator fite = hemesh.facesEnd();
 	for(; fit != fite; ++fit) {
-		FaceCirculator fc = hemesh.faceCirculate(*fit);
-		FaceCirculator fce = fc;
+		ofxHEMeshFaceCirculator fc = hemesh.faceCirculate(*fit);
+		ofxHEMeshFaceCirculator fce = fc;
 		do {
 			indices.push_back(hemesh.halfedgeVertex(*fc).idx);
 			++fc;
@@ -15,41 +15,39 @@ void faceIndices(const Hemesh& hemesh, vector<ofIndexType>& indices) {
 	}
 }
 
-void edgeIndices(const Hemesh& hemesh, vector<ofIndexType>& indices) {
-	EdgeIterator eit = hemesh.edgesBegin();
-	EdgeIterator eite = hemesh.edgesEnd();
+void edgeIndices(const ofxHEMesh& hemesh, vector<ofIndexType>& indices) {
+	ofxHEMeshEdgeIterator eit = hemesh.edgesBegin();
+	ofxHEMeshEdgeIterator eite = hemesh.edgesEnd();
 	for(; eit != eite; ++eit) {
 		indices.push_back(hemesh.halfedgeSource(*eit).idx);
 		indices.push_back(hemesh.halfedgeSink(*eit).idx);
 	}
 }
 
-void vertexNormalVectors(const Hemesh& hemesh, vector<ofVec3f> &points, Hemesh::Scalar scale) {
-	VertexIterator vit = hemesh.verticesBegin();
-	VertexIterator vite = hemesh.verticesEnd();
+void vertexNormalVectors(const ofxHEMesh& hemesh, vector<ofVec3f> &points, ofxHEMesh::Scalar scale) {
+	ofxHEMeshVertexIterator vit = hemesh.verticesBegin();
+	ofxHEMeshVertexIterator vite = hemesh.verticesEnd();
 	for(; vit != vite; ++vit) {
-		Hemesh::Point pt = hemesh.vertexPoint(*vit);
-		Hemesh::Point pt2 = pt + hemesh.angleWeightedVertexNormal(*vit)*scale;
+		ofxHEMesh::Point pt = hemesh.vertexPoint(*vit);
+		ofxHEMesh::Point pt2 = pt + hemesh.angleWeightedVertexNormal(*vit)*scale;
 		points.push_back(pt);
 		points.push_back(pt2);
 	}
 }
 
-void borderEdges(const Hemesh& hemesh, vector<ofIndexType>& indices) {
-	EdgeIterator eit = hemesh.edgesBegin();
-	EdgeIterator eite = hemesh.edgesEnd();
+void borderEdges(const ofxHEMesh& hemesh, vector<ofIndexType>& indices) {
+	ofxHEMeshEdgeIterator eit = hemesh.edgesBegin();
+	ofxHEMeshEdgeIterator eite = hemesh.edgesEnd();
 	for(; eit != eite; ++eit) {
-		Halfedge h = *eit;
-		Halfedge ho = hemesh.halfedgeOpposite(h);
+		ofxHEMeshHalfedge h = *eit;
+		ofxHEMeshHalfedge ho = hemesh.halfedgeOpposite(h);
 		if(!hemesh.halfedgeFace(h).isValid()) {
 			indices.push_back(hemesh.halfedgeSource(h).idx);
 			indices.push_back(hemesh.halfedgeSink(h).idx);
-			//std::cout << hemesh.vertexPoint(hemesh.halfedgeSource(h)) << " - " << hemesh.vertexPoint(hemesh.halfedgeSink(h)) << "\n";
 		}
 		if(!hemesh.halfedgeFace(ho).isValid()) {
 			indices.push_back(hemesh.halfedgeSource(ho).idx);
 			indices.push_back(hemesh.halfedgeSink(ho).idx);
-			//std::cout << hemesh.vertexPoint(hemesh.halfedgeSource(ho)) << " - " << hemesh.vertexPoint(hemesh.halfedgeSink(ho)) << "\n";
 		}
 	}
 }

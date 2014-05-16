@@ -1,11 +1,11 @@
 #pragma once
 
-struct Node {
+struct ofxHEMeshNode {
 	enum Indices{
 		Invalid = -1
 	};
 
-	explicit Node(int idx=Invalid)
+	explicit ofxHEMeshNode(int idx=Invalid)
 	:	idx(idx)
 	{}
 	
@@ -13,43 +13,37 @@ struct Node {
 		return idx != Invalid;
 	}
 	
-	bool operator==(const Node &rhs) const {
+	bool operator==(const ofxHEMeshNode &rhs) const {
 		return idx == rhs.idx;
 	}
-	bool operator!=(const Node &rhs) const {
+	bool operator!=(const ofxHEMeshNode &rhs) const {
 		return idx != rhs.idx;
 	}
-	bool operator<(const Node &rhs) const {
+	bool operator<(const ofxHEMeshNode &rhs) const {
 		return idx < rhs.idx;
 	}
-	bool operator>(const Node &rhs) const {
+	bool operator>(const ofxHEMeshNode &rhs) const {
 		return idx > rhs.idx;
 	}
 
 	int idx;
 };
 
-struct Vertex : public Node {
-	explicit Vertex(int idx=Invalid) : Node(idx)
+struct ofxHEMeshVertex : public ofxHEMeshNode {
+	explicit ofxHEMeshVertex(int idx=Invalid) : ofxHEMeshNode(idx)
 	{}
 };
-struct Halfedge : public Node {
-	explicit Halfedge(int idx=Invalid) : Node(idx)
+struct ofxHEMeshHalfedge : public ofxHEMeshNode {
+	explicit ofxHEMeshHalfedge(int idx=Invalid) : ofxHEMeshNode(idx)
 	{}
 };
-struct Edge {
-	explicit Edge(const Halfedge& h) : h(h)
-	{}
-	
-	Halfedge h;
-};
-struct Face : public Node {
+struct ofxHEMeshFace : public ofxHEMeshNode {
 	enum Winding{
 		CW=0,
 		CCW
 	};
 
-	explicit Face(int idx=Invalid) : Node(idx)
+	explicit ofxHEMeshFace(int idx=Invalid) : ofxHEMeshNode(idx)
 	{}
 };
 

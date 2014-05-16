@@ -1,4 +1,4 @@
-Hemesh
+ofxHEMesh
 ======
 
 Halfedge meshing

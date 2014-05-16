@@ -1,114 +1,114 @@
 #pragma once
-#include "HemeshNode.h"
+#include "ofxHEMeshNode.h"
 
-class Hemesh;
+class ofxHEMesh;
 
-struct FaceIterator {
+struct ofxHEMeshFaceIterator {
 		
-	FaceIterator();
-	FaceIterator(const Hemesh* hemesh);
-	FaceIterator(const Hemesh* hemesh, Face f);
-	FaceIterator(const FaceIterator& src);
+	ofxHEMeshFaceIterator();
+	ofxHEMeshFaceIterator(const ofxHEMesh* hemesh);
+	ofxHEMeshFaceIterator(const ofxHEMesh* hemesh, ofxHEMeshFace f);
+	ofxHEMeshFaceIterator(const ofxHEMeshFaceIterator& src);
 	
-	bool operator==(const FaceIterator& right);
-	bool operator!=(const FaceIterator& right);
+	bool operator==(const ofxHEMeshFaceIterator& right);
+	bool operator!=(const ofxHEMeshFaceIterator& right);
 	
-	Face& operator*();
-	Face* operator->();
+	ofxHEMeshFace& operator*();
+	ofxHEMeshFace* operator->();
 	
-	FaceIterator& operator++();
-	FaceIterator operator++(int);
-	FaceIterator& operator--();
-	FaceIterator operator--(int);
+	ofxHEMeshFaceIterator& operator++();
+	ofxHEMeshFaceIterator operator++(int);
+	ofxHEMeshFaceIterator& operator--();
+	ofxHEMeshFaceIterator operator--(int);
 	
-	const Hemesh* hemesh;
-	Face f;
+	const ofxHEMesh* hemesh;
+	ofxHEMeshFace f;
 };
 
-struct EdgeIterator {
+struct ofxHEMeshEdgeIterator {
 		
-	EdgeIterator();
-	EdgeIterator(const Hemesh* hemesh);
-	EdgeIterator(const Hemesh* hemesh, Halfedge h);
-	EdgeIterator(const EdgeIterator& src);
+	ofxHEMeshEdgeIterator();
+	ofxHEMeshEdgeIterator(const ofxHEMesh* hemesh);
+	ofxHEMeshEdgeIterator(const ofxHEMesh* hemesh, ofxHEMeshHalfedge h);
+	ofxHEMeshEdgeIterator(const ofxHEMeshEdgeIterator& src);
 	
-	bool operator==(const EdgeIterator& right);
-	bool operator!=(const EdgeIterator& right);
+	bool operator==(const ofxHEMeshEdgeIterator& right);
+	bool operator!=(const ofxHEMeshEdgeIterator& right);
 	
-	Halfedge& operator*();
-	Halfedge* operator->();
+	ofxHEMeshHalfedge& operator*();
+	ofxHEMeshHalfedge* operator->();
 	
-	EdgeIterator& operator++();
-	EdgeIterator operator++(int);
-	EdgeIterator& operator--();
-	EdgeIterator operator--(int);
+	ofxHEMeshEdgeIterator& operator++();
+	ofxHEMeshEdgeIterator operator++(int);
+	ofxHEMeshEdgeIterator& operator--();
+	ofxHEMeshEdgeIterator operator--(int);
 	
-	const Hemesh* hemesh;
-	Halfedge h;
+	const ofxHEMesh* hemesh;
+	ofxHEMeshHalfedge h;
 };
 
-struct VertexIterator {
+struct ofxHEMeshVertexIterator {
 		
-	VertexIterator();
-	VertexIterator(const Hemesh* hemesh);
-	VertexIterator(const Hemesh* hemesh, Vertex v);
-	VertexIterator(const VertexIterator& src);
+	ofxHEMeshVertexIterator();
+	ofxHEMeshVertexIterator(const ofxHEMesh* hemesh);
+	ofxHEMeshVertexIterator(const ofxHEMesh* hemesh, ofxHEMeshVertex v);
+	ofxHEMeshVertexIterator(const ofxHEMeshVertexIterator& src);
 	
-	bool operator==(const VertexIterator& right);
-	bool operator!=(const VertexIterator& right);
+	bool operator==(const ofxHEMeshVertexIterator& right);
+	bool operator!=(const ofxHEMeshVertexIterator& right);
 	
-	Vertex& operator*();
-	Vertex* operator->();
+	ofxHEMeshVertex& operator*();
+	ofxHEMeshVertex* operator->();
 	
-	VertexIterator& operator++();
-	VertexIterator operator++(int);
-	VertexIterator& operator--();
-	VertexIterator operator--(int);
+	ofxHEMeshVertexIterator& operator++();
+	ofxHEMeshVertexIterator operator++(int);
+	ofxHEMeshVertexIterator& operator--();
+	ofxHEMeshVertexIterator operator--(int);
 	
-	const Hemesh* hemesh;
-	Vertex v;
+	const ofxHEMesh* hemesh;
+	ofxHEMeshVertex v;
 };
 
-struct FaceCirculator {
+struct ofxHEMeshFaceCirculator {
 		
-	FaceCirculator();
-	FaceCirculator(const Hemesh* hemesh);
-	FaceCirculator(const Hemesh* hemesh, Halfedge h);
-	FaceCirculator(const FaceCirculator& src);
+	ofxHEMeshFaceCirculator();
+	ofxHEMeshFaceCirculator(const ofxHEMesh* hemesh);
+	ofxHEMeshFaceCirculator(const ofxHEMesh* hemesh, ofxHEMeshHalfedge h);
+	ofxHEMeshFaceCirculator(const ofxHEMeshFaceCirculator& src);
 	
-	bool operator==(const FaceCirculator& right);
-	bool operator!=(const FaceCirculator& right);
+	bool operator==(const ofxHEMeshFaceCirculator& right);
+	bool operator!=(const ofxHEMeshFaceCirculator& right);
 	
-	Halfedge& operator*();
-	Halfedge* operator->();
+	ofxHEMeshHalfedge& operator*();
+	ofxHEMeshHalfedge* operator->();
 	
-	FaceCirculator& operator++();
-	FaceCirculator operator++(int);
-	FaceCirculator& operator--();
-	FaceCirculator operator--(int);
+	ofxHEMeshFaceCirculator& operator++();
+	ofxHEMeshFaceCirculator operator++(int);
+	ofxHEMeshFaceCirculator& operator--();
+	ofxHEMeshFaceCirculator operator--(int);
 	
-	const Hemesh* hemesh;
-	Halfedge h;
+	const ofxHEMesh* hemesh;
+	ofxHEMeshHalfedge h;
 };
 
-struct VertexCirculator {
+struct ofxHEMeshVertexCirculator {
 		
-	VertexCirculator();
-	VertexCirculator(const Hemesh* hemesh);
-	VertexCirculator(const Hemesh* hemesh, Halfedge h);
-	VertexCirculator(const VertexCirculator& src);
+	ofxHEMeshVertexCirculator();
+	ofxHEMeshVertexCirculator(const ofxHEMesh* hemesh);
+	ofxHEMeshVertexCirculator(const ofxHEMesh* hemesh, ofxHEMeshHalfedge h);
+	ofxHEMeshVertexCirculator(const ofxHEMeshVertexCirculator& src);
 	
-	bool operator==(const VertexCirculator& right);
-	bool operator!=(const VertexCirculator& right);
+	bool operator==(const ofxHEMeshVertexCirculator& right);
+	bool operator!=(const ofxHEMeshVertexCirculator& right);
 	
-	Halfedge& operator*();
-	Halfedge* operator->();
+	ofxHEMeshHalfedge& operator*();
+	ofxHEMeshHalfedge* operator->();
 	
-	VertexCirculator& operator++();
-	VertexCirculator operator++(int);
-	VertexCirculator& operator--();
-	VertexCirculator operator--(int);
+	ofxHEMeshVertexCirculator& operator++();
+	ofxHEMeshVertexCirculator operator++(int);
+	ofxHEMeshVertexCirculator& operator--();
+	ofxHEMeshVertexCirculator operator--(int);
 	
-	const Hemesh* hemesh;
-	Halfedge h;
+	const ofxHEMesh* hemesh;
+	ofxHEMeshHalfedge h;
 };

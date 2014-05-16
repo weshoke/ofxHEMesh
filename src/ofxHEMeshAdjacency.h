@@ -1,25 +1,25 @@
 #pragma once
-#include "HemeshNode.h"
+#include "ofxHEMeshNode.h"
 
-struct VertexAdjacency {
-	VertexAdjacency() : he() {}
+struct ofxHEMeshVertexAdjacency {
+	ofxHEMeshVertexAdjacency() : he() {}
 	
-	Halfedge he;
+	ofxHEMeshHalfedge he;
 };
 
-struct HalfedgeAdjacency {
-	HalfedgeAdjacency() :
+struct ofxHEMeshHalfedgeAdjacency {
+	ofxHEMeshHalfedgeAdjacency() :
 		v(), f(), prev(), next()
 	{}
 	
-	Vertex v;
-	Face f;
-	Halfedge prev;
-	Halfedge next;
+	ofxHEMeshVertex v;
+	ofxHEMeshFace f;
+	ofxHEMeshHalfedge prev;
+	ofxHEMeshHalfedge next;
 };
 
-struct FaceAdjacency {
-	FaceAdjacency() : he() {}
+struct ofxHEMeshFaceAdjacency {
+	ofxHEMeshFaceAdjacency() : he() {}
 	
-	Halfedge he;
+	ofxHEMeshHalfedge he;
 };

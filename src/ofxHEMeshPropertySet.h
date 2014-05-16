@@ -14,10 +14,10 @@ that is inherited by a templated sub-class such that all instantiations of the t
 stored in a single collection as pointers.
 */
 // interface that doesn't require knowing the array element type
-class PropertyBase {
+class ofxHEMeshPropertyBase {
 public:
-	PropertyBase() {}
-	virtual ~PropertyBase() {}
+	ofxHEMeshPropertyBase() {}
+	virtual ~ofxHEMeshPropertyBase() {}
 
 	virtual int capacity() = 0;
 	virtual void clear() = 0;
@@ -33,13 +33,13 @@ protected:
 
 // wrapper around std::vector
 template <typename T>
-class Property : public PropertyBase {
+class ofxHEMeshProperty : public ofxHEMeshPropertyBase {
 public:
-	Property(const string &name, T def=T())
+	ofxHEMeshProperty(const string &name, T def=T())
 	:	mName(name), mDef(def)
 	{}
 	
-	~Property() {}
+	~ofxHEMeshProperty() {}
 	
 	int capacity() { return int(mValues.capacity()); }
 	void clear() { mValues.clear(); }
@@ -72,42 +72,45 @@ protected:
 	T mDef;
 };
 
-class HemeshPropertySet {
+class ofxHEMeshPropertySet {
 public:
+	typedef map<string, ofxHEMeshPropertyBase *> PropertyMap;
+	typedef map<string, ofxHEMeshPropertyBase *>::iterator PropertyMapIterator;
+	typedef map<string, ofxHEMeshPropertyBase *>::const_iterator PropertyMapConstIterator;
 
-	HemeshPropertySet() {}
-	~HemeshPropertySet() {
+	ofxHEMeshPropertySet() {}
+	~ofxHEMeshPropertySet() {
 		clear();
 	}
 	
 	void clear() {
-		map<string, PropertyBase *>::iterator it = mProperties.begin();
-		map<string, PropertyBase *>::iterator ite = mProperties.end();
+		PropertyMapIterator it = properties.begin();
+		PropertyMapIterator ite = properties.end();
 		for(; it != ite; ++it) {
 			delete it->second;
 		}
-		mProperties.clear();
+		properties.clear();
 	}
 	
 	template <typename T>
-	Property<T> * add(const string &name, T def) {
-		Property<T> *prop = new Property<T>(name);
-		mProperties.insert(std::pair<string, PropertyBase*>(name, prop));
+	ofxHEMeshProperty<T> * add(const string &name, T def) {
+		ofxHEMeshProperty<T> *prop = new ofxHEMeshProperty<T>(name);
+		properties.insert(std::pair<string, ofxHEMeshPropertyBase*>(name, prop));
 		prop->resize(size());
 		return prop;
 	}
 	
 	void extend() {
-		map<string, PropertyBase *>::iterator it = mProperties.begin();
-		map<string, PropertyBase *>::iterator ite = mProperties.end();
+		PropertyMapIterator it = properties.begin();
+		PropertyMapIterator ite = properties.end();
 		for(; it != ite; ++it) {
 			it->second->extend();
 		}
 	}
 	
 	void resize(int n) {
-		map<string, PropertyBase *>::iterator it = mProperties.begin();
-		map<string, PropertyBase *>::iterator ite = mProperties.end();
+		PropertyMapIterator it = properties.begin();
+		PropertyMapIterator ite = properties.end();
 		for(; it != ite; ++it) {
 			it->second->resize(n);
 		}
@@ -115,19 +118,19 @@ public:
 	
 	// assumes arrays are always synchonized after an add operation
 	int size() const {
-		map<string, PropertyBase *>::const_iterator it = mProperties.begin();
-		if(it == mProperties.end()) return 0;
+		PropertyMapConstIterator it = properties.begin();
+		if(it == properties.end()) return 0;
 		else return it->second->size();
 	}
 	
 	void swapItems(int idx1, int idx2) {
-		map<string, PropertyBase *>::iterator it = mProperties.begin();
-		map<string, PropertyBase *>::iterator ite = mProperties.end();
+		PropertyMapIterator it = properties.begin();
+		PropertyMapIterator ite = properties.end();
 		for(; it != ite; ++it) {
 			it->second->swapItems(idx1, idx2);
 		}
 	}
 
 protected:
-	map<string, PropertyBase *> mProperties;
+	PropertyMap properties;
 };

@@ -1,7 +1,7 @@
 #pragma once
-#include "HemeshPropertySet.h"
-#include "HemeshAdjacency.h"
-#include "HemeshIterators.h"
+#include "ofxHEMeshPropertySet.h"
+#include "ofxHEMeshAdjacency.h"
+#include "ofxHEMeshIterators.h"
 #include "ofMain.h"
 #include <vector>
 #include <map>
@@ -18,17 +18,17 @@ using std::set;
 using std::string;
 
 
-class Hemesh{
+class ofxHEMesh{
 public:
-	friend class FaceIterator;
-	friend class EdgeIterator;
-	friend class VertexIterator;
-	typedef std::pair<Vertex, Vertex> ExplicitEdge;
-	typedef vector<Vertex> ExplicitFace;
+	friend class ofxHEMeshFaceIterator;
+	friend class ofxHEMeshEdgeIterator;
+	friend class ofxHEMeshVertexIterator;
+	typedef std::pair<ofxHEMeshVertex, ofxHEMeshVertex> ExplicitEdge;
+	typedef vector<ofxHEMeshVertex> ExplicitFace;
 
 
-	Hemesh();
-	~Hemesh() {}
+	ofxHEMesh();
+	~ofxHEMesh() {}
 	
 
 	/////////////////////////////////////////////////////////
@@ -48,15 +48,15 @@ public:
 	/////////////////////////////////////////////////////////
 	// Add combinatorial elements
 	void addMesh(const ofMesh& mesh);
-	Vertex addVertex(const Point& p);
-	Halfedge addEdge();
+	ofxHEMeshVertex addVertex(const Point& p);
+	ofxHEMeshHalfedge addEdge();
 	void addFaces(const vector<ExplicitFace>& faces);
-	Face addFace(const vector<Vertex>& vertices);
+	ofxHEMeshFace addFace(const vector<ofxHEMeshVertex>& vertices);
 	
 	// Remove combinatorial elements
-	void removeVertex(Vertex v);
-	bool removeHalfedge(Halfedge h);
-	void removeFace(Face f);
+	void removeVertex(ofxHEMeshVertex v);
+	bool removeHalfedge(ofxHEMeshHalfedge h);
+	void removeFace(ofxHEMeshFace f);
 	
 	// Number of combinatorial elements (some could be inactive)
 	int getNumVertices() const;
@@ -65,82 +65,82 @@ public:
 	int getNumFaces() const;
 	
 	// Iterate combinatorial elements
-	FaceIterator facesBegin() const;
-	FaceIterator facesEnd() const;
-	EdgeIterator edgesBegin() const;
-	EdgeIterator edgesEnd() const;
-	VertexIterator verticesBegin() const;
-	VertexIterator verticesEnd() const;
-	FaceCirculator faceCirculate(const Face& f) const;
-	VertexCirculator vertexCirculate(const Vertex& v) const;
+	ofxHEMeshFaceIterator facesBegin() const;
+	ofxHEMeshFaceIterator facesEnd() const;
+	ofxHEMeshEdgeIterator edgesBegin() const;
+	ofxHEMeshEdgeIterator edgesEnd() const;
+	ofxHEMeshVertexIterator verticesBegin() const;
+	ofxHEMeshVertexIterator verticesEnd() const;
+	ofxHEMeshFaceCirculator faceCirculate(const ofxHEMeshFace& f) const;
+	ofxHEMeshVertexCirculator vertexCirculate(const ofxHEMeshVertex& v) const;
 	
 	// Set + get connectivity
-	Halfedge vertexHalfedge(Vertex v) const;
-	void setVertexHalfedge(Vertex v, Halfedge h);
-	Halfedge faceHalfedge(Face f) const;
-	void setFaceHalfedge(Face f, Halfedge h);
+	ofxHEMeshHalfedge vertexHalfedge(ofxHEMeshVertex v) const;
+	void setVertexHalfedge(ofxHEMeshVertex v, ofxHEMeshHalfedge h);
+	ofxHEMeshHalfedge faceHalfedge(ofxHEMeshFace f) const;
+	void setFaceHalfedge(ofxHEMeshFace f, ofxHEMeshHalfedge h);
 	
-	Halfedge halfedgeOpposite(Halfedge h) const;
-	Vertex halfedgeVertex(Halfedge h) const;
-	void setHalfedgeVertex(Halfedge h, Vertex v);
-	Face halfedgeFace(Halfedge h) const;
-	void setHalfedgeFace(Halfedge h, Face f);
-	Vertex halfedgeSource(Halfedge h) const;
-	Vertex halfedgeSink(Halfedge h) const;
-	Halfedge halfedgeNext(Halfedge h) const;
-	void setHalfedgeNext(Halfedge h, Halfedge next);
-	Halfedge halfedgePrev(Halfedge h) const;
-	void setHalfedgePrev(Halfedge h, Halfedge prev);
-	Halfedge halfedgeSourceCW(Halfedge h) const;
-	Halfedge halfedgeSourceCCW(Halfedge h) const;
-	Halfedge halfedgeSinkCW(Halfedge h) const;
-	Halfedge halfedgeSinkCCW(Halfedge h) const;
-	Halfedge findHalfedge(Vertex v1, Vertex v2) const;
-	bool halfedgeIsOnBoundary(Halfedge h) const;
+	ofxHEMeshHalfedge halfedgeOpposite(ofxHEMeshHalfedge h) const;
+	ofxHEMeshVertex halfedgeVertex(ofxHEMeshHalfedge h) const;
+	void setHalfedgeVertex(ofxHEMeshHalfedge h, ofxHEMeshVertex v);
+	ofxHEMeshFace halfedgeFace(ofxHEMeshHalfedge h) const;
+	void setHalfedgeFace(ofxHEMeshHalfedge h, ofxHEMeshFace f);
+	ofxHEMeshVertex halfedgeSource(ofxHEMeshHalfedge h) const;
+	ofxHEMeshVertex halfedgeSink(ofxHEMeshHalfedge h) const;
+	ofxHEMeshHalfedge halfedgeNext(ofxHEMeshHalfedge h) const;
+	void setHalfedgeNext(ofxHEMeshHalfedge h, ofxHEMeshHalfedge next);
+	ofxHEMeshHalfedge halfedgePrev(ofxHEMeshHalfedge h) const;
+	void setHalfedgePrev(ofxHEMeshHalfedge h, ofxHEMeshHalfedge prev);
+	ofxHEMeshHalfedge halfedgeSourceCW(ofxHEMeshHalfedge h) const;
+	ofxHEMeshHalfedge halfedgeSourceCCW(ofxHEMeshHalfedge h) const;
+	ofxHEMeshHalfedge halfedgeSinkCW(ofxHEMeshHalfedge h) const;
+	ofxHEMeshHalfedge halfedgeSinkCCW(ofxHEMeshHalfedge h) const;
+	ofxHEMeshHalfedge findHalfedge(ofxHEMeshVertex v1, ofxHEMeshVertex v2) const;
+	bool halfedgeIsOnBoundary(ofxHEMeshHalfedge h) const;
 	
 	// Combinatorial Properties
-	int vertexValence(Vertex v) const;
+	int vertexValence(ofxHEMeshVertex v) const;
 	
 	// Geometric modification
-	void vertexMoveTo(Vertex v, const Point& p);
+	void vertexMoveTo(ofxHEMeshVertex v, const Point& p);
 	
 	// Geometric properties
 	Point centroid() const;
 	
-	Point vertexPoint(Vertex v) const;
-	Direction angleWeightedVertexNormal(Vertex v) const;
-	Scalar vertexArea(Vertex v) const;
+	Point vertexPoint(ofxHEMeshVertex v) const;
+	Direction angleWeightedVertexNormal(ofxHEMeshVertex v) const;
+	Scalar vertexArea(ofxHEMeshVertex v) const;
 	
-	Scalar faceArea(Face f) const;
-	Point faceCentroid(Face f) const;
-	Direction faceNormal(Face f) const;
+	Scalar faceArea(ofxHEMeshFace f) const;
+	Point faceCentroid(ofxHEMeshFace f) const;
+	Direction faceNormal(ofxHEMeshFace f) const;
 	
-	Point halfedgeLerp(Halfedge h, Scalar t) const;
-	Point halfedgeMidpoint(Halfedge h) const;
-	Scalar halfedgeCotan(Halfedge h) const;
-	Scalar halfedgeLengthSquared(Halfedge h) const;
-	Direction halfedgeDirection(Halfedge h) const;
-	Scalar angleAtVertex(Halfedge h) const;
-	Scalar halfedgeAngle(Halfedge h) const;
+	Point halfedgeLerp(ofxHEMeshHalfedge h, Scalar t) const;
+	Point halfedgeMidpoint(ofxHEMeshHalfedge h) const;
+	Scalar halfedgeCotan(ofxHEMeshHalfedge h) const;
+	Scalar halfedgeLengthSquared(ofxHEMeshHalfedge h) const;
+	Direction halfedgeDirection(ofxHEMeshHalfedge h) const;
+	Scalar angleAtVertex(ofxHEMeshHalfedge h) const;
+	Scalar halfedgeAngle(ofxHEMeshHalfedge h) const;
 	
 	// Combinatorial element properties
 	template<typename T>
-	Property<T> * addVertexProperty(const string &name, T def=T()) {
+	ofxHEMeshProperty<T> * addVertexProperty(const string &name, T def=T()) {
 		return vertexProperties.add(name, def);
 	}
 	
 	template<typename T>
-	Property<T> * addHalfedgeProperty(const string &name, T def=T()) {
+	ofxHEMeshProperty<T> * addHalfedgeProperty(const string &name, T def=T()) {
 		return halfedgeProperties.add(name, def);
 	}
 	
 	template<typename T>
-	Property<T> * addEdgeProperty(const string &name, T def=T()) {
+	ofxHEMeshProperty<T> * addEdgeProperty(const string &name, T def=T()) {
 		return edgeProperties.add(name, def);
 	}
 	
 	template<typename T>
-	Property<T> * addFaceProperty(const string &name, T def=T()) {
+	ofxHEMeshProperty<T> * addFaceProperty(const string &name, T def=T()) {
 		return faceProperties.add(name, def);
 	}
 	/////////////////////////////////////////////////////////
@@ -148,26 +148,26 @@ public:
 
 	/////////////////////////////////////////////////////////
 	// Geometric elements
-	const Property<Point>& getPoints() const { return *points; }
+	const ofxHEMeshProperty<Point>& getPoints() const { return *points; }
 	/////////////////////////////////////////////////////////
 	
 	/////////////////////////////////////////////////////////
 	// Debugging
-	string halfedgeString(Halfedge h) const;
-	void printFace(Face f) const;
-	void printVertexOneHood(Vertex v) const;
+	string halfedgeString(ofxHEMeshHalfedge h) const;
+	void printFace(ofxHEMeshFace f) const;
+	void printVertexOneHood(ofxHEMeshVertex v) const;
 	/////////////////////////////////////////////////////////
 
 protected:
 
-	HemeshPropertySet vertexProperties;
-	HemeshPropertySet halfedgeProperties;
-	HemeshPropertySet edgeProperties;
-	HemeshPropertySet faceProperties;
+	ofxHEMeshPropertySet vertexProperties;
+	ofxHEMeshPropertySet halfedgeProperties;
+	ofxHEMeshPropertySet edgeProperties;
+	ofxHEMeshPropertySet faceProperties;
 	
-	Property<VertexAdjacency> *vertexAdjacency;
-	Property<HalfedgeAdjacency> *halfedgeAdjacency;
-	Property<FaceAdjacency> *faceAdjacency;
+	ofxHEMeshProperty<ofxHEMeshVertexAdjacency> *vertexAdjacency;
+	ofxHEMeshProperty<ofxHEMeshHalfedgeAdjacency> *halfedgeAdjacency;
+	ofxHEMeshProperty<ofxHEMeshFaceAdjacency> *faceAdjacency;
 	
-	Property<Point>* points;
+	ofxHEMeshProperty<Point>* points;
 };
