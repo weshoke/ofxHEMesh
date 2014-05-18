@@ -1,4 +1,5 @@
 #include "ofxHEMesh.h"
+#include "ofxHEMeshOBJLoader.h"
 #include <sstream>
 
 
@@ -95,6 +96,7 @@ void ofxHEMesh::subdivideLoop() {
 		faces.push_back(innerFace);
 	}
 	
+	halfedgeAdjacency->clear();
 	faceAdjacency->clear();
 	addFaces(faces);
 }
@@ -102,13 +104,19 @@ void ofxHEMesh::subdivideLoop() {
 // Assumes no boundaries
 void ofxHEMesh::subdivideCatmullClark() {
 	map<ofxHEMeshFace, Point> facePoints;
+	map<ofxHEMeshFace, ofxHEMeshVertex> faceVertices;
 	ofxHEMeshFaceIterator fit = facesBegin();
 	ofxHEMeshFaceIterator fite = facesEnd();
 	for(; fit != fite; ++fit) {
-		facePoints.insert(std::pair<ofxHEMeshFace, Point>(*fit, faceCentroid(*fit)));
+		Point centroid = faceCentroid(*fit);
+		facePoints.insert(std::pair<ofxHEMeshFace, Point>(*fit, centroid));
+		
+		ofxHEMeshVertex v = addVertex(centroid);
+		faceVertices.insert(std::pair<ofxHEMeshFace, ofxHEMeshVertex>(*fit, v));
 	}
 	
 	map<ofxHEMeshHalfedge, Point> edgePoints;
+	map<ofxHEMeshHalfedge, ofxHEMeshVertex> edgeVertices;
 	ofxHEMeshEdgeIterator eit = edgesBegin();
 	ofxHEMeshEdgeIterator eite = edgesEnd();
 	for(; eit != eite; ++eit) {
@@ -120,6 +128,10 @@ void ofxHEMesh::subdivideCatmullClark() {
 		);
 		edgePoints.insert(std::pair<ofxHEMeshHalfedge, Point>(h, pt));
 		edgePoints.insert(std::pair<ofxHEMeshHalfedge, Point>(ho, pt));
+		
+		ofxHEMeshVertex v = addVertex(pt);
+		edgeVertices.insert(std::pair<ofxHEMeshHalfedge, ofxHEMeshVertex>(h, v));
+		edgeVertices.insert(std::pair<ofxHEMeshHalfedge, ofxHEMeshVertex>(ho, v));
 	}
 	
 	ofxHEMeshVertexIterator vit = verticesBegin();
@@ -135,8 +147,76 @@ void ofxHEMesh::subdivideCatmullClark() {
 			Q += facePoints[halfedgeFace(h)];
 			R += edgePoints[h];
 			++valence;
+			++vc;
 		} while(vc != vce);
+		
+		Q /= valence;
+		R /= valence;
+		Point S = vertexPoint(*vit);
+		Point npt = (Q + R*2 + S*(valence-3))/valence;
+		vertexMoveTo(*vit, npt);
 	}
+	
+	vector<ExplicitFace> faces;
+	faces.reserve(faceAdjacency->size()*4);
+	fit = facesBegin();
+	fite = facesEnd();
+	for(; fit != fite; ++fit) {
+		ofxHEMeshFace f = *fit;
+		ofxHEMeshFaceCirculator fc = faceCirculate(f);
+		ofxHEMeshFaceCirculator fce = fc;
+		do {
+			ExplicitFace face(4);
+			ofxHEMeshHalfedge h = *fc;
+			face[0] = edgeVertices[h];
+			face[1] = halfedgeVertex(h);
+			face[2] = edgeVertices[halfedgeNext(h)];
+			face[3] = faceVertices[f];
+			faces.push_back(face);
+			++fc;
+		} while(fc != fce);
+	}
+	
+	halfedgeAdjacency->clear();
+	faceAdjacency->clear();
+	addFaces(faces);
+}
+
+void ofxHEMesh::dual() {
+	vector<ofxHEMeshVertex> faceCentroids(getNumFaces());
+	ofxHEMeshFaceIterator fit = facesBegin();
+	ofxHEMeshFaceIterator fite = facesEnd();
+	for(; fit != fite; ++fit) {
+		faceCentroids[(*fit).idx] = addVertex(faceCentroid(*fit));
+	}
+	
+	vector<ExplicitFace> faces(getNumVertices());
+	ofxHEMeshVertexIterator vit = verticesBegin();
+	ofxHEMeshVertexIterator vite = verticesEnd();
+	for(; vit != vite; ++vit) {
+		ExplicitFace face;
+		ofxHEMeshVertexCirculator vc = vertexCirculate(*vit);
+		ofxHEMeshVertexCirculator vce = vc;
+		do {
+			ofxHEMeshFace f = halfedgeFace(*vc);
+			face.push_back(faceCentroids[f.idx]);
+			++vc;
+		} while(vc != vce);
+		faces[(*vit).idx] = face;
+	}
+	
+	halfedgeAdjacency->clear();
+	faceAdjacency->clear();
+	addFaces(faces);
+}
+
+bool ofxHEMesh::loadOBJModel(string modelName) {
+	ofxHEMeshOBJLoader loader;
+	bool res = loader.loadModel(modelName);
+	if(res) {
+		loader.addToHemesh(*this, 0);
+	}
+	return res;
 }
 
 void ofxHEMesh::addMesh(const ofMesh& mesh) {
@@ -244,7 +324,7 @@ void ofxHEMesh::addFaces(const vector<ExplicitFace>& faces) {
 		setFaceHalfedge(f, halfedges[0]);
 		for(j=0; j < nv; ++j) {
 			ofxHEMeshHalfedge h1 = halfedges[j];
-			ofxHEMeshHalfedge h2 = halfedges[WRAP_NEXT(j, nv)];
+			ofxHEMeshHalfedge h2 = halfedges[WRAP_NEXT(j, nv)];			
 			allHalfedges.erase(allHalfedges.find(h1));
 			setHalfedgeNext(h1, h2);
 			setHalfedgePrev(h2, h1);
@@ -521,6 +601,10 @@ ofxHEMeshVertexIterator ofxHEMesh::verticesEnd() const {
 
 ofxHEMeshFaceCirculator ofxHEMesh::faceCirculate(const ofxHEMeshFace& f) const {
 	return ofxHEMeshFaceCirculator(this, faceHalfedge(f));
+}
+
+ofxHEMeshPolygonSplitter ofxHEMesh::splitPolygon(const ofxHEMeshFace& f) const {
+	return ofxHEMeshPolygonSplitter(this, faceHalfedge(f));
 }
 
 ofxHEMeshVertexCirculator ofxHEMesh::vertexCirculate(const ofxHEMeshVertex& v) const {

@@ -112,3 +112,41 @@ struct ofxHEMeshVertexCirculator {
 	const ofxHEMesh* hemesh;
 	ofxHEMeshHalfedge h;
 };
+
+
+struct ofxHEMeshTriangle{
+	ofxHEMeshTriangle()
+	: v1(), v2(), v3()
+	{}
+	
+	ofxHEMeshTriangle(const ofxHEMeshTriangle& src)
+	: v1(src.v1), v2(src.v2), v3(src.v3)
+	{}
+
+	ofxHEMeshVertex v1;
+	ofxHEMeshVertex v2;
+	ofxHEMeshVertex v3;
+};
+
+struct ofxHEMeshPolygonSplitter {
+	ofxHEMeshPolygonSplitter();
+	ofxHEMeshPolygonSplitter(const ofxHEMesh* hemesh);
+	ofxHEMeshPolygonSplitter(const ofxHEMesh* hemesh, ofxHEMeshHalfedge h);
+	ofxHEMeshPolygonSplitter(const ofxHEMeshPolygonSplitter& src);
+	
+	bool operator==(const ofxHEMeshPolygonSplitter& right);
+	bool operator!=(const ofxHEMeshPolygonSplitter& right);
+	
+	ofxHEMeshTriangle& operator*();
+	ofxHEMeshTriangle* operator->();
+	
+	ofxHEMeshPolygonSplitter& operator++();
+	ofxHEMeshPolygonSplitter operator++(int);
+	
+	const ofxHEMesh* hemesh;
+	ofxHEMeshHalfedge h;
+	ofxHEMeshTriangle triangle;
+	
+protected:
+	void firstTriangle();
+};

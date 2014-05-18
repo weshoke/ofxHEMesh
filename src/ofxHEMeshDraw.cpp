@@ -93,12 +93,15 @@ void ofxHEMeshDraw::faceIndices(vector<ofIndexType>& indices) {
 	ofxHEMeshFaceIterator fit = hemesh.facesBegin();
 	ofxHEMeshFaceIterator fite = hemesh.facesEnd();
 	for(; fit != fite; ++fit) {
-		ofxHEMeshFaceCirculator fc = hemesh.faceCirculate(*fit);
-		ofxHEMeshFaceCirculator fce = fc;
+		ofxHEMeshPolygonSplitter pit = hemesh.splitPolygon(*fit);
+		ofxHEMeshPolygonSplitter pite = pit;
 		do {
-			indices.push_back(hemesh.halfedgeVertex(*fc).idx);
-			++fc;
-		} while(fc != fce);
+			ofxHEMeshTriangle& tri = *pit;
+			indices.push_back(tri.v1.idx);
+			indices.push_back(tri.v2.idx);
+			indices.push_back(tri.v3.idx);
+			++pit;
+		} while (pit != pite);
 	}
 }
 

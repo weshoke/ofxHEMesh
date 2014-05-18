@@ -42,11 +42,13 @@ public:
 	// Mesh-level modifications
 	void subdivideLoop();
 	void subdivideCatmullClark();
+	void dual();
 	/////////////////////////////////////////////////////////
 	
 	
 	/////////////////////////////////////////////////////////
 	// Add combinatorial elements
+	bool loadOBJModel(string modelName);
 	void addMesh(const ofMesh& mesh);
 	ofxHEMeshVertex addVertex(const Point& p);
 	ofxHEMeshHalfedge addEdge();
@@ -72,6 +74,7 @@ public:
 	ofxHEMeshVertexIterator verticesBegin() const;
 	ofxHEMeshVertexIterator verticesEnd() const;
 	ofxHEMeshFaceCirculator faceCirculate(const ofxHEMeshFace& f) const;
+	ofxHEMeshPolygonSplitter splitPolygon(const ofxHEMeshFace& f) const;
 	ofxHEMeshVertexCirculator vertexCirculate(const ofxHEMeshVertex& v) const;
 	
 	// Set + get connectivity

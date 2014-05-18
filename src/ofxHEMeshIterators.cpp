@@ -308,3 +308,64 @@ ofxHEMeshVertexCirculator ofxHEMeshVertexCirculator::operator--(int) {
 	--(*this);
 	return it;
 }
+
+
+
+ofxHEMeshPolygonSplitter::ofxHEMeshPolygonSplitter()
+: hemesh(NULL), h()
+{}
+
+ofxHEMeshPolygonSplitter::ofxHEMeshPolygonSplitter(const ofxHEMesh* hemesh)
+: hemesh(hemesh), h()
+{}
+
+
+ofxHEMeshPolygonSplitter::ofxHEMeshPolygonSplitter(const ofxHEMesh* hemesh, ofxHEMeshHalfedge h)
+: hemesh(hemesh), h(h)
+{}
+
+ofxHEMeshPolygonSplitter::ofxHEMeshPolygonSplitter(const ofxHEMeshPolygonSplitter& src)
+: hemesh(src.hemesh), h(src.h), triangle(src.triangle)
+{}
+
+bool ofxHEMeshPolygonSplitter::operator==(const ofxHEMeshPolygonSplitter& right) {
+	return hemesh == right.hemesh && h == right.h;
+}
+
+bool ofxHEMeshPolygonSplitter::operator!=(const ofxHEMeshPolygonSplitter& right) {
+	return !(*this == right);
+}
+
+ofxHEMeshTriangle& ofxHEMeshPolygonSplitter::operator*() {
+	firstTriangle();
+	return triangle;
+}
+
+ofxHEMeshTriangle* ofxHEMeshPolygonSplitter::operator->() {
+	firstTriangle();
+	return &triangle;
+}
+
+ofxHEMeshPolygonSplitter& ofxHEMeshPolygonSplitter::operator++() {
+	firstTriangle();
+	h = hemesh->halfedgeNext(h);
+	triangle.v2 = triangle.v3;
+	triangle.v3 = hemesh->halfedgeVertex(h);
+	return *this;
+}
+
+ofxHEMeshPolygonSplitter ofxHEMeshPolygonSplitter::operator++(int) {
+	ofxHEMeshPolygonSplitter it(*this);
+	++(*this);
+	return it;
+}
+
+void ofxHEMeshPolygonSplitter::firstTriangle() {
+	if(!triangle.v1.isValid()) {
+		triangle.v1 = hemesh->halfedgeVertex(h);
+		h = hemesh->halfedgeNext(h);
+		triangle.v2 = hemesh->halfedgeVertex(h);
+		h = hemesh->halfedgeNext(h);
+		triangle.v3 = hemesh->halfedgeVertex(h);
+	}
+}
