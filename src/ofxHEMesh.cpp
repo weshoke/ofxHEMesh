@@ -96,8 +96,8 @@ void ofxHEMesh::subdivideLoop() {
 		faces.push_back(innerFace);
 	}
 	
-	halfedgeAdjacency->clear();
-	faceAdjacency->clear();
+	halfedgeProperties.clear();
+	faceProperties.clear();
 	addFaces(faces);
 }
 
@@ -177,19 +177,26 @@ void ofxHEMesh::subdivideCatmullClark() {
 		} while(fc != fce);
 	}
 	
-	halfedgeAdjacency->clear();
-	faceAdjacency->clear();
+	halfedgeProperties.clear();
+	faceProperties.clear();
 	addFaces(faces);
 }
 
 void ofxHEMesh::dual() {
-	vector<ofxHEMeshVertex> faceCentroids(getNumFaces());
+	// New vertices will be created in order starting form 0 since
+	// the old vertices will be cleared out
+	int i=0;
+	map<ofxHEMeshFace, ofxHEMeshVertex> faceVertices;
+	vector<Point> faceCentroids(faceAdjacency->size());
 	ofxHEMeshFaceIterator fit = facesBegin();
 	ofxHEMeshFaceIterator fite = facesEnd();
 	for(; fit != fite; ++fit) {
-		faceCentroids[(*fit).idx] = addVertex(faceCentroid(*fit));
+		faceVertices.insert(std::pair<ofxHEMeshFace, ofxHEMeshVertex>(*fit, ofxHEMeshVertex(i)));
+		faceCentroids[i] = faceCentroid(*fit);
+		++i;
 	}
 	
+	// New faces are the cells around the existing vertices
 	vector<ExplicitFace> faces(getNumVertices());
 	ofxHEMeshVertexIterator vit = verticesBegin();
 	ofxHEMeshVertexIterator vite = verticesEnd();
@@ -199,14 +206,25 @@ void ofxHEMesh::dual() {
 		ofxHEMeshVertexCirculator vce = vc;
 		do {
 			ofxHEMeshFace f = halfedgeFace(*vc);
-			face.push_back(faceCentroids[f.idx]);
+			face.push_back(faceVertices[f]);
 			++vc;
 		} while(vc != vce);
 		faces[(*vit).idx] = face;
 	}
 	
-	halfedgeAdjacency->clear();
-	faceAdjacency->clear();
+	vertexProperties.clear();
+	// Iterates in same order as at top of function so that
+	// vertex indices and centroids match
+	fit = facesBegin();
+	fite = facesEnd();
+	i=0;
+	for(; fit != fite; ++fit) {
+		ofxHEMeshVertex v = addVertex(faceCentroids[i]);
+		++i;
+	}
+	
+	halfedgeProperties.clear();
+	faceProperties.clear();
 	addFaces(faces);
 }
 

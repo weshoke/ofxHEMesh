@@ -87,9 +87,8 @@ public:
 		PropertyMapIterator it = properties.begin();
 		PropertyMapIterator ite = properties.end();
 		for(; it != ite; ++it) {
-			delete it->second;
+			it->second->clear();
 		}
-		properties.clear();
 	}
 	
 	template <typename T>
