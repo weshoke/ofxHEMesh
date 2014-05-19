@@ -42,6 +42,7 @@ public:
 	// Mesh-level modifications
 	void subdivideLoop();
 	void subdivideCatmullClark();
+	void subdivideDooSabin();
 	void dual();
 	/////////////////////////////////////////////////////////
 	
@@ -102,6 +103,7 @@ public:
 	bool halfedgeIsOnBoundary(ofxHEMeshHalfedge h) const;
 	
 	// Combinatorial Properties
+	int faceSize(ofxHEMeshFace f) const;
 	int vertexValence(ofxHEMeshVertex v) const;
 	
 	// Geometric modification
@@ -114,6 +116,7 @@ public:
 	Direction angleWeightedVertexNormal(ofxHEMeshVertex v) const;
 	Scalar vertexArea(ofxHEMeshVertex v) const;
 	
+	void facePoints(ofxHEMeshFace f, vector<Point>& points) const;
 	Scalar faceArea(ofxHEMeshFace f) const;
 	Point faceCentroid(ofxHEMeshFace f) const;
 	Direction faceNormal(ofxHEMeshFace f) const;

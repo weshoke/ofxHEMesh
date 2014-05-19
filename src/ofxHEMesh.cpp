@@ -182,6 +182,114 @@ void ofxHEMesh::subdivideCatmullClark() {
 	addFaces(faces);
 }
 
+void ofxHEMesh::subdivideDooSabin() {
+	vector<ExplicitFace> faces;
+	faces.reserve(getNumVertices()+getNumEdges()+getNumFaces());
+
+	map<ofxHEMeshFace, map<ofxHEMeshVertex, ofxHEMeshVertex> > cornerVertices;
+	vector<Point> cornerPoints;
+	ofxHEMeshFaceIterator fit = facesBegin();
+	ofxHEMeshFaceIterator fite = facesEnd();
+	int i=0;
+	for(; fit != fite; ++fit) {
+		// New indices for face
+		ExplicitFace face;
+	
+		// Points on the current face
+		vector<Point> points;
+		facePoints(*fit, points);
+		int k = points.size();
+		
+		cornerVertices.insert(
+			std::pair<ofxHEMeshFace, map<ofxHEMeshVertex, ofxHEMeshVertex> >(
+				*fit, map<ofxHEMeshVertex, ofxHEMeshVertex>()
+			)
+		);
+		
+		vector<Scalar> weights(k);
+		weights[0] = 1./4. + 5./(4.*k);
+		for(int _m=1; _m < k; ++_m) {
+			weights[_m] = (3.+2.*cos(2.*_m*M_PI/k))/(4.*k);
+		}
+		
+		// Calculate the new face vertex positions
+		map<ofxHEMeshVertex, ofxHEMeshVertex>& newVertices = cornerVertices[*fit];
+		ofxHEMeshFaceCirculator fc = faceCirculate(*fit);
+		ofxHEMeshFaceCirculator fce = fc;
+		int n = 0;
+		do {
+			// Calculate the new position of the vertex
+			// based on wighted sum of all face points
+			ofxHEMeshVertex v = halfedgeVertex(*fc);
+			Point pt = points[n]*weights[0];
+			for(int _m=1; _m < k; ++_m) {
+				int m = (_m+n)%k;
+				pt += points[m]*weights[_m];
+			}
+			cornerPoints.push_back(pt);
+			newVertices.insert(std::pair<ofxHEMeshVertex, ofxHEMeshVertex>(v, ofxHEMeshVertex(i)));
+			face.push_back(ofxHEMeshVertex(i));
+			
+			++n;
+			++i;
+			++fc;
+		} while(fc != fce);
+		
+		faces.push_back(face);
+	}
+	
+	// Faces created from vertices
+	ofxHEMeshVertexIterator vit = verticesBegin();
+	ofxHEMeshVertexIterator vite = verticesEnd();
+	for(; vit != vite; ++vit) {
+		ExplicitFace face;
+		ofxHEMeshVertexCirculator vc = vertexCirculate(*vit);
+		ofxHEMeshVertexCirculator vce = vc;
+		do {
+			ofxHEMeshFace f = halfedgeFace(*vc);
+			face.push_back(cornerVertices[f][*vit]);
+			++vc;
+		} while(vc != vce);
+		faces.push_back(face);
+	}
+	
+	// Faces created from edges
+	ofxHEMeshEdgeIterator eit = edgesBegin();
+	ofxHEMeshEdgeIterator eite = edgesEnd();
+	for(; eit != eite; ++eit) {
+		ExplicitFace face(4);
+		ofxHEMeshHalfedge h = *eit;
+		ofxHEMeshHalfedge ho = halfedgeOpposite(h);
+		ofxHEMeshFace f = halfedgeFace(h);
+		ofxHEMeshFace fo = halfedgeFace(ho);
+		ofxHEMeshVertex v = halfedgeVertex(h);
+		ofxHEMeshVertex vo = halfedgeVertex(ho);
+		face[0] = cornerVertices[fo][vo];
+		face[1] = cornerVertices[fo][v];
+		face[2] = cornerVertices[f][v];
+		face[3] = cornerVertices[f][vo];
+		faces.push_back(face);
+	}
+	
+	vertexProperties.clear();
+	fit = facesBegin();
+	fite = facesEnd();
+	i=0;
+	for(; fit != fite; ++fit) {
+		ofxHEMeshFaceCirculator fc = faceCirculate(*fit);
+		ofxHEMeshFaceCirculator fce = fc;
+		do {
+			addVertex(cornerPoints[i]);
+			++i;
+			++fc;
+		} while(fc != fce);
+	}
+	
+	halfedgeProperties.clear();
+	faceProperties.clear();
+	addFaces(faces);
+}
+
 void ofxHEMesh::dual() {
 	// New vertices will be created in order starting form 0 since
 	// the old vertices will be cleared out
@@ -745,6 +853,17 @@ bool ofxHEMesh::halfedgeIsOnBoundary(ofxHEMeshHalfedge h) const {
 	return !halfedgeFace(h).isValid();
 }
 
+int ofxHEMesh::faceSize(ofxHEMeshFace f) const {
+	ofxHEMeshFaceCirculator fc = faceCirculate(f);
+	ofxHEMeshFaceCirculator fce = fc;
+	int n = 0;
+	do {
+		++n;
+		++fc;
+	} while(fc != fce);
+	return n;
+}
+
 int ofxHEMesh::vertexValence(ofxHEMeshVertex v) const {
 	int n=0;
 	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
@@ -810,6 +929,15 @@ ofxHEMesh::Scalar ofxHEMesh::vertexArea(ofxHEMeshVertex v) const {
 	} while(vc != vce);
 	// TODO: check for NaN
 	return A*0.333333333333333;
+}
+
+void ofxHEMesh::facePoints(ofxHEMeshFace f, vector<Point>& points) const {
+	ofxHEMeshFaceCirculator fc = faceCirculate(f);
+	ofxHEMeshFaceCirculator fce = fc;
+	do {
+		points.push_back(vertexPoint(halfedgeVertex(*fc)));
+		++fc;
+	} while(fc != fce);
 }
 
 ofxHEMesh::Scalar ofxHEMesh::faceArea(ofxHEMeshFace f) const {
