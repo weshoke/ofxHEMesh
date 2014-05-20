@@ -30,6 +30,8 @@ public:
 	ofxHEMesh();
 	~ofxHEMesh() {}
 	
+	ofxHEMesh& operator=(const ofxHEMesh& src);
+	
 
 	/////////////////////////////////////////////////////////
 	// Geometric quantities
@@ -43,7 +45,21 @@ public:
 	void subdivideLoop();
 	void subdivideCatmullClark();
 	void subdivideDooSabin();
+	void subdivideModifiedCornerCut(Scalar tension);
+	void facePeel(Scalar thickness);
 	void dual();
+	void reverseFaces();
+	void translate(Direction dir);
+	/////////////////////////////////////////////////////////
+	
+	/////////////////////////////////////////////////////////
+	// Component-level modifications
+	void connectFacesSimple(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge h2);
+	/////////////////////////////////////////////////////////
+	
+	/////////////////////////////////////////////////////////
+	// Queries
+	ofxHEMeshHalfedge nearestVertexInFaceToPoint(const Point& pt, ofxHEMeshFace f) const;
 	/////////////////////////////////////////////////////////
 	
 	
@@ -51,10 +67,11 @@ public:
 	// Add combinatorial elements
 	bool loadOBJModel(string modelName);
 	void addMesh(const ofMesh& mesh);
+	void addMesh(const ofxHEMesh& hemesh);
 	ofxHEMeshVertex addVertex(const Point& p);
 	ofxHEMeshHalfedge addEdge();
 	void addFaces(const vector<ExplicitFace>& faces);
-	ofxHEMeshFace addFace(const vector<ofxHEMeshVertex>& vertices);
+	ofxHEMeshFace addFace(const ExplicitFace& vertices);
 	
 	// Remove combinatorial elements
 	void removeVertex(ofxHEMeshVertex v);
@@ -107,6 +124,7 @@ public:
 	int vertexValence(ofxHEMeshVertex v) const;
 	
 	// Geometric modification
+	void vertexMove(ofxHEMeshVertex v, const Direction& dir);
 	void vertexMoveTo(ofxHEMeshVertex v, const Point& p);
 	
 	// Geometric properties
@@ -149,6 +167,10 @@ public:
 	ofxHEMeshProperty<T> * addFaceProperty(const string &name, T def=T()) {
 		return faceProperties.add(name, def);
 	}
+	
+	void clearVertices();
+	void clearHalfedges();
+	void clearFaces();
 	/////////////////////////////////////////////////////////
 	
 
