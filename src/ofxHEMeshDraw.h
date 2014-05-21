@@ -36,7 +36,7 @@ public:
 	ofxHEMeshDraw& setDrawFaces(bool v);
 	bool getDrawVertexNormals() const;
 	ofxHEMeshDraw& setDrawVertexNormals(bool v);
-
+	
 	void faceIndices(vector<ofIndexType>& indices);
 	void edgeIndices(vector<ofIndexType>& indices);
 	void vertexNormalVectors(vector<ofVec3f> &points, ofxHEMesh::Scalar scale=1.);

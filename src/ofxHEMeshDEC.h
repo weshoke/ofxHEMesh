@@ -12,17 +12,35 @@ namespace hemesh {
 	class MeanCurvatureNormals{
 	public:
 		MeanCurvatureNormals(ofxHEMesh& hemesh);
+		void getNormals(vector<ofxHEMesh::Direction>& normals);
 		ofxHEMesh::Direction getNormal(ofxHEMeshVertex v);
-		ofxHEMesh::Scalar getMeanCurvature(ofxHEMeshVertex v);
+		//ofxHEMesh::Scalar getMeanCurvature(ofxHEMeshVertex v);
+		
+		void build();
 		
 	protected:
-		void build();
 		void getPositions();
 
 		const ofxHEMesh& hemesh;
 		Eigen::SparseMatrix<double> L;
 		Eigen::Matrix<double, Eigen::Dynamic, 3> positions;
 		Eigen::Matrix<double, Eigen::Dynamic, 3> normals;
+	};
+	
+	class MeanCurvatureFlow{
+	public:
+		MeanCurvatureFlow(ofxHEMesh& hemesh);
+		
+		void step(double amt);
+		
+	protected:
+		void getPositions();
+		void setPositions(Eigen::Matrix<double, Eigen::Dynamic, 3> &newPositions);
+	
+		ofxHEMesh& hemesh;
+		Eigen::SparseMatrix<double> L;
+		Eigen::SparseMatrix<double> star0;
+		Eigen::Matrix<double, Eigen::Dynamic, 3> positions;
 	};
 
 } // hemesh::

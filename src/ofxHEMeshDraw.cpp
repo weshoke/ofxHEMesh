@@ -37,6 +37,16 @@ void ofxHEMeshDraw::draw() {
 		if(normalType == VertexNormals) {
 			calculateVertexNormals = true;
 		}
+		
+		if(drawEdges.enabled) {
+			edges.setVertexData(hemesh.getPoints().ptr(), hemesh.getPoints().size(), GL_DYNAMIC_DRAW);
+		}
+		if(drawFaces.enabled) {
+			faces.setVertexData(hemesh.getPoints().ptr(), hemesh.getPoints().size(), GL_DYNAMIC_DRAW);
+		}
+		if(drawVertexNormals && calculateVertexNormals) {
+			updateVertexNormals();
+		}
 		hemesh.setGeometryDirty(false);
 	}
 	
