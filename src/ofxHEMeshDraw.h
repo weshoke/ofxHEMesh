@@ -27,6 +27,7 @@ public:
 	};
 
 	ofxHEMeshDraw(ofxHEMesh& hemesh, NormalType normalType=VertexNormals);
+	~ofxHEMeshDraw();
 	
 	void draw();
 
@@ -37,10 +38,15 @@ public:
 	bool getDrawVertexNormals() const;
 	ofxHEMeshDraw& setDrawVertexNormals(bool v);
 	
+	ofShader * getMaterial() { return material; }
+	void setMaterial(ofShader *v) { material = v; }
+	
 	void faceIndices(vector<ofIndexType>& indices);
 	void edgeIndices(vector<ofIndexType>& indices);
 	void vertexNormalVectors(vector<ofVec3f> &points, ofxHEMesh::Scalar scale=1.);
 	void borderEdges(vector<ofIndexType>& indices);
+	
+	ofVbo& getFaceVbo() { return faces; }
 	
 protected:
 	void updateEdges();
@@ -57,6 +63,7 @@ protected:
 	Property drawFaces;
 	bool drawVertexNormals;
 	bool calculateVertexNormals;
+	ofShader *material;
 	ofVbo edges;
 	ofVbo faces;
 	ofVbo vertexNormals;

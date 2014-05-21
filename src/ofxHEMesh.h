@@ -129,6 +129,7 @@ public:
 	
 	// Geometric properties
 	Point centroid() const;
+	Scalar meanEdgeLength() const;
 	
 	Point vertexPoint(ofxHEMeshVertex v) const;
 	Direction angleWeightedVertexNormal(ofxHEMeshVertex v) const;
@@ -143,9 +144,14 @@ public:
 	Point halfedgeMidpoint(ofxHEMeshHalfedge h) const;
 	Scalar halfedgeCotan(ofxHEMeshHalfedge h) const;
 	Scalar halfedgeLengthSquared(ofxHEMeshHalfedge h) const;
+	Scalar halfedgeLength(ofxHEMeshHalfedge h) const;
 	Direction halfedgeDirection(ofxHEMeshHalfedge h) const;
 	Scalar angleAtVertex(ofxHEMeshHalfedge h) const;
 	Scalar halfedgeAngle(ofxHEMeshHalfedge h) const;
+	Direction halfedgeRotated(ofxHEMeshHalfedge h) const;
+	
+	Direction triangleNormal(const ofxHEMeshTriangle& tri) const;
+	bool withinTriangle(const ofxHEMeshTriangle& tri, const Point& pt) const;
 	
 	// Combinatorial element properties
 	template<typename T>
@@ -192,6 +198,7 @@ public:
 	string halfedgeString(ofxHEMeshHalfedge h) const;
 	void printFace(ofxHEMeshFace f) const;
 	void printVertexOneHood(ofxHEMeshVertex v) const;
+	void print() const;
 	/////////////////////////////////////////////////////////
 
 protected:

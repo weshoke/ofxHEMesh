@@ -8,8 +8,13 @@ ofxHEMeshDraw::ofxHEMeshDraw(ofxHEMesh& hemesh, NormalType normalType)
 	drawFaces(true),
 	drawVertexNormals(false),
 	calculateVertexNormals(false),
+	material(NULL),
 	normalScale(0.1)
 {}
+
+ofxHEMeshDraw::~ofxHEMeshDraw() {
+	if(material) delete material;
+}
 
 void ofxHEMeshDraw::draw() {
 	if(hemesh.getTopologyDirty()) {
@@ -55,7 +60,9 @@ void ofxHEMeshDraw::draw() {
 			glEnable(GL_LIGHT0);		
 			glEnable(GL_POLYGON_OFFSET_FILL);
 				glPolygonOffset(1, 1);
+				if(material) material->begin();
 				faces.drawElements(GL_TRIANGLES, faces.getNumIndices());
+				if(material) material->end();
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		glDisable(GL_LIGHTING);
 	}

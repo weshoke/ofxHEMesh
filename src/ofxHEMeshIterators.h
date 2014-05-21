@@ -1,6 +1,7 @@
 #pragma once
 #include "ofxHEMeshNode.h"
 
+
 class ofxHEMesh;
 
 struct ofxHEMeshFaceIterator {
@@ -122,6 +123,8 @@ struct ofxHEMeshTriangle{
 	ofxHEMeshTriangle(const ofxHEMeshTriangle& src)
 	: v1(src.v1), v2(src.v2), v3(src.v3)
 	{}
+	
+	//normal(const ofxHEMesh& hemesh) const;
 
 	ofxHEMeshVertex v1;
 	ofxHEMeshVertex v2;

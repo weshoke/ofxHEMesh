@@ -42,5 +42,24 @@ namespace hemesh {
 		Eigen::SparseMatrix<double> star0;
 		Eigen::Matrix<double, Eigen::Dynamic, 3> positions;
 	};
+	
+	class Geodesics{
+	public:
+		Geodesics(ofxHEMesh& hemesh);
+		
+		void build(vector<ofxHEMeshVertex>& impulseLocations, double dt, vector<ofxHEMesh::Scalar>& distances);
+		
+	protected:
+		int buildImpulseSignal(vector<ofxHEMeshVertex>& impulseLocations);
+		void computeVectorField(Eigen::Matrix<double, Eigen::Dynamic, 1>& u, vector<ofxHEMesh::Direction>& vectorField);
+		void computeDivergence(Eigen::Matrix<double, Eigen::Dynamic, 1>& div, vector<ofxHEMesh::Direction>& vectorField);
+	
+		ofxHEMesh& hemesh;
+		Eigen::Matrix<double, Eigen::Dynamic, 1> u0;
+		Eigen::SparseMatrix<double> star0;
+		Eigen::SparseMatrix<double> star1;
+		Eigen::SparseMatrix<double> d0;
+		Eigen::SparseMatrix<double> L;
+	};
 
 } // hemesh::

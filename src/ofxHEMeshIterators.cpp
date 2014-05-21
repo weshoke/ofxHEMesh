@@ -310,7 +310,6 @@ ofxHEMeshVertexCirculator ofxHEMeshVertexCirculator::operator--(int) {
 }
 
 
-
 ofxHEMeshPolygonSplitter::ofxHEMeshPolygonSplitter()
 : hemesh(NULL), h()
 {}

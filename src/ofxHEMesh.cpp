@@ -461,7 +461,7 @@ void ofxHEMesh::addFaces(const vector<ExplicitFace>& faces) {
 		for(j=0; j < nv; ++j) {
 			ofxHEMeshVertex v1 = face[j];
 			ofxHEMeshVertex v2 = face[WRAP_NEXT(j, nv)];
-			orderVertices(v1, v2);
+			bool swap = orderVertices(v1, v2);
 			if(explicitEdgeMap.find(ExplicitEdge(v1, v2)) == explicitEdgeMap.end()) {
 				ofxHEMeshHalfedge h1 = addEdge();
 				ofxHEMeshHalfedge h1o = halfedgeOpposite(h1);
@@ -469,6 +469,7 @@ void ofxHEMesh::addFaces(const vector<ExplicitFace>& faces) {
 				setHalfedgeVertex(h1o, v1);
 				setVertexHalfedge(v2, h1);
 				setVertexHalfedge(v1, h1o);
+
 				explicitEdgeMap.insert(std::pair<ExplicitEdge, ofxHEMeshHalfedge>(ExplicitEdge(v1, v2), h1));
 				allHalfedges.insert(h1);
 				allHalfedges.insert(h1o);
@@ -944,6 +945,18 @@ ofxHEMesh::Point ofxHEMesh::centroid() const {
 	return c;
 }
 
+ofxHEMesh::Scalar ofxHEMesh::meanEdgeLength() const {
+	ofxHEMeshEdgeIterator eit = edgesBegin();
+	ofxHEMeshEdgeIterator eite = edgesEnd();
+	Scalar res = 0;
+	Scalar n = 0;
+	for(; eit != eite; ++eit) {
+		res += halfedgeLength(*eit);
+		++n;
+	}
+	return res/n;
+}
+
 ofxHEMesh::Point ofxHEMesh::vertexPoint(ofxHEMeshVertex v) const {
 	return points->get(v.idx);
 }
@@ -977,6 +990,7 @@ ofxHEMesh::Scalar ofxHEMesh::vertexArea(ofxHEMeshVertex v) const {
 		ofxHEMeshFace f = halfedgeFace(h);
 		A += faceArea(f);
 		h = halfedgeSinkCCW(h);
+		++vc;
 	} while(vc != vce);
 	// TODO: check for NaN
 	return A*0.333333333333333;
@@ -1057,6 +1071,10 @@ ofxHEMesh::Scalar ofxHEMesh::halfedgeLengthSquared(ofxHEMeshHalfedge h) const {
 	return halfedgeDirection(h).lengthSquared();
 }
 
+ofxHEMesh::Scalar ofxHEMesh::halfedgeLength(ofxHEMeshHalfedge h) const {
+	return halfedgeDirection(h).length();
+}
+
 ofxHEMesh::Direction ofxHEMesh::halfedgeDirection(ofxHEMeshHalfedge h) const {
 	return vertexPoint(halfedgeSink(h)) - vertexPoint(halfedgeSource(h));
 }
@@ -1074,6 +1092,40 @@ ofxHEMesh::Scalar ofxHEMesh::angleAtVertex(ofxHEMeshHalfedge h) const {
 
 ofxHEMesh::Scalar ofxHEMesh::halfedgeAngle(ofxHEMeshHalfedge h) const {
 
+}
+
+ofxHEMesh::Direction ofxHEMesh::halfedgeRotated(ofxHEMeshHalfedge h) const {
+	Direction n = faceNormal(halfedgeFace(h));
+	Direction dir = halfedgeDirection(h);
+	return n.cross(dir);
+}
+
+ofxHEMesh::Direction ofxHEMesh::triangleNormal(const ofxHEMeshTriangle& tri) const {
+	Direction dir1 = vertexPoint(tri.v2)-vertexPoint(tri.v1);
+	Direction dir2 = vertexPoint(tri.v3)-vertexPoint(tri.v1);
+	return dir1.crossed(dir2).getNormalized();
+}
+
+bool ofxHEMesh::withinTriangle(const ofxHEMeshTriangle& tri, const Point& pt) const {
+	Point p1 = vertexPoint(tri.v1);
+	Point p2 = vertexPoint(tri.v2);
+	Point p3 = vertexPoint(tri.v3);
+	Direction n = triangleNormal(tri);
+	
+	Direction A1 = p1-p3;
+	Direction A2 = pt-p1;
+	Direction A = A1.crossed(A2);
+	if(A.dot(n) < 0) return false;
+	
+	Direction B1 = p2-p1;
+	Direction B2 = pt-p2;
+	Direction B = B1.crossed(B2);
+	if(B.dot(n) < 0) return false;
+	
+	Direction C1 = p3-p2;
+	Direction C2 = pt-p3;
+	Direction C = C1.crossed(C2);
+	return C.dot(n) >= 0;
 }
 
 void ofxHEMesh::clearVertices() {
@@ -1112,4 +1164,13 @@ void ofxHEMesh::printVertexOneHood(ofxHEMeshVertex v) const {
 		++vc;
 	} while(vc != vce);
 	std::cout << "\n";
+}
+
+void ofxHEMesh::print() const {
+	ofxHEMeshFaceIterator fit = facesBegin();
+	ofxHEMeshFaceIterator fite = facesEnd();
+	for(; fit != fite; ++fit) {
+		std::cout << (*fit).idx << " ";
+		printFace(*fit);
+	}
 }
