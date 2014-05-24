@@ -41,7 +41,7 @@ ofxHEMesh& ofxHEMesh::operator=(const ofxHEMesh& src) {
 // Assumes the mesh is a triangulation
 void ofxHEMesh::subdivideLoop() {
 
-	// Get the new location of existing vertices in the subd mesh
+	// Get the new location of existing (even) vertices in the subd mesh
 	ofxHEMeshVertexIterator vit = verticesBegin();
 	ofxHEMeshVertexIterator vite = verticesEnd();
 	map<ofxHEMeshVertex, Point> newPositions;
@@ -51,32 +51,53 @@ void ofxHEMesh::subdivideLoop() {
 		int valence = vertexValence(*vit);
 		Scalar beta;
 		if(valence == 3) {
-			beta = 3./16.*valence;
+			beta = 3./16.;
 		}
 		else {
 			beta = 3./(8.*valence);
 		}
 		
 		Point nPt = vertexPoint(*vit)*(1.-valence*beta);
+		bool onBoundary = false;
 		do {
+			if(halfedgeIsOnBoundary(*vc)) {
+				onBoundary = true;
+				break;
+			}
 			nPt += vertexPoint(halfedgeSource(*vc))*beta;
 			++vc;
 		} while(vc != vce);
 		
+		if(onBoundary) {
+			ofxHEMeshHalfedge h1 = *vc;
+			ofxHEMeshHalfedge h2 = halfedgeSinkCW(h1);
+			nPt =
+				3./4.*vertexPoint(*vit) +
+				1./8.*(vertexPoint(halfedgeSource(h1)) + vertexPoint(halfedgeSource(h2)));
+		}
+		
 		newPositions.insert(std::pair<ofxHEMeshVertex, Point>(*vit, nPt));
 	}
 
-	// Get the location of new vertices dividing edges in the subd mesh
+	// Get the location of new (odd) vertices dividing edges in the subd mesh
 	map<ofxHEMeshHalfedge, ofxHEMeshVertex> edgeVertices;
 	ofxHEMeshEdgeIterator eit = edgesBegin();
 	ofxHEMeshEdgeIterator eite = edgesEnd();
 	for(; eit != eite; ++eit) {
 		ofxHEMeshHalfedge h = *eit;
-		ofxHEMeshHalfedge hn = halfedgeNext(h);
-		ofxHEMeshHalfedge hon = halfedgeNext(halfedgeOpposite(h));
-		Point pt =
-			(vertexPoint(halfedgeSource(h)) + vertexPoint(halfedgeSink(h)))*0.375 +
-			(vertexPoint(halfedgeSink(hn)) + vertexPoint(halfedgeSink(hon)))*0.125;
+		ofxHEMeshHalfedge ho = halfedgeOpposite(h);
+		
+		Point pt;
+		if(halfedgeIsOnBoundary(h) || halfedgeIsOnBoundary(ho)) {
+			pt = halfedgeMidpoint(h);
+		}
+		else {
+			ofxHEMeshHalfedge hn = halfedgeNext(h);
+			ofxHEMeshHalfedge hon = halfedgeNext(ho);
+			pt =
+				(vertexPoint(halfedgeSource(h)) + vertexPoint(halfedgeSink(h)))*0.375 +
+				(vertexPoint(halfedgeSink(hn)) + vertexPoint(halfedgeSink(hon)))*0.125;
+		}
 		ofxHEMeshVertex v = addVertex(pt);
 		edgeVertices.insert(std::pair<ofxHEMeshHalfedge, ofxHEMeshVertex>(h, v));
 		edgeVertices.insert(std::pair<ofxHEMeshHalfedge, ofxHEMeshVertex>(halfedgeOpposite(h), v));
