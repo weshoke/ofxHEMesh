@@ -216,3 +216,6 @@ protected:
 	bool topologyDirty;
 	bool geometryDirty;
 };
+
+void printExplicitFace(const ofxHEMesh::ExplicitFace& face);
+void printExplicitFaces(const vector<ofxHEMesh::ExplicitFace>& faces);

@@ -449,9 +449,27 @@ static bool orderVertices(ofxHEMeshVertex& v1, ofxHEMeshVertex& v2) {
 	return swap;
 }
 
+void printExplicitFace(const ofxHEMesh::ExplicitFace& face) {
+	std::cout << "f: ";
+	for(int i=0; i < face.size(); ++i) {
+		std::cout << face[i].idx << "-";
+	}
+	std::cout << "\n";
+}
+
+void printExplicitFaces(const vector<ofxHEMesh::ExplicitFace>& faces) {
+	for(int i=0; i < faces.size(); ++i) {
+		printExplicitFace(faces[i]);
+	}
+}
+
+
 void ofxHEMesh::addFaces(const vector<ExplicitFace>& faces) {
 	map<ExplicitEdge, ofxHEMeshHalfedge> explicitEdgeMap;
 	int i, j;
+	
+	//printExplicitFaces(faces);
+	
 	
 	// Create any edges that don't yet exist
 	set<ofxHEMeshHalfedge> allHalfedges;

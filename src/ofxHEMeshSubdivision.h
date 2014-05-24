@@ -1,5 +1,8 @@
 #pragma once
 #include "ofxHEMesh.h"
+#include <set>
+
+using std::set;
 
 class ofxHEMeshCornerCutSubdivision{
 public:
@@ -25,7 +28,9 @@ protected:
 	vector<ofxHEMesh::ExplicitFace> faces;
 	CornerMap cornerVertices;
 	vector<ofxHEMesh::Point> cornerPoints;
+	set<ofxHEMeshVertex> boundaryVertices;
 };
+
 
 class ofxHEMeshDooSabinSubdivision : public ofxHEMeshCornerCutSubdivision{
 public:
@@ -34,6 +39,7 @@ public:
 protected:
 	void vertexWeights(vector<ofxHEMesh::Scalar>& weights, ofxHEMeshFace f);
 };
+
 
 // see: http://www.viz.tamu.edu/faculty/ergun/research/topology/papers/ijsm01.pdf
 // generally tension should be in the range [5/12, 1]
@@ -46,6 +52,7 @@ protected:
 	
 	ofxHEMesh::Scalar tension;
 };
+
 
 class ofxHEMeshFacePeel : public ofxHEMeshModifiedCornerCutSubdivision {
 public:

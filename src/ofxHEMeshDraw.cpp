@@ -5,6 +5,7 @@ ofxHEMeshDraw::ofxHEMeshDraw(ofxHEMesh& hemesh, NormalType normalType)
 	normalType(normalType),
 	meshVertexNormals(NULL),
 	drawEdges(false),
+	drawBoundaryEdges(false),
 	drawFaces(true),
 	drawVertexNormals(false),
 	calculateVertexNormals(false),
@@ -23,6 +24,9 @@ void ofxHEMeshDraw::draw() {
 		}
 		if(drawEdges.enabled) {
 			updateEdges();
+		}
+		if(drawBoundaryEdges.enabled) {
+			updateBoundaryEdges();
 		}
 		// Do this before updating faces
 		if(normalType != NoNormals || drawVertexNormals) {
@@ -46,6 +50,9 @@ void ofxHEMeshDraw::draw() {
 		if(drawEdges.enabled) {
 			edges.setVertexData(hemesh.getPoints().ptr(), hemesh.getPoints().size(), GL_DYNAMIC_DRAW);
 		}
+		if(drawBoundaryEdges.enabled) {
+			boundaryEdges.setVertexData(hemesh.getPoints().ptr(), hemesh.getPoints().size(), GL_DYNAMIC_DRAW);
+		}
 		if(drawFaces.enabled) {
 			faces.setVertexData(hemesh.getPoints().ptr(), hemesh.getPoints().size(), GL_DYNAMIC_DRAW);
 		}
@@ -66,6 +73,12 @@ void ofxHEMeshDraw::draw() {
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		glDisable(GL_LIGHTING);
 	}
+	if(drawBoundaryEdges.enabled) {
+		glLineWidth(3);
+		ofSetColor(ofColor::blue);
+		boundaryEdges.drawElements(GL_LINES, edges.getNumIndices());
+		glLineWidth(1);
+	}
 	if(drawEdges.enabled) {
 		ofSetColor(ofColor::black);
 		edges.drawElements(GL_LINES, edges.getNumIndices());
@@ -82,6 +95,15 @@ bool ofxHEMeshDraw::getDrawEdges() const {
 
 ofxHEMeshDraw& ofxHEMeshDraw::setDrawEdges(bool v) {
 	drawEdges.enable(v);
+	return *this;
+}
+
+bool ofxHEMeshDraw::getDrawBoundaryEdges() const {
+	return drawBoundaryEdges.enabled;
+}
+
+ofxHEMeshDraw& ofxHEMeshDraw::setDrawBoundaryEdges(bool v) {
+	drawBoundaryEdges.enable(v);
 	return *this;
 }
 
@@ -142,7 +164,7 @@ void ofxHEMeshDraw::vertexNormalVectors(vector<ofVec3f> &points, ofxHEMesh::Scal
 	}
 }
 
-void ofxHEMeshDraw::borderEdges(vector<ofIndexType>& indices) {
+void ofxHEMeshDraw::boundaryEdgeIndices(vector<ofIndexType>& indices) {
 	ofxHEMeshEdgeIterator eit = hemesh.edgesBegin();
 	ofxHEMeshEdgeIterator eite = hemesh.edgesEnd();
 	for(; eit != eite; ++eit) {
@@ -165,6 +187,14 @@ void ofxHEMeshDraw::updateEdges() {
 	edgeIndices(indices);
 	edges.setVertexData(hemesh.getPoints().ptr(), hemesh.getPoints().size(), GL_DYNAMIC_DRAW);
 	edges.setIndexData(&indices[0], indices.size(), GL_DYNAMIC_DRAW);
+	drawEdges.needsUpdate = false;
+}
+
+void ofxHEMeshDraw::updateBoundaryEdges() {
+	vector<ofIndexType> indices;
+	boundaryEdgeIndices(indices);
+	boundaryEdges.setVertexData(hemesh.getPoints().ptr(), hemesh.getPoints().size(), GL_DYNAMIC_DRAW);
+	boundaryEdges.setIndexData(&indices[0], indices.size(), GL_DYNAMIC_DRAW);
 	drawEdges.needsUpdate = false;
 }
 

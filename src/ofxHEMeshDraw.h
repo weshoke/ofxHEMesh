@@ -33,6 +33,8 @@ public:
 
 	bool getDrawEdges() const;
 	ofxHEMeshDraw& setDrawEdges(bool v);
+	bool getDrawBoundaryEdges() const;
+	ofxHEMeshDraw& setDrawBoundaryEdges(bool v);
 	bool getDrawFaces() const;
 	ofxHEMeshDraw& setDrawFaces(bool v);
 	bool getDrawVertexNormals() const;
@@ -44,12 +46,13 @@ public:
 	void faceIndices(vector<ofIndexType>& indices);
 	void edgeIndices(vector<ofIndexType>& indices);
 	void vertexNormalVectors(vector<ofVec3f> &points, ofxHEMesh::Scalar scale=1.);
-	void borderEdges(vector<ofIndexType>& indices);
+	void boundaryEdgeIndices(vector<ofIndexType>& indices);
 	
 	ofVbo& getFaceVbo() { return faces; }
 	
 protected:
 	void updateEdges();
+	void updateBoundaryEdges();
 	void updateFaces();
 	void updateNormals();
 	void updateVertexNormals();
@@ -60,11 +63,13 @@ protected:
 	NormalType normalType;
 	ofxHEMeshProperty<ofVec3f> *meshVertexNormals;
 	Property drawEdges;
+	Property drawBoundaryEdges;
 	Property drawFaces;
 	bool drawVertexNormals;
 	bool calculateVertexNormals;
 	ofShader *material;
 	ofVbo edges;
+	ofVbo boundaryEdges;
 	ofVbo faces;
 	ofVbo vertexNormals;
 	float normalScale;
