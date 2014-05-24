@@ -263,29 +263,39 @@ void ofxHEMesh::dual() {
 	// the old vertices will be cleared out
 	int i=0;
 	map<ofxHEMeshFace, ofxHEMeshVertex> faceVertices;
-	vector<Point> faceCentroids(faceAdjacency->size());
+	vector<Point> faceCentroids;
+	faceCentroids.reserve(faceAdjacency->size());
 	ofxHEMeshFaceIterator fit = facesBegin();
 	ofxHEMeshFaceIterator fite = facesEnd();
 	for(; fit != fite; ++fit) {
 		faceVertices.insert(std::pair<ofxHEMeshFace, ofxHEMeshVertex>(*fit, ofxHEMeshVertex(i)));
-		faceCentroids[i] = faceCentroid(*fit);
+		faceCentroids.push_back(faceCentroid(*fit));
 		++i;
 	}
 	
 	// New faces are the cells around the existing vertices
-	vector<ExplicitFace> faces(getNumVertices());
+	vector<ExplicitFace> faces;
+	faces.reserve(getNumVertices());
 	ofxHEMeshVertexIterator vit = verticesBegin();
 	ofxHEMeshVertexIterator vite = verticesEnd();
 	for(; vit != vite; ++vit) {
 		ExplicitFace face;
 		ofxHEMeshVertexCirculator vc = vertexCirculate(*vit);
 		ofxHEMeshVertexCirculator vce = vc;
+		bool onBoundary = false;
 		do {
+			if(halfedgeIsOnBoundary(*vc)) {
+				onBoundary = true;
+				break;
+			}
 			ofxHEMeshFace f = halfedgeFace(*vc);
 			face.push_back(faceVertices[f]);
 			++vc;
 		} while(vc != vce);
-		faces[(*vit).idx] = face;
+		
+		if(!onBoundary) {
+			faces.push_back(face);
+		}
 	}
 	
 	vertexProperties.clear();
@@ -511,7 +521,7 @@ void ofxHEMesh::addFaces(const vector<ExplicitFace>& faces) {
 	map<ExplicitEdge, ofxHEMeshHalfedge> explicitEdgeMap;
 	int i, j;
 	
-	//printExplicitFaces(faces);
+	printExplicitFaces(faces);
 	
 	
 	// Create any edges that don't yet exist
