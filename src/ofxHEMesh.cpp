@@ -161,10 +161,17 @@ void ofxHEMesh::subdivideCatmullClark() {
 	for(; eit != eite; ++eit) {
 		ofxHEMeshHalfedge h = *eit;
 		ofxHEMeshHalfedge ho = halfedgeOpposite(h);
-		Point pt = 0.25*(
-			vertexPoint(halfedgeSink(h)) + vertexPoint(halfedgeSink(ho)) +
-			facePoints[halfedgeFace(h)] + facePoints[halfedgeFace(ho)]
-		);
+		
+		Point pt;
+		if(halfedgeIsOnBoundary(h) || halfedgeIsOnBoundary(ho)) {
+			pt = halfedgeMidpoint(h);
+		}
+		else {
+			pt = 0.25*(
+				vertexPoint(halfedgeSink(h)) + vertexPoint(halfedgeSink(ho)) +
+				facePoints[halfedgeFace(h)] + facePoints[halfedgeFace(ho)]
+			);
+		}
 		edgePoints.insert(std::pair<ofxHEMeshHalfedge, Point>(h, pt));
 		edgePoints.insert(std::pair<ofxHEMeshHalfedge, Point>(ho, pt));
 		
@@ -181,18 +188,33 @@ void ofxHEMesh::subdivideCatmullClark() {
 		Scalar valence = 0;
 		ofxHEMeshVertexCirculator vc = vertexCirculate(*vit);
 		ofxHEMeshVertexCirculator vce = vc;
+		bool onBoundary = false;
 		do {
 			ofxHEMeshHalfedge h = *vc;
+			if(halfedgeIsOnBoundary(h)) {
+				onBoundary = true;
+				break;
+			}
 			Q += facePoints[halfedgeFace(h)];
 			R += edgePoints[h];
 			++valence;
 			++vc;
 		} while(vc != vce);
 		
-		Q /= valence;
-		R /= valence;
-		Point S = vertexPoint(*vit);
-		Point npt = (Q + R*2 + S*(valence-3))/valence;
+		Point npt;
+		if(onBoundary) {
+			ofxHEMeshHalfedge h1 = *vc;
+			ofxHEMeshHalfedge h2 = halfedgeSinkCW(h1);
+			npt =
+				3./4.*vertexPoint(*vit) +
+				1./8.*(vertexPoint(halfedgeSource(h1)) + vertexPoint(halfedgeSource(h2)));
+		}
+		else {	
+			Q /= valence;
+			R /= valence;
+			Point S = vertexPoint(*vit);
+			npt = (Q + R*2 + S*(valence-3))/valence;
+		}
 		vertexMoveTo(*vit, npt);
 	}
 	
