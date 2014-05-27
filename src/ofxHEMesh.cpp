@@ -521,8 +521,6 @@ void ofxHEMesh::addFaces(const vector<ExplicitFace>& faces) {
 	map<ExplicitEdge, ofxHEMeshHalfedge> explicitEdgeMap;
 	int i, j;
 	
-	printExplicitFaces(faces);
-	
 	
 	// Create any edges that don't yet exist
 	set<ofxHEMeshHalfedge> allHalfedges;
