@@ -314,6 +314,26 @@ void ofxHEMesh::dual() {
 	addFaces(faces);
 }
 
+void ofxHEMesh::triangulate() {
+	int nfaces = getNumFaces();
+	for(int i=0; i < nfaces; ++i) {
+		ofxHEMeshFace f(i);
+		ofxHEMeshHalfedge h = faceHalfedge(f);
+		if(h.isValid()) {
+			int fsize = faceSize(f);
+			if(fsize > 3) {
+				ofxHEMeshHalfedge hprev = halfedgePrev(h);
+				h = halfedgeNext(h);
+				for(int j=3; j < fsize; ++j) {
+					ofxHEMeshHalfedge hnext = halfedgeNext(h);
+					connectHalfedgesCofacial(h, hprev);
+					h = hnext;
+				}
+			}
+		}
+	}
+}
+
 void ofxHEMesh::reverseFaces() {
 	ofxHEMeshFaceIterator fit = facesBegin();
 	ofxHEMeshFaceIterator fite = facesEnd();
@@ -380,6 +400,49 @@ void ofxHEMesh::connectFacesSimple(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge h2) {
 	for(int i=0; i < faces.size(); ++i) {
 		addFace(faces[i]);
 	}
+}
+
+void ofxHEMesh::connectHalfedgesCofacial(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge h2) {
+	ofxHEMeshFace fn(faceProperties.size());
+	faceAdjacency->extend();
+	
+	ofxHEMeshHalfedge hn = addEdge();
+	ofxHEMeshHalfedge hno(hn.idx+1);
+	
+	// associate halfedge with face
+	setFaceHalfedge(fn, hno);
+	
+	// set vertex/face adjacency info for new halfedges
+	setHalfedgeFace(hn, halfedgeFace(h1));
+	setHalfedgeFace(hno, fn);
+	setHalfedgeVertex(hn, halfedgeVertex(h2));
+	setHalfedgeVertex(hno, halfedgeVertex(h1));
+	
+	// get halfedges connected to newly created ones
+	ofxHEMeshHalfedge h1n = halfedgeNext(h2);
+	ofxHEMeshHalfedge h2n = halfedgeNext(h1);
+	
+	// move halfedges to new face
+	ofxHEMeshHalfedge hfn = h2n;
+	do {
+		setHalfedgeFace(hfn, fn);
+		hfn = halfedgeNext(hfn);
+	} while(hfn != h2);
+	setHalfedgeFace(h2, fn);
+	
+	// link into existing face
+	setHalfedgePrev(hn, h1);
+	setHalfedgeNext(h1, hn);
+	setHalfedgePrev(h1n, hn);
+	setHalfedgeNext(hn, h1n);
+	
+	// link into new face
+	setHalfedgePrev(hno, h2);
+	setHalfedgeNext(h2, hno);
+	setHalfedgePrev(h2n, hno);
+	setHalfedgeNext(hno, h2n);
+	
+	topologyDirty = true;
 }
 
 ofxHEMeshHalfedge ofxHEMesh::nearestVertexInFaceToPoint(const Point& pt, ofxHEMeshFace f) const {

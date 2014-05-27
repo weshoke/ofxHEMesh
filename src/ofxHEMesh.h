@@ -48,6 +48,7 @@ public:
 	void subdivideModifiedCornerCut(Scalar tension);
 	void facePeel(Scalar thickness);
 	void dual();
+	void triangulate();
 	void reverseFaces();
 	void translate(Direction dir);
 	/////////////////////////////////////////////////////////
@@ -55,6 +56,7 @@ public:
 	/////////////////////////////////////////////////////////
 	// Component-level modifications
 	void connectFacesSimple(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge h2);
+	void connectHalfedgesCofacial(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge h2);
 	/////////////////////////////////////////////////////////
 	
 	/////////////////////////////////////////////////////////
