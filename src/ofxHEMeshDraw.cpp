@@ -73,10 +73,10 @@ void ofxHEMeshDraw::draw() {
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		glDisable(GL_LIGHTING);
 	}
-	if(drawBoundaryEdges.enabled) {
+	if(drawBoundaryEdges.enabled && boundaryEdges.getNumIndices() > 0) {
 		glLineWidth(3);
 		ofSetColor(ofColor::blue);
-		boundaryEdges.drawElements(GL_LINES, edges.getNumIndices());
+		boundaryEdges.drawElements(GL_LINES, boundaryEdges.getNumIndices());
 		glLineWidth(1);
 	}
 	if(drawEdges.enabled) {
