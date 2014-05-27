@@ -50,7 +50,17 @@ void ofxHEMeshCornerCutSubdivision::processFaces() {
 			nextBoundary = hemesh.halfedgeIsOnBoundary(hemesh.halfedgeOpposite(hnext));
 			if(boundary && nextBoundary) {
 				// insert an extra vertex
-				//boundaryVertices.insert(v);
+				ofxHEMesh::Point pt1 = hemesh.halfedgeLerp(*fc, 0.75);
+				ofxHEMesh::Point pt2 = hemesh.halfedgeLerp(hnext, 0.25);
+				cornerPoints.push_back(pt1);
+				cornerPoints.push_back(pt2);
+				boundaryVertices.insert(v);
+				
+				ofxHEMeshVertex vn1(i);
+				i++;
+				ofxHEMeshVertex vn2(i);
+				face.push_back(vn1);
+				face.push_back(vn2);
 			}
 			else {
 				// move the existing vertex
@@ -99,6 +109,7 @@ void ofxHEMeshCornerCutSubdivision::createVertexFaces() {
 				face.push_back(cornerVertices[f][*vit]);
 				++vc;
 			} while(vc != vce);
+			printExplicitFace(face);
 			faces.push_back(face);
 		}
 	}
@@ -120,6 +131,7 @@ void ofxHEMeshCornerCutSubdivision::createHalfedgeFaces() {
 			face[1] = cornerVertices[fo][v];
 			face[2] = cornerVertices[f][v];
 			face[3] = cornerVertices[f][vo];
+			printExplicitFace(face);
 			faces.push_back(face);
 		}
 	}
@@ -134,8 +146,20 @@ void ofxHEMeshCornerCutSubdivision::createNewVertices() {
 	for(; fit != fite; ++fit) {
 		ofxHEMeshFaceCirculator fc = hemesh.faceCirculate(*fit);
 		ofxHEMeshFaceCirculator fce = fc;
+		bool nextBoundary = false;
+		bool boundary = hemesh.halfedgeIsOnBoundary(hemesh.halfedgeOpposite(*fc));
 		do {
-			hemesh.addVertex(cornerPoints[i]);
+			ofxHEMeshHalfedge hnext = hemesh.halfedgeNext(*fc);
+			nextBoundary = hemesh.halfedgeIsOnBoundary(hemesh.halfedgeOpposite(hnext));
+			if(boundary && nextBoundary) {
+				hemesh.addVertex(cornerPoints[i]);
+				++i;
+				hemesh.addVertex(cornerPoints[i]);
+			}
+			else {
+				hemesh.addVertex(cornerPoints[i]);
+			}
+			boundary = nextBoundary;
 			++i;
 			++fc;
 		} while(fc != fce);
