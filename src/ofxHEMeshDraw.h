@@ -10,6 +10,12 @@ public:
 		NoNormals
 	};
 	
+	enum MaterialType{
+		BlackMaterial,
+		RedMaterial,
+		ClayMaterial
+	};
+	
 	struct Property{
 		Property(bool enabled, bool needsUpdate=true)
 		: enabled(enabled), needsUpdate(needsUpdate)
@@ -41,7 +47,8 @@ public:
 	ofxHEMeshDraw& setDrawVertexNormals(bool v);
 	
 	ofShader * getMaterial() { return material; }
-	void setMaterial(ofShader *v) { material = v; }
+	void setMaterial(MaterialType matType);
+	void setMaterial(ofShader *v);
 	
 	void faceIndices(vector<ofIndexType>& indices);
 	void edgeIndices(vector<ofIndexType>& indices);
@@ -68,6 +75,8 @@ protected:
 	bool drawVertexNormals;
 	bool calculateVertexNormals;
 	ofShader *material;
+	bool ownsMaterial;
+	ofImage img;
 	ofVbo edges;
 	ofVbo boundaryEdges;
 	ofVbo faces;

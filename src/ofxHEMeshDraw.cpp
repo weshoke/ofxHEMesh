@@ -10,8 +10,12 @@ ofxHEMeshDraw::ofxHEMeshDraw(ofxHEMesh& hemesh, NormalType normalType)
 	drawVertexNormals(false),
 	calculateVertexNormals(false),
 	material(NULL),
+	ownsMaterial(false),
 	normalScale(0.1)
-{}
+{
+	setMaterial(BlackMaterial);
+}
+
 
 ofxHEMeshDraw::~ofxHEMeshDraw() {
 	if(material) delete material;
@@ -67,9 +71,15 @@ void ofxHEMeshDraw::draw() {
 			glEnable(GL_LIGHT0);		
 			glEnable(GL_POLYGON_OFFSET_FILL);
 				glPolygonOffset(1, 1);
-				if(material) material->begin();
+				if(material) {
+					if(ownsMaterial) img.getTextureReference().bind();
+					material->begin();
+				}
 				faces.drawElements(GL_TRIANGLES, faces.getNumIndices());
-				if(material) material->end();
+				if(material) {
+					material->end();
+					if(ownsMaterial) img.getTextureReference().unbind();
+				}
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		glDisable(GL_LIGHTING);
 	}
@@ -80,8 +90,12 @@ void ofxHEMeshDraw::draw() {
 		glLineWidth(1);
 	}
 	if(drawEdges.enabled) {
-		ofSetColor(ofColor::black);
+		glEnable(GL_BLEND);
+		//glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		ofSetColor(ofColor::white, 30);
 		edges.drawElements(GL_LINES, edges.getNumIndices());
+		glDisable(GL_BLEND);
 	}
 	if(drawVertexNormals) {
 		ofSetColor(ofColor::red);
@@ -126,6 +140,51 @@ ofxHEMeshDraw& ofxHEMeshDraw::setDrawVertexNormals(bool v) {
 		calculateVertexNormals = true;
 	}
 	return *this;
+}
+
+void ofxHEMeshDraw::setMaterial(MaterialType matType) {
+	bool usingArbTex = ofGetUsingArbTex();
+	ofDisableArbTex();
+	setMaterial(NULL);
+	
+	switch(matType) {
+		case BlackMaterial:
+			img.loadImage("matcap2.jpg");
+			break;
+			
+		case RedMaterial:
+			img.loadImage("matcap.jpg");
+			break;
+			
+		case ClayMaterial:
+			img.loadImage("matcap3.jpg");
+			break;
+		
+		default:
+			break;
+	}
+	
+	material = new ofShader();
+	material->load("SEMShader");
+	ownsMaterial = true;
+	
+	material->begin();
+	material->setUniformTexture("tMatCap", img.getTextureReference(), 0);
+	material->end();
+	
+	if(usingArbTex) {
+		ofEnableArbTex();
+	}
+	else {
+		ofDisableArbTex();
+	}
+}
+
+void ofxHEMeshDraw::setMaterial(ofShader *v) {
+	if(ownsMaterial && material) {
+		delete material;
+	}
+	material = v;
 }
 
 void ofxHEMeshDraw::faceIndices(vector<ofIndexType>& indices) {

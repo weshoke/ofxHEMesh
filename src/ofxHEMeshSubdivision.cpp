@@ -109,7 +109,6 @@ void ofxHEMeshCornerCutSubdivision::createVertexFaces() {
 				face.push_back(cornerVertices[f][*vit]);
 				++vc;
 			} while(vc != vce);
-			printExplicitFace(face);
 			faces.push_back(face);
 		}
 	}
@@ -131,7 +130,6 @@ void ofxHEMeshCornerCutSubdivision::createHalfedgeFaces() {
 			face[1] = cornerVertices[fo][v];
 			face[2] = cornerVertices[f][v];
 			face[3] = cornerVertices[f][vo];
-			printExplicitFace(face);
 			faces.push_back(face);
 		}
 	}
