@@ -58,9 +58,12 @@ public:
 	// Component-level modifications
 	void connectFacesSimple(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge h2);
 	void connectHalfedgesCofacial(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge h2);
+	ofxHEMeshVertex splitHalfedgeQuadraticFit(ofxHEMeshHalfedge h);
 	ofxHEMeshVertex splitHalfedge(ofxHEMeshHalfedge h, Scalar t=0.5);
 	ofxHEMeshVertex splitHalfedge(ofxHEMeshHalfedge h, Point pt);
-	ofxHEMeshVertex splitHalfedgeQuadraticFit(ofxHEMeshHalfedge h);
+	
+	ofxHEMeshVertex collapseHalfedgeQuadraticFit(ofxHEMeshHalfedge h);
+	ofxHEMeshVertex collapseHalfedge(ofxHEMeshHalfedge h, Scalar t=0.5);
 	ofxHEMeshVertex collapseHalfedge(ofxHEMeshHalfedge h, Point pt);
 	/////////////////////////////////////////////////////////
 	

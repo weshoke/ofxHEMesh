@@ -434,11 +434,14 @@ void ofxHEMesh::connectHalfedgesCofacial(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge
 	ofxHEMeshHalfedge hn = addEdge();
 	ofxHEMeshHalfedge hno(hn.idx+1);
 	
+	ofxHEMeshFace f = halfedgeFace(h1);
+	
 	// associate halfedge with face
 	setFaceHalfedge(fn, hno);
+	setFaceHalfedge(f, h1);
 	
 	// set vertex/face adjacency info for new halfedges
-	setHalfedgeFace(hn, halfedgeFace(h1));
+	setHalfedgeFace(hn, f);
 	setHalfedgeFace(hno, fn);
 	setHalfedgeVertex(hn, halfedgeVertex(h2));
 	setHalfedgeVertex(hno, halfedgeVertex(h1));
@@ -464,6 +467,10 @@ void ofxHEMesh::connectHalfedgesCofacial(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge
 	linkHalfedges(hno, h2n);
 	
 	topologyDirty = true;
+}
+
+ofxHEMeshVertex ofxHEMesh::splitHalfedgeQuadraticFit(ofxHEMeshHalfedge h) {
+	return splitHalfedge(h, halfedgeQuadraticFit(h));
 }
 
 ofxHEMeshVertex ofxHEMesh::splitHalfedge(ofxHEMeshHalfedge h, Scalar t) {
@@ -500,8 +507,12 @@ ofxHEMeshVertex ofxHEMesh::splitHalfedge(ofxHEMeshHalfedge h, Point pt) {
 	return vn;
 }
 
-ofxHEMeshVertex ofxHEMesh::splitHalfedgeQuadraticFit(ofxHEMeshHalfedge h) {
-	return splitHalfedge(h, halfedgeQuadraticFit(h));
+ofxHEMeshVertex ofxHEMesh::collapseHalfedgeQuadraticFit(ofxHEMeshHalfedge h) {
+	return collapseHalfedge(h, halfedgeQuadraticFit(h));
+}
+
+ofxHEMeshVertex ofxHEMesh::collapseHalfedge(ofxHEMeshHalfedge h, Scalar t) {
+	return collapseHalfedge(h, halfedgeLerp(h, t));
 }
 
 ofxHEMeshVertex ofxHEMesh::collapseHalfedge(ofxHEMeshHalfedge h, Point pt) {
