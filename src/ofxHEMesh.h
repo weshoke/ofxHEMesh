@@ -49,6 +49,7 @@ public:
 	void facePeel(Scalar thickness);
 	void dual();
 	void triangulate();
+	void centroidTriangulation();
 	void reverseFaces();
 	void translate(Direction dir);
 	/////////////////////////////////////////////////////////
@@ -57,6 +58,10 @@ public:
 	// Component-level modifications
 	void connectFacesSimple(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge h2);
 	void connectHalfedgesCofacial(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge h2);
+	ofxHEMeshVertex splitHalfedge(ofxHEMeshHalfedge h, Scalar t=0.5);
+	ofxHEMeshVertex splitHalfedge(ofxHEMeshHalfedge h, Point pt);
+	ofxHEMeshVertex splitHalfedgeQuadraticFit(ofxHEMeshHalfedge h);
+	ofxHEMeshVertex collapseHalfedge(ofxHEMeshHalfedge h, Point pt);
 	/////////////////////////////////////////////////////////
 	
 	/////////////////////////////////////////////////////////
@@ -78,6 +83,7 @@ public:
 	// Remove combinatorial elements
 	void removeVertex(ofxHEMeshVertex v);
 	bool removeHalfedge(ofxHEMeshHalfedge h);
+	void eraseHalfedge(ofxHEMeshHalfedge h);
 	void removeFace(ofxHEMeshFace f);
 	
 	// Number of combinatorial elements (some could be inactive)
@@ -120,10 +126,15 @@ public:
 	ofxHEMeshHalfedge halfedgeSinkCCW(ofxHEMeshHalfedge h) const;
 	ofxHEMeshHalfedge findHalfedge(ofxHEMeshVertex v1, ofxHEMeshVertex v2) const;
 	bool halfedgeIsOnBoundary(ofxHEMeshHalfedge h) const;
+	void linkHalfedges(ofxHEMeshHalfedge prev, ofxHEMeshHalfedge next);
 	
 	// Combinatorial Properties
 	int faceSize(ofxHEMeshFace f) const;
+	bool faceIsDegenerate(ofxHEMeshFace f) const;
+	bool halfedgeEndPointsShareOneRing(ofxHEMeshHalfedge h) const;
 	int vertexValence(ofxHEMeshVertex v) const;
+	void vertexOneRing(ofxHEMeshVertex v, set<ofxHEMeshVertex>& oneRing) const;
+	bool verticesShareOneRing(ofxHEMeshVertex v1, ofxHEMeshVertex v2) const;
 	
 	// Geometric modification
 	void vertexMove(ofxHEMeshVertex v, const Direction& dir);
@@ -136,11 +147,13 @@ public:
 	Point vertexPoint(ofxHEMeshVertex v) const;
 	Direction angleWeightedVertexNormal(ofxHEMeshVertex v) const;
 	Scalar vertexArea(ofxHEMeshVertex v) const;
+	void vertexQuadric(ofxHEMeshVertex v, ofMatrix4x4& Q) const;
 	
 	void facePoints(ofxHEMeshFace f, vector<Point>& points) const;
 	Scalar faceArea(ofxHEMeshFace f) const;
 	Point faceCentroid(ofxHEMeshFace f) const;
 	Direction faceNormal(ofxHEMeshFace f) const;
+	void faceQuadric(ofxHEMeshFace f, ofMatrix4x4& Q) const;
 	
 	Point halfedgeLerp(ofxHEMeshHalfedge h, Scalar t) const;
 	Point halfedgeMidpoint(ofxHEMeshHalfedge h) const;
@@ -151,6 +164,7 @@ public:
 	Scalar angleAtVertex(ofxHEMeshHalfedge h) const;
 	Scalar halfedgeAngle(ofxHEMeshHalfedge h) const;
 	Direction halfedgeRotated(ofxHEMeshHalfedge h) const;
+	Point halfedgeQuadraticFit(ofxHEMeshHalfedge h) const;
 	
 	Direction triangleNormal(const ofxHEMeshTriangle& tri) const;
 	bool withinTriangle(const ofxHEMeshTriangle& tri, const Point& pt) const;

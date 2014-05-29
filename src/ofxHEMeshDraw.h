@@ -35,8 +35,12 @@ public:
 	ofxHEMeshDraw(ofxHEMesh& hemesh, NormalType normalType=VertexNormals);
 	~ofxHEMeshDraw();
 	
-	void draw();
+	void draw(const ofCamera& camera);
 
+	bool getDrawVertices() const;
+	ofxHEMeshDraw& setDrawVertices(bool v);
+	bool getDrawVertexLabels() const;
+	ofxHEMeshDraw& setDrawVertexLabels(bool v);
 	bool getDrawEdges() const;
 	ofxHEMeshDraw& setDrawEdges(bool v);
 	bool getDrawBoundaryEdges() const;
@@ -69,6 +73,8 @@ protected:
 	ofxHEMesh& hemesh;
 	NormalType normalType;
 	ofxHEMeshProperty<ofVec3f> *meshVertexNormals;
+	Property drawVertices;
+	Property drawVertexLabels;
 	Property drawEdges;
 	Property drawBoundaryEdges;
 	Property drawFaces;

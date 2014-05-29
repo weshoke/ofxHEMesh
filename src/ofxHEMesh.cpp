@@ -334,6 +334,31 @@ void ofxHEMesh::triangulate() {
 	}
 }
 
+void ofxHEMesh::centroidTriangulation() {
+	vector<ExplicitFace> faces;
+	faces.reserve(getNumFaces());
+	
+	ofxHEMeshFaceIterator fit = facesBegin();
+	ofxHEMeshFaceIterator fite = facesEnd();
+	for(; fit != fite; ++fit) {
+		ofxHEMeshVertex v = addVertex(faceCentroid(*fit));
+		ofxHEMeshFaceCirculator fc = faceCirculate(*fit);
+		ofxHEMeshFaceCirculator fce = fc;
+		do {
+			ExplicitFace face(3);
+			face[0] = v;
+			face[1] = halfedgeSource(*fc);
+			face[2] = halfedgeSink(*fc);
+			faces.push_back(face);
+			++fc;
+		} while(fc != fce);
+	}
+	
+	halfedgeProperties.clear();
+	faceProperties.clear();
+	addFaces(faces);
+}
+
 void ofxHEMesh::reverseFaces() {
 	ofxHEMeshFaceIterator fit = facesBegin();
 	ofxHEMeshFaceIterator fite = facesEnd();
@@ -431,18 +456,104 @@ void ofxHEMesh::connectHalfedgesCofacial(ofxHEMeshHalfedge h1, ofxHEMeshHalfedge
 	setHalfedgeFace(h2, fn);
 	
 	// link into existing face
-	setHalfedgePrev(hn, h1);
-	setHalfedgeNext(h1, hn);
-	setHalfedgePrev(h1n, hn);
-	setHalfedgeNext(hn, h1n);
+	linkHalfedges(h1, hn);
+	linkHalfedges(hn, h1n);
 	
 	// link into new face
-	setHalfedgePrev(hno, h2);
-	setHalfedgeNext(h2, hno);
-	setHalfedgePrev(h2n, hno);
-	setHalfedgeNext(hno, h2n);
+	linkHalfedges(h2, hno);
+	linkHalfedges(hno, h2n);
 	
 	topologyDirty = true;
+}
+
+ofxHEMeshVertex ofxHEMesh::splitHalfedge(ofxHEMeshHalfedge h, Scalar t) {
+	return splitHalfedge(h, halfedgeLerp(h, t));
+}
+
+ofxHEMeshVertex ofxHEMesh::splitHalfedge(ofxHEMeshHalfedge h, Point pt) {
+	ofxHEMeshVertex vn = addVertex(pt);
+	ofxHEMeshHalfedge hn = addEdge();
+	ofxHEMeshHalfedge hno(hn.idx+1);
+	ofxHEMeshHalfedge ho = halfedgeOpposite(h);
+	
+	setHalfedgeFace(hn, halfedgeFace(h));
+	setHalfedgeFace(hno, halfedgeFace(ho));
+	
+	ofxHEMeshVertex v = halfedgeVertex(h);
+	setVertexHalfedge(vn, h);
+	setVertexHalfedge(v, hn);
+	setHalfedgeVertex(hn, v);
+	setHalfedgeVertex(hno, vn);
+	setHalfedgeVertex(h, vn);
+	
+	ofxHEMeshHalfedge hnn = halfedgeNext(h);
+	linkHalfedges(hn, hnn);
+	
+	ofxHEMeshHalfedge hnop = halfedgePrev(ho);
+	linkHalfedges(hnop, hno);
+	
+	linkHalfedges(h, hn);
+	linkHalfedges(hno, ho);
+	
+	topologyDirty = true;
+	geometryDirty = true;
+	return vn;
+}
+
+ofxHEMeshVertex ofxHEMesh::splitHalfedgeQuadraticFit(ofxHEMeshHalfedge h) {
+	return splitHalfedge(h, halfedgeQuadraticFit(h));
+}
+
+ofxHEMeshVertex ofxHEMesh::collapseHalfedge(ofxHEMeshHalfedge h, Point pt) {
+	if(halfedgeEndPointsShareOneRing(h)) {
+		return ofxHEMeshVertex();
+	}
+	
+	ofxHEMeshHalfedge ho = halfedgeOpposite(h);
+	ofxHEMeshHalfedge hprev = halfedgePrev(h);
+	ofxHEMeshHalfedge hoprev = halfedgePrev(ho);
+	ofxHEMeshVertex v1 = halfedgeVertex(ho);
+	ofxHEMeshVertex v2 = halfedgeVertex(h);
+	
+	// Move halfedges on v2 to v1
+	ofxHEMeshHalfedge from = halfedgeSinkCCW(h);
+	do {
+		setHalfedgeVertex(from, v1);
+		from = halfedgeSinkCCW(from);
+	} while(from != h);
+	
+	// Ensure remaining vertex links to a valid halfedge
+	if(vertexHalfedge(v1) == ho) {
+		setVertexHalfedge(v1, hoprev);
+	}	
+	
+	// Remove links to h and its opposite
+	linkHalfedges(hprev, halfedgeNext(h));
+	linkHalfedges(hoprev, halfedgeNext(ho));
+	
+	// Check for degenerate faces
+	ofxHEMeshFace f1 = halfedgeFace(h);
+	if(faceIsDegenerate(f1)) {
+		removeFace(f1);
+	}
+	else if(faceHalfedge(f1) == h) {
+		setFaceHalfedge(f1, hprev);
+	}
+	
+	ofxHEMeshFace f2 = halfedgeFace(ho);
+	if(faceIsDegenerate(f2)) {
+		removeFace(f2);
+	}
+	else if(faceHalfedge(f2) == ho) {
+		setFaceHalfedge(f2, hoprev);
+	}
+	
+	eraseHalfedge(h);
+	setVertexHalfedge(v2, ofxHEMeshHalfedge());
+	removeVertex(v2);
+	vertexMoveTo(v1, pt);
+	
+	return v1;
 }
 
 ofxHEMeshHalfedge ofxHEMesh::nearestVertexInFaceToPoint(const Point& pt, ofxHEMeshFace f) const {
@@ -797,15 +908,9 @@ bool ofxHEMesh::removeHalfedge(ofxHEMeshHalfedge h) {
 	if(h1p == ho) vrem = v2;
 	else vrem = v;
 	
-	setHalfedgePrev(h1n, h1p);
-	setHalfedgeNext(h1p, h1n);
-	
-	setHalfedgePrev(h2n, h2p);
-	setHalfedgeNext(h2p, h2n);
-	
-	halfedgeAdjacency->set(h.idx, ofxHEMeshHalfedgeAdjacency());
-	halfedgeAdjacency->set(ho.idx, ofxHEMeshHalfedgeAdjacency());
-	topologyDirty = true;
+	linkHalfedges(h1p, h1n);
+	linkHalfedges(h2p, h2n);
+	eraseHalfedge(h);
 
 	if(f.idx == f2.idx) {
 		// belong to the same face, last edge linking vertex to mesh
@@ -834,6 +939,12 @@ bool ofxHEMesh::removeHalfedge(ofxHEMeshHalfedge h) {
 	}
 }
 
+void ofxHEMesh::eraseHalfedge(ofxHEMeshHalfedge h) {
+	ofxHEMeshHalfedge ho = halfedgeOpposite(h);
+	halfedgeAdjacency->set(h.idx, ofxHEMeshHalfedgeAdjacency());
+	halfedgeAdjacency->set(ho.idx, ofxHEMeshHalfedgeAdjacency());
+	topologyDirty = true;
+}
 
 void ofxHEMesh::removeFace(ofxHEMeshFace f) {
 	ofxHEMeshHalfedge h = faceHalfedge(f);
@@ -1033,6 +1144,11 @@ bool ofxHEMesh::halfedgeIsOnBoundary(ofxHEMeshHalfedge h) const {
 	return !halfedgeFace(h).isValid();
 }
 
+void ofxHEMesh::linkHalfedges(ofxHEMeshHalfedge prev, ofxHEMeshHalfedge next) {
+	setHalfedgeNext(prev, next);
+	setHalfedgePrev(next, prev);
+}
+
 int ofxHEMesh::faceSize(ofxHEMeshFace f) const {
 	ofxHEMeshFaceCirculator fc = faceCirculate(f);
 	ofxHEMeshFaceCirculator fce = fc;
@@ -1044,6 +1160,15 @@ int ofxHEMesh::faceSize(ofxHEMeshFace f) const {
 	return n;
 }
 
+bool ofxHEMesh::faceIsDegenerate(ofxHEMeshFace f) const {
+	ofxHEMeshHalfedge h = faceHalfedge(f);
+	return h == halfedgeNext(halfedgeNext(h));
+}
+
+bool ofxHEMesh::halfedgeEndPointsShareOneRing(ofxHEMeshHalfedge h) const {
+	return verticesShareOneRing(halfedgeSource(h), halfedgeSink(h));
+}
+
 int ofxHEMesh::vertexValence(ofxHEMeshVertex v) const {
 	int n=0;
 	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
@@ -1053,6 +1178,30 @@ int ofxHEMesh::vertexValence(ofxHEMeshVertex v) const {
 		++vc;
 	} while(vc != vce);
 	return n;
+}
+
+void ofxHEMesh::vertexOneRing(ofxHEMeshVertex v, set<ofxHEMeshVertex>& oneRing) const {
+	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
+	ofxHEMeshVertexCirculator vce = vc;
+	do {
+		oneRing.insert(halfedgeSource(*vc));
+		++vc;
+	} while(vc != vce);
+}
+
+bool ofxHEMesh::verticesShareOneRing(ofxHEMeshVertex v1, ofxHEMeshVertex v2) const {
+	set<ofxHEMeshVertex> oneRing1;
+	vertexOneRing(v1, oneRing1);
+	
+	ofxHEMeshVertexCirculator vc2 = vertexCirculate(v2);
+	ofxHEMeshVertexCirculator vce2 = vc2;
+	do {
+		if(oneRing1.find(halfedgeSource(*vc2)) != oneRing1.end()) {
+			return true;
+		}
+		++vc2;
+	} while(vc2 != vce2);
+	return false;
 }
 
 void ofxHEMesh::vertexMove(ofxHEMeshVertex v, const Direction& dir) {
@@ -1128,6 +1277,21 @@ ofxHEMesh::Scalar ofxHEMesh::vertexArea(ofxHEMeshVertex v) const {
 	return A*0.333333333333333;
 }
 
+void ofxHEMesh::vertexQuadric(ofxHEMeshVertex v, ofMatrix4x4& Q) const {
+	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
+	ofxHEMeshVertexCirculator vce = vc;
+	do {
+		ofMatrix4x4 faceQ;
+		faceQuadric(halfedgeFace(*vc), faceQ);
+		float *ptrQ = Q.getPtr();
+		float *ptrFace = faceQ.getPtr();
+		for(int i=0; i < 16; ++i) {
+			ptrQ[i] += ptrFace[i];
+		}
+		++vc;
+	} while(vc != vce);
+}
+
 void ofxHEMesh::facePoints(ofxHEMeshFace f, vector<Point>& points) const {
 	ofxHEMeshFaceCirculator fc = faceCirculate(f);
 	ofxHEMeshFaceCirculator fce = fc;
@@ -1169,6 +1333,32 @@ ofxHEMesh::Direction ofxHEMesh::faceNormal(ofxHEMeshFace f) const {
 	Direction n = v1.cross(v2);
 	n.normalize();
 	return n;
+}
+
+void ofxHEMesh::faceQuadric(ofxHEMeshFace f, ofMatrix4x4& Q) const {
+	Direction n = faceNormal(f);
+	Point p = vertexPoint(halfedgeVertex(faceHalfedge(f)));
+	double d = -n.dot(p);
+	
+	Q(0, 0) = n[0]*n[0];
+	Q(1, 0) = n[0]*n[1];
+	Q(2, 0) = n[0]*n[2];
+	Q(3, 0) = n[0]*d;
+	
+	Q(0, 1) = n[1]*n[0];
+	Q(1, 1) = n[1]*n[1];
+	Q(2, 1) = n[1]*n[2];
+	Q(3, 1) = n[1]*d;
+	
+	Q(0, 2) = n[2]*n[0];
+	Q(1, 2) = n[2]*n[1];
+	Q(2, 2) = n[2]*n[2];
+	Q(3, 2) = n[2]*d;
+	
+	Q(0, 3) = d*n[0];
+	Q(1, 3) = d*n[1];
+	Q(2, 3) = d*n[2];
+	Q(3, 3) = d*d;
 }
 
 ofxHEMesh::Point ofxHEMesh::halfedgeLerp(ofxHEMeshHalfedge h, Scalar t) const {
@@ -1230,6 +1420,102 @@ ofxHEMesh::Direction ofxHEMesh::halfedgeRotated(ofxHEMeshHalfedge h) const {
 	Direction n = faceNormal(halfedgeFace(h));
 	Direction dir = halfedgeDirection(h);
 	return n.cross(dir);
+}
+
+// assume symmetrix matrix with (3, 3) equal to 1
+ofxHEMesh::Scalar quadraticError(const ofMatrix4x4& Q, const ofxHEMesh::Point& pos) {
+	ofxHEMesh::Scalar x = pos.x;
+	ofxHEMesh::Scalar y = pos.y;
+	ofxHEMesh::Scalar z = pos.z;
+	return
+		Q(0, 0)*x*x + 2*Q(0, 1)*x*y + 2*Q(0, 2)*x*z + 2*Q(0, 3)*x +
+						Q(1, 1)*y*y + 2*Q(1, 2)*y*z + 2*Q(1, 3)*y +
+										Q(2, 2)*z*z + 2*Q(2, 3)*z +
+														Q(3, 3);
+}
+
+ofxHEMesh::Point ofxHEMesh::halfedgeQuadraticFit(ofxHEMeshHalfedge h) const {
+	ofMatrix4x4 Q1(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+	ofMatrix4x4 Q2(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+	ofxHEMeshVertex v1 = halfedgeSource(h);
+	ofxHEMeshVertex v2 = halfedgeVertex(h);
+	vertexQuadric(v1, Q1);
+	vertexQuadric(v2, Q2);
+	ofMatrix4x4 Q(
+		Q1(0, 0)+Q2(0, 0), Q1(0, 1)+Q2(0, 1), Q1(0, 2)+Q2(0, 2), Q1(0, 3)+Q2(0, 3),
+		Q1(1, 0)+Q2(1, 0), Q1(1, 1)+Q2(1, 1), Q1(1, 2)+Q2(1, 2), Q1(1, 3)+Q2(1, 3),
+		Q1(2, 0)+Q2(2, 0), Q1(2, 1)+Q2(2, 1), Q1(2, 2)+Q2(2, 2), Q1(2, 3)+Q2(2, 3),
+		Q1(3, 0)+Q2(3, 0), Q1(3, 1)+Q2(3, 1), Q1(3, 2)+Q2(3, 2), Q1(3, 3)+Q2(3, 3)
+	);
+	
+	ofMatrix3x3 Qsub(
+		Q(0, 0), Q(0, 1), Q(0, 2),
+		Q(1, 0), Q(1, 1), Q(1, 2),
+		Q(2, 0), Q(2, 1), Q(2, 2)
+	);
+	Scalar det = Qsub.determinant();
+	
+	if(ABS(det) <= 1e-8) {
+		Point pos1 = vertexPoint(v1);
+		Point pos2 = vertexPoint(v2);
+		Point mid = halfedgeMidpoint(h);
+		Scalar err1 = quadraticError(Q, pos1);
+		Scalar err2 = quadraticError(Q, pos2);
+		Scalar errmid = quadraticError(Q, mid);
+		
+		if(err1 < err2) {
+			if(err1 < errmid) return pos1;
+			else return mid;
+		}
+		else {
+			if(err2 < errmid) return pos2;
+			else return mid;
+		}
+	}
+	
+	ofMatrix3x3 Qa(
+		Q(0, 1), Q(0, 2), Q(0, 3),
+		Q(1, 1), Q(1, 2), Q(1, 3),
+		Q(2, 1), Q(2, 2), Q(2, 3)
+	);
+	ofMatrix3x3 Qb(
+		Q(0, 0), Q(0, 2), Q(0, 3),
+		Q(1, 0), Q(1, 2), Q(1, 3),
+		Q(2, 0), Q(2, 2), Q(2, 3)
+	);
+	ofMatrix3x3 Qc(
+		Q(0, 0), Q(0, 1), Q(0, 3),
+		Q(1, 0), Q(1, 1), Q(1, 3),
+		Q(2, 0), Q(2, 1), Q(2, 3)
+	);
+	Point res = Point(
+		Qa.determinant(),
+		-Qb.determinant(),
+		Qc.determinant()
+	)*(-1./det);
+	
+	Point pos1 = vertexPoint(v1);
+	Point pos2 = vertexPoint(v2);
+	Point mid = halfedgeMidpoint(h);
+	Scalar l1 = (pos1-pos2).length();
+	Scalar l2 = (res-pos1).length();
+	Scalar l3 = (res-pos2).length();
+	if(l2 > l1 || l3 > l1) {
+		Scalar err1 = quadraticError(Q, pos1);
+		Scalar err2 = quadraticError(Q, pos2);
+		Scalar errmid = quadraticError(Q, mid);
+		
+		if(err1 < err2) {
+			if(err1 < errmid) return pos1;
+			else return mid;
+		}
+		else {
+			if(err2 < errmid) return pos2;
+			else return mid;
+		}
+	}
+	
+	return res;
 }
 
 ofxHEMesh::Direction ofxHEMesh::triangleNormal(const ofxHEMeshTriangle& tri) const {

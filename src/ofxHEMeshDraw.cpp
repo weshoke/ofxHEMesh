@@ -4,6 +4,8 @@ ofxHEMeshDraw::ofxHEMeshDraw(ofxHEMesh& hemesh, NormalType normalType)
 :	hemesh(hemesh),
 	normalType(normalType),
 	meshVertexNormals(NULL),
+	drawVertices(false),
+	drawVertexLabels(false),
 	drawEdges(false),
 	drawBoundaryEdges(false),
 	drawFaces(true),
@@ -13,7 +15,7 @@ ofxHEMeshDraw::ofxHEMeshDraw(ofxHEMesh& hemesh, NormalType normalType)
 	ownsMaterial(false),
 	normalScale(0.1)
 {
-	setMaterial(BlackMaterial);
+	setMaterial(RedMaterial);
 }
 
 
@@ -21,7 +23,7 @@ ofxHEMeshDraw::~ofxHEMeshDraw() {
 	if(material) delete material;
 }
 
-void ofxHEMeshDraw::draw() {
+void ofxHEMeshDraw::draw(const ofCamera& camera) {
 	if(hemesh.getTopologyDirty()) {
 		if(normalType == VertexNormals) {
 			calculateVertexNormals = true;
@@ -33,7 +35,7 @@ void ofxHEMeshDraw::draw() {
 			updateBoundaryEdges();
 		}
 		// Do this before updating faces
-		if(normalType != NoNormals || drawVertexNormals) {
+		if(normalType != NoNormals || drawVertexNormals || drawVertexLabels.enabled) {
 			updateNormals();
 			if(drawVertexNormals) {
 				updateVertexNormalVectors();
@@ -97,10 +99,49 @@ void ofxHEMeshDraw::draw() {
 		edges.drawElements(GL_LINES, edges.getNumIndices());
 		glDisable(GL_BLEND);
 	}
+	if(drawVertices.enabled) {
+		//ofSetColor(251, 198, 87);
+		ofSetColor(93, 144, 192);
+		glPointSize(3);
+		faces.draw(GL_POINTS, 0, faces.getNumVertices());
+		glPointSize(1);
+	}
+	if(drawVertexLabels.enabled) {
+		//ofSetColor(251, 198, 87);
+		ofSetColor(93, 144, 192);
+		ofxHEMeshVertexIterator vit = hemesh.verticesBegin();
+		ofxHEMeshVertexIterator vite = hemesh.verticesEnd();
+		for(; vit != vite; ++vit) {
+			ofVec3f pt = hemesh.vertexPoint(*vit);
+			//if(camera.getLookAtDir().dot(meshVertexNormals->get((*vit).idx)) <= 0) {
+				stringstream ss;
+				ss << (*vit).idx;
+				ofDrawBitmapString(ss.str(), pt.x, pt.y, pt.z);
+			//}
+		}
+	}
 	if(drawVertexNormals) {
 		ofSetColor(ofColor::red);
 		vertexNormals.draw(GL_LINES, 0, vertexNormals.getNumVertices());
 	}
+}
+
+bool ofxHEMeshDraw::getDrawVertices() const {
+	return drawVertices.enabled;
+}
+
+ofxHEMeshDraw& ofxHEMeshDraw::setDrawVertices(bool v) {
+	drawVertices.enable(v);
+	return *this;
+}
+
+bool ofxHEMeshDraw::getDrawVertexLabels() const {
+	return drawVertexLabels.enabled;
+}
+
+ofxHEMeshDraw& ofxHEMeshDraw::setDrawVertexLabels(bool v) {
+	drawVertexLabels.enable(v);
+	return *this;
 }
 
 bool ofxHEMeshDraw::getDrawEdges() const {
