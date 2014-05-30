@@ -12,6 +12,18 @@ ofxHEMeshAdaptive::ofxHEMeshAdaptive(Scalar detail)
 	maxMove = sqrt((thickness*thickness - detail*detail/3.)/4.);
 }
 
+void ofxHEMeshAdaptive::initializeMesh() {
+	std::cout << meanEdgeLength() << " dev: " << sqrt(edgeLengthVariance(meanEdgeLength())) << "\n";
+	centroidTriangulation();
+	Scalar mu = meanEdgeLength();
+	Scalar sigma = sqrt(edgeLengthVariance(mu));
+	while((mu+sigma) > detail) {
+		remeshLoop();
+		mu *= 0.5;
+		sigma *= 0.5;
+	}
+}
+
 void ofxHEMeshAdaptive::splitLongEdges() {
 	ofxHEMeshEdgeIterator eit = edgesBegin();
 	ofxHEMeshEdgeIterator eite = edgesEnd();
@@ -23,7 +35,7 @@ void ofxHEMeshAdaptive::splitLongEdges() {
 }
 
 bool ofxHEMeshAdaptive::halfedgeShouldBeSplit(ofxHEMeshHalfedge h) {
-	return halfedgeLengthSquared(h) < detail2;
+	return halfedgeLengthSquared(h) > detail2;
 }
 
 void ofxHEMeshAdaptive::splitHalfedgeAndTriangulate(ofxHEMeshHalfedge h) {
@@ -32,4 +44,18 @@ void ofxHEMeshAdaptive::splitHalfedgeAndTriangulate(ofxHEMeshHalfedge h) {
 	ofxHEMeshHalfedge hn2 = halfedgeSinkCCW(hn1);
 	connectHalfedgesCofacial(hn1, halfedgeNext(halfedgeNext(hn1)));
 	connectHalfedgesCofacial(hn2, halfedgeNext(halfedgeNext(hn2)));
+}
+
+void ofxHEMeshAdaptive::collapseShortEdges() {
+	ofxHEMeshEdgeIterator eit = edgesBegin();
+	ofxHEMeshEdgeIterator eite = edgesEnd();
+	for(; eit != eite; ++eit) {
+		if(halfedgeShouldBeCollapsed(*eit)) {
+			collapseHalfedge(*eit);
+		}
+	}
+}
+
+bool ofxHEMeshAdaptive::halfedgeShouldBeCollapsed(ofxHEMeshHalfedge h) {
+	return halfedgeLengthSquared(h) < edgeLength2;
 }

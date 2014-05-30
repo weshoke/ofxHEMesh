@@ -42,6 +42,7 @@ public:
 	
 	/////////////////////////////////////////////////////////
 	// Mesh-level modifications
+	void remeshLoop();
 	void subdivideLoop();
 	void subdivideCatmullClark();
 	void subdivideDooSabin();
@@ -146,6 +147,7 @@ public:
 	// Geometric properties
 	Point centroid() const;
 	Scalar meanEdgeLength() const;
+	Scalar edgeLengthVariance(Scalar expected) const;
 	
 	Point vertexPoint(ofxHEMeshVertex v) const;
 	Direction angleWeightedVertexNormal(ofxHEMeshVertex v) const;

@@ -38,6 +38,51 @@ ofxHEMesh& ofxHEMesh::operator=(const ofxHEMesh& src) {
 	geometryDirty = true;
 }
 
+void ofxHEMesh::remeshLoop() {
+	// Get the location of new (odd) vertices dividing edges in the subd mesh
+	map<ofxHEMeshHalfedge, ofxHEMeshVertex> edgeVertices;
+	ofxHEMeshEdgeIterator eit = edgesBegin();
+	ofxHEMeshEdgeIterator eite = edgesEnd();
+	for(; eit != eite; ++eit) {
+		ofxHEMeshHalfedge h = *eit;
+		ofxHEMeshHalfedge ho = halfedgeOpposite(h);
+		
+		Point pt = halfedgeMidpoint(h);
+		ofxHEMeshVertex v = addVertex(pt);
+		edgeVertices.insert(std::pair<ofxHEMeshHalfedge, ofxHEMeshVertex>(h, v));
+		edgeVertices.insert(std::pair<ofxHEMeshHalfedge, ofxHEMeshVertex>(halfedgeOpposite(h), v));
+	}
+	
+	// Calculate the subd mesh faces
+	vector<ExplicitFace> faces;
+	faces.reserve(faceAdjacency->size()*4);
+	ofxHEMeshFaceIterator fit = facesBegin();
+	ofxHEMeshFaceIterator fite = facesEnd();
+	for(; fit != fite; ++fit) {
+		ofxHEMeshFaceCirculator fc = faceCirculate(*fit);
+		ofxHEMeshFaceCirculator fce = fc;
+		
+		ExplicitFace innerFace(3);
+		int i=0;
+		do {
+			ExplicitFace cornerFace(3);
+			ofxHEMeshHalfedge h = *fc;
+			cornerFace[0] = halfedgeSink(h);
+			cornerFace[1] = edgeVertices[halfedgeNext(h)];
+			cornerFace[2] = edgeVertices[h];
+			faces.push_back(cornerFace);
+			innerFace[i] = edgeVertices[h];
+			++i;
+			++fc;
+		} while(fc != fce);
+		faces.push_back(innerFace);
+	}
+	
+	halfedgeProperties.clear();
+	faceProperties.clear();
+	addFaces(faces);
+}
+
 // Assumes the mesh is a triangulation
 void ofxHEMesh::subdivideLoop() {
 
@@ -87,7 +132,7 @@ void ofxHEMesh::subdivideLoop() {
 		ofxHEMeshHalfedge h = *eit;
 		ofxHEMeshHalfedge ho = halfedgeOpposite(h);
 		
-		Point pt;
+		Point pt = halfedgeMidpoint(h);
 		if(halfedgeIsOnBoundary(h) || halfedgeIsOnBoundary(ho)) {
 			pt = halfedgeMidpoint(h);
 		}
@@ -1244,6 +1289,19 @@ ofxHEMesh::Scalar ofxHEMesh::meanEdgeLength() const {
 	Scalar n = 0;
 	for(; eit != eite; ++eit) {
 		res += halfedgeLength(*eit);
+		++n;
+	}
+	return res/n;
+}
+
+ofxHEMesh::Scalar ofxHEMesh::edgeLengthVariance(Scalar expected) const {
+	ofxHEMeshEdgeIterator eit = edgesBegin();
+	ofxHEMeshEdgeIterator eite = edgesEnd();
+	Scalar res = 0;
+	Scalar n = 0;
+	for(; eit != eite; ++eit) {
+		Scalar v = halfedgeLength(*eit) - expected;
+		res += v*v;
 		++n;
 	}
 	return res/n;
