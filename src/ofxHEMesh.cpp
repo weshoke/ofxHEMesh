@@ -593,34 +593,13 @@ ofxHEMeshVertex ofxHEMesh::collapseHalfedge(ofxHEMeshHalfedge h, Point pt) {
 	if(faceHalfedge(f1) == h) {
 		setFaceHalfedge(f1, hprev);
 	}
-	
-	if(faceIsDegenerate(f1)) {
-		ofxHEMeshHalfedge hnext = halfedgeNext(hprev);
-		removeFace(f1);
-		swapHalfedgeAdjacency(halfedgeOpposite(hprev), hnext);
-		eraseHalfedge(hprev);
-		
-		if(vertexHalfedge(v1) == hprev) {
-			setVertexHalfedge(v1, halfedgeOpposite(hnext));
-		}
-	}
-	
+	removeFaceIfDegenerate(f1);
 	
 	ofxHEMeshFace f2 = halfedgeFace(ho);
 	if(faceHalfedge(f2) == ho) {
 		setFaceHalfedge(f2, hoprev);
 	}
-	
-	if(faceIsDegenerate(f2)) {
-		ofxHEMeshHalfedge honext = halfedgeNext(hoprev);
-		removeFace(f2);
-		swapHalfedgeAdjacency(halfedgeOpposite(hoprev), honext);
-		eraseHalfedge(hoprev);
-		
-		if(vertexHalfedge(v1) == hoprev) {
-			setVertexHalfedge(v1, halfedgeOpposite(honext));
-		}
-	}
+	removeFaceIfDegenerate(f2);
 	
 	eraseHalfedge(h);
 	setVertexHalfedge(v2, ofxHEMeshHalfedge());
@@ -1032,6 +1011,18 @@ void ofxHEMesh::removeFace(ofxHEMeshFace f) {
 	topologyDirty = true;
 }
 
+bool ofxHEMesh::removeFaceIfDegenerate(ofxHEMeshFace f) {
+	bool degenerate = faceIsDegenerate(f);
+	if(degenerate) {
+		ofxHEMeshHalfedge hprev = faceHalfedge(f);
+		ofxHEMeshHalfedge hnext = halfedgeNext(hprev);
+		removeFace(f);
+		swapHalfedgeAdjacency(halfedgeOpposite(hprev), hnext);
+		eraseHalfedge(hprev);
+	}
+	return degenerate;
+}
+
 int ofxHEMesh::getNumVertices() const {
 	return (int)vertexAdjacency->size();
 }
@@ -1238,6 +1229,12 @@ void ofxHEMesh::swapHalfedgeAdjacency(ofxHEMeshHalfedge src, ofxHEMeshHalfedge d
 	ofxHEMeshVertex v = halfedgeVertex(dst);
 	if(vertexHalfedge(v) == src) {
 		setVertexHalfedge(v, dst);
+	}
+	
+	ofxHEMeshHalfedge dsto = halfedgeOpposite(dst);
+	ofxHEMeshVertex vo = halfedgeVertex(dsto);
+	if(vertexHalfedge(vo) == halfedgeOpposite(src)) {
+		setVertexHalfedge(vo, dsto);
 	}
 }
 

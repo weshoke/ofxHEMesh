@@ -89,6 +89,7 @@ public:
 	bool removeHalfedge(ofxHEMeshHalfedge h);
 	void eraseHalfedge(ofxHEMeshHalfedge h);
 	void removeFace(ofxHEMeshFace f);
+	bool removeFaceIfDegenerate(ofxHEMeshFace f);
 	
 	// Number of combinatorial elements (some could be inactive)
 	int getNumVertices() const;
