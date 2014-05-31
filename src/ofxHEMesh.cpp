@@ -36,6 +36,7 @@ ofxHEMesh& ofxHEMesh::operator=(const ofxHEMesh& src) {
 	
 	topologyDirty = true;
 	geometryDirty = true;
+	return *this;
 }
 
 void ofxHEMesh::remeshLoop() {
@@ -581,27 +582,44 @@ ofxHEMeshVertex ofxHEMesh::collapseHalfedge(ofxHEMeshHalfedge h, Point pt) {
 	// Ensure remaining vertex links to a valid halfedge
 	if(vertexHalfedge(v1) == ho) {
 		setVertexHalfedge(v1, hoprev);
-	}	
-	
+	}
+
 	// Remove links to h and its opposite
 	linkHalfedges(hprev, halfedgeNext(h));
 	linkHalfedges(hoprev, halfedgeNext(ho));
 	
 	// Check for degenerate faces
 	ofxHEMeshFace f1 = halfedgeFace(h);
-	if(faceIsDegenerate(f1)) {
-		removeFace(f1);
-	}
-	else if(faceHalfedge(f1) == h) {
+	if(faceHalfedge(f1) == h) {
 		setFaceHalfedge(f1, hprev);
 	}
 	
-	ofxHEMeshFace f2 = halfedgeFace(ho);
-	if(faceIsDegenerate(f2)) {
-		removeFace(f2);
+	if(faceIsDegenerate(f1)) {
+		ofxHEMeshHalfedge hnext = halfedgeNext(hprev);
+		removeFace(f1);
+		swapHalfedgeAdjacency(halfedgeOpposite(hprev), hnext);
+		eraseHalfedge(hprev);
+		
+		if(vertexHalfedge(v1) == hprev) {
+			setVertexHalfedge(v1, halfedgeOpposite(hnext));
+		}
 	}
-	else if(faceHalfedge(f2) == ho) {
+	
+	
+	ofxHEMeshFace f2 = halfedgeFace(ho);
+	if(faceHalfedge(f2) == ho) {
 		setFaceHalfedge(f2, hoprev);
+	}
+	
+	if(faceIsDegenerate(f2)) {
+		ofxHEMeshHalfedge honext = halfedgeNext(hoprev);
+		removeFace(f2);
+		swapHalfedgeAdjacency(halfedgeOpposite(hoprev), honext);
+		eraseHalfedge(hoprev);
+		
+		if(vertexHalfedge(v1) == hoprev) {
+			setVertexHalfedge(v1, halfedgeOpposite(honext));
+		}
 	}
 	
 	eraseHalfedge(h);
@@ -1205,6 +1223,24 @@ void ofxHEMesh::linkHalfedges(ofxHEMeshHalfedge prev, ofxHEMeshHalfedge next) {
 	setHalfedgePrev(next, prev);
 }
 
+void ofxHEMesh::swapHalfedgeAdjacency(ofxHEMeshHalfedge src, ofxHEMeshHalfedge dst) {
+	ofxHEMeshHalfedgeAdjacency tmp = halfedgeAdjacency->get(src.idx);
+	halfedgeAdjacency->set(src.idx, halfedgeAdjacency->get(dst.idx));
+	halfedgeAdjacency->set(dst.idx, tmp);
+	linkHalfedges(dst, halfedgeNext(dst));
+	linkHalfedges(halfedgePrev(dst), dst);
+	
+	ofxHEMeshFace f = halfedgeFace(dst);
+	if(faceHalfedge(f) == src) {
+		setFaceHalfedge(f, dst);
+	}
+	
+	ofxHEMeshVertex v = halfedgeVertex(dst);
+	if(vertexHalfedge(v) == src) {
+		setVertexHalfedge(v, dst);
+	}
+}
+
 int ofxHEMesh::faceSize(ofxHEMeshFace f) const {
 	ofxHEMeshFaceCirculator fc = faceCirculate(f);
 	ofxHEMeshFaceCirculator fce = fc;
@@ -1222,7 +1258,24 @@ bool ofxHEMesh::faceIsDegenerate(ofxHEMeshFace f) const {
 }
 
 bool ofxHEMesh::halfedgeEndPointsShareOneRing(ofxHEMeshHalfedge h) const {
-	return verticesShareOneRing(halfedgeSource(h), halfedgeSink(h));
+	ofxHEMeshVertex v1 = halfedgeSource(h);
+	ofxHEMeshVertex v2 = halfedgeSink(h);
+
+	set<ofxHEMeshVertex> oneRing1;
+	vertexOneRing(v1, oneRing1);
+	
+	oneRing1.erase(halfedgeVertex(halfedgeSourceCW(h)));
+	oneRing1.erase(halfedgeVertex(halfedgeSourceCCW(h)));
+	
+	ofxHEMeshVertexCirculator vc2 = vertexCirculate(v2);
+	ofxHEMeshVertexCirculator vce2 = vc2;
+	do {
+		if(oneRing1.find(halfedgeSource(*vc2)) != oneRing1.end()) {
+			return true;
+		}
+		++vc2;
+	} while(vc2 != vce2);
+	return false;
 }
 
 int ofxHEMesh::vertexValence(ofxHEMeshVertex v) const {
@@ -1257,6 +1310,32 @@ bool ofxHEMesh::verticesShareOneRing(ofxHEMeshVertex v1, ofxHEMeshVertex v2) con
 		}
 		++vc2;
 	} while(vc2 != vce2);
+	return false;
+}
+
+bool ofxHEMesh::halfedgeIsInFace(ofxHEMeshFace f, ofxHEMeshHalfedge h) const {
+	ofxHEMeshFaceCirculator fc = faceCirculate(f);
+	ofxHEMeshFaceCirculator fce = fc;
+	do {
+		if(h == *fc) return true;
+		++fc;
+	} while(fc != fce);
+	return false;
+}
+
+bool ofxHEMesh::halfedgeLinksToVertex(ofxHEMeshVertex v, ofxHEMeshHalfedge h) const {
+	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
+	ofxHEMeshVertexCirculator vce = vc;
+	std::cout << "halfedgeLinksToVertex: " << v.idx << ":\n";
+	int i=0;
+	do {
+		if(h == *vc) return true;
+		++i;
+		//if(i > 6) {
+		//	std::cout << "\tchecking: " << (*vc).idx << ":" << halfedgeString(*vc) << " " << h.idx << ":" << halfedgeString(h) << "\n";
+		//}
+		++vc;
+	} while(vc != vce);
 	return false;
 }
 
@@ -1653,6 +1732,18 @@ void ofxHEMesh::printVertexOneHood(ofxHEMeshVertex v) const {
 	std::cout << "\n";
 }
 
+void ofxHEMesh::printVertexOneHoodFaces(ofxHEMeshVertex v) const {
+	ofxHEMeshVertexCirculator vc = vertexCirculate(v);
+	ofxHEMeshVertexCirculator vce = vc;
+	std::cout << "v: " << v.idx << "\n";
+	do {
+		std::cout << "\t";
+		printFace(halfedgeFace(*vc));
+		++vc;
+	} while(vc != vce);
+	std::cout << "\n";
+}
+
 void ofxHEMesh::print() const {
 	ofxHEMeshFaceIterator fit = facesBegin();
 	ofxHEMeshFaceIterator fite = facesEnd();
@@ -1660,4 +1751,32 @@ void ofxHEMesh::print() const {
 		std::cout << (*fit).idx << " ";
 		printFace(*fit);
 	}
+}
+
+bool ofxHEMesh::verifyConnectivity() const {
+	bool res = true;
+	for(int i=0; i < halfedgeAdjacency->size(); ++i) {
+		ofxHEMeshHalfedge h(i);
+		if(halfedgeVertex(h).isValid()) {
+			if(halfedgeNext(halfedgePrev(h)) != h) {
+				std::cout << h.idx << "(" << halfedgeString(h) << ") is not the next of its prev " <<
+						halfedgePrev(h).idx << "(" << halfedgeString(halfedgePrev(h)) << ")\n";
+				res = false;
+			}
+			if(halfedgePrev(halfedgeNext(h)) != h) {
+				std::cout << h.idx << "(" << halfedgeString(h) << ") is not the prev of its next " <<
+						halfedgeNext(h).idx << "(" << halfedgeString(halfedgeNext(h)) << ")\n";
+				res = false;
+			}
+			if(!halfedgeIsInFace(halfedgeFace(h), h)) {
+				std::cout << h.idx << "(" << halfedgeString(h) << ") is not in face " << halfedgeFace(h).idx << "\n";
+				res = false;
+			}
+			if(!halfedgeLinksToVertex(halfedgeVertex(h), h)) {
+				std::cout << h.idx << "(" << halfedgeString(h) << ") is not connected to vertex " << halfedgeVertex(h).idx << "\n";
+				res = false;
+			}
+		}
+	}
+	return res;
 }

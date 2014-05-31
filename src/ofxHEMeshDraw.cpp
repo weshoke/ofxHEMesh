@@ -13,7 +13,7 @@ ofxHEMeshDraw::ofxHEMeshDraw(ofxHEMesh& hemesh, NormalType normalType)
 	calculateVertexNormals(false),
 	material(NULL),
 	ownsMaterial(false),
-	normalScale(0.1)
+	normalScale(0.05)
 {
 	setMaterial(RedMaterial);
 }

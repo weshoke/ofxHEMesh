@@ -7,13 +7,16 @@ public:
 	ofxHEMeshAdaptive(Scalar detail);
 
 	void initializeMesh();
+	void adapt();
 	
 	void splitLongEdges();
 	inline bool halfedgeShouldBeSplit(ofxHEMeshHalfedge h);
 	void splitHalfedgeAndTriangulate(ofxHEMeshHalfedge h);
+	void getLongEdges(vector<ofxHEMeshHalfedge>& edges);
 	
 	void collapseShortEdges();
 	inline bool halfedgeShouldBeCollapsed(ofxHEMeshHalfedge h);
+	void getShortEdges(vector<ofxHEMeshHalfedge>& edges);
 
 protected:
 	

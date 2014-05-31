@@ -131,6 +131,7 @@ public:
 	ofxHEMeshHalfedge findHalfedge(ofxHEMeshVertex v1, ofxHEMeshVertex v2) const;
 	bool halfedgeIsOnBoundary(ofxHEMeshHalfedge h) const;
 	void linkHalfedges(ofxHEMeshHalfedge prev, ofxHEMeshHalfedge next);
+	void swapHalfedgeAdjacency(ofxHEMeshHalfedge src, ofxHEMeshHalfedge dst);
 	
 	// Combinatorial Properties
 	int faceSize(ofxHEMeshFace f) const;
@@ -139,6 +140,8 @@ public:
 	int vertexValence(ofxHEMeshVertex v) const;
 	void vertexOneRing(ofxHEMeshVertex v, set<ofxHEMeshVertex>& oneRing) const;
 	bool verticesShareOneRing(ofxHEMeshVertex v1, ofxHEMeshVertex v2) const;
+	bool halfedgeIsInFace(ofxHEMeshFace f, ofxHEMeshHalfedge h) const;
+	bool halfedgeLinksToVertex(ofxHEMeshVertex v, ofxHEMeshHalfedge h) const;
 	
 	// Geometric modification
 	void vertexMove(ofxHEMeshVertex v, const Direction& dir);
@@ -219,8 +222,11 @@ public:
 	string halfedgeString(ofxHEMeshHalfedge h) const;
 	void printFace(ofxHEMeshFace f) const;
 	void printVertexOneHood(ofxHEMeshVertex v) const;
+	void printVertexOneHoodFaces(ofxHEMeshVertex v) const;
 	void print() const;
+	bool verifyConnectivity() const;
 	/////////////////////////////////////////////////////////
+
 
 protected:
 

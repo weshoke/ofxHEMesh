@@ -13,15 +13,25 @@ ofxHEMeshAdaptive::ofxHEMeshAdaptive(Scalar detail)
 }
 
 void ofxHEMeshAdaptive::initializeMesh() {
-	std::cout << meanEdgeLength() << " dev: " << sqrt(edgeLengthVariance(meanEdgeLength())) << "\n";
 	centroidTriangulation();
 	Scalar mu = meanEdgeLength();
 	Scalar sigma = sqrt(edgeLengthVariance(mu));
-	while((mu+sigma) > detail) {
+	
+	while((mu+sigma*0.5) > detail) {
 		remeshLoop();
+		// can just divide in half since remeshLoop
+		// splits edges at the midpoint
 		mu *= 0.5;
 		sigma *= 0.5;
 	}
+	
+	adapt();
+}
+
+void ofxHEMeshAdaptive::adapt() {
+	splitLongEdges();
+	collapseShortEdges();
+	splitLongEdges();
 }
 
 void ofxHEMeshAdaptive::splitLongEdges() {
@@ -46,6 +56,16 @@ void ofxHEMeshAdaptive::splitHalfedgeAndTriangulate(ofxHEMeshHalfedge h) {
 	connectHalfedgesCofacial(hn2, halfedgeNext(halfedgeNext(hn2)));
 }
 
+void ofxHEMeshAdaptive::getLongEdges(vector<ofxHEMeshHalfedge>& edges) {
+	ofxHEMeshEdgeIterator eit = edgesBegin();
+	ofxHEMeshEdgeIterator eite = edgesEnd();
+	for(; eit != eite; ++eit) {
+		if(halfedgeShouldBeSplit(*eit)) {
+			edges.push_back(*eit);
+		}
+	}
+}
+
 void ofxHEMeshAdaptive::collapseShortEdges() {
 	ofxHEMeshEdgeIterator eit = edgesBegin();
 	ofxHEMeshEdgeIterator eite = edgesEnd();
@@ -58,4 +78,14 @@ void ofxHEMeshAdaptive::collapseShortEdges() {
 
 bool ofxHEMeshAdaptive::halfedgeShouldBeCollapsed(ofxHEMeshHalfedge h) {
 	return halfedgeLengthSquared(h) < edgeLength2;
+}
+
+void ofxHEMeshAdaptive::getShortEdges(vector<ofxHEMeshHalfedge>& edges) {
+	ofxHEMeshEdgeIterator eit = edgesBegin();
+	ofxHEMeshEdgeIterator eite = edgesEnd();
+	for(; eit != eite; ++eit) {
+		if(halfedgeShouldBeCollapsed(*eit)) {
+			edges.push_back(*eit);
+		}
+	}
 }
