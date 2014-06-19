@@ -62,6 +62,7 @@ bool ofxHEMeshOBJLoader::loadModel(string modelName) {
 		}
 	}
 	fileStream.close();
+	return true;
 }
 
 void ofxHEMeshOBJLoader::addToHemesh(ofxHEMesh& hemesh, int idx) {

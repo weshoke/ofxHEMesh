@@ -710,6 +710,8 @@ ofxHEMeshVertex ofxHEMesh::addVertex(const Point& p) {
 	points->set(idx, p);
 	ofxHEMeshVertex v(idx);
 	topologyDirty = true;
+	geometryDirty = true;
+	notifyGeometryListeners(v, &GeometryListener::vertexAdded);
 	return v;
 }
 
@@ -927,6 +929,7 @@ ofxHEMeshFace ofxHEMesh::addFace(const ExplicitFace& vertices) {
 
 void ofxHEMesh::removeVertex(ofxHEMeshVertex v) {
 	if(!v.isValid()) throw std::invalid_argument("attempting to remove invalid vertex");
+	notifyGeometryListeners(v, &GeometryListener::vertexWillBeRemoved);
 	
 	ofxHEMeshHalfedge h = vertexHalfedge(v);
 	if(h.isValid()) {
@@ -941,6 +944,14 @@ void ofxHEMesh::removeVertex(ofxHEMeshVertex v) {
 	}
 	setVertexHalfedge(v, ofxHEMeshHalfedge());
 	topologyDirty = true;
+	geometryDirty = true;
+}
+
+void ofxHEMesh::removeAllVertices() {
+	vertexAdjacency->clear();
+	topologyDirty = true;
+	geometryDirty = true;
+	notifyGeometryListeners(ofxHEMeshVertex(), &GeometryListener::verticesCleared);
 }
 
 
@@ -1341,6 +1352,7 @@ void ofxHEMesh::vertexMove(ofxHEMeshVertex v, const Direction& dir) {
 }
 
 void ofxHEMesh::vertexMoveTo(ofxHEMeshVertex v, const Point& p) {
+	notifyGeometryListeners(v, p, &GeometryListener::vertexWillBeMovedTo);
 	points->set(v.idx, p);
 	geometryDirty = true;
 }
@@ -1504,6 +1516,18 @@ void ofxHEMesh::faceQuadric(ofxHEMeshFace f, ofMatrix4x4& Q) const {
 	Q(1, 3) = d*n[1];
 	Q(2, 3) = d*n[2];
 	Q(3, 3) = d*d;
+}
+
+bool ofxHEMesh::withinFace(ofxHEMeshFace f, const Point& pt) const {
+	ofxHEMeshPolygonSplitter psp = splitPolygon(f);
+	ofxHEMeshPolygonSplitter pspe = psp;
+	do {
+		if(withinTriangle(*psp, pt)) {
+			return true;
+		}
+		++psp;
+	} while(psp != pspe);
+	return false;
 }
 
 ofxHEMesh::Point ofxHEMesh::halfedgeLerp(ofxHEMeshHalfedge h, Scalar t) const {

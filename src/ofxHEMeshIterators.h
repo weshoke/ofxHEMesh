@@ -148,8 +148,8 @@ struct ofxHEMeshPolygonSplitter {
 	
 	const ofxHEMesh* hemesh;
 	ofxHEMeshHalfedge h;
-	ofxHEMeshTriangle triangle;
 	
 protected:
 	void firstTriangle();
+	ofxHEMeshTriangle triangle;
 };

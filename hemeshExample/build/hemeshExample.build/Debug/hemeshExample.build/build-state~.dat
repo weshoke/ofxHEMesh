@@ -1,0 +1,250 @@
+ThemeshExample
+v5
+r1
+cCheck dependencies
+cProcessInfoPlistFile /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/Info.plist openFrameworks-Info.plist
+cCompileC build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/ofApp.o /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/ofApp.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/main.o /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/main.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cLd /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/MacOS/hemeshExampleDebug normal i386
+cPhaseScriptExecution "Run Script" /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Script-E4B6FFFD0C3F9AB9008CF71C.sh
+cPBXCp ../../../libs/glut/lib/osx/GLUT.framework bin/hemeshExampleDebug.app/Contents/Frameworks/GLUT.framework
+cTouch /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+c0000000051BF707D00000000000000AA
+t1371500669
+s170
+
+N/System/Library/Frameworks/AGL.framework/AGL
+c0000000050A668BE000000000001A480
+t1353083070
+s107648
+
+N/System/Library/Frameworks/Accelerate.framework/Accelerate
+c000000005240463F00000000000065B0
+t1379943999
+s26032
+
+N/System/Library/Frameworks/AppKit.framework/AppKit
+c0000000051CCD6F200000000023F11D0
+t1372378866
+s37687760
+
+N/System/Library/Frameworks/ApplicationServices.framework/ApplicationServices
+c0000000050A66882000000000000BAA0
+t1353083010
+s47776
+
+N/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox
+c000000005240464100000000003B2500
+t1379944001
+s3876096
+
+N/System/Library/Frameworks/Cocoa.framework/Cocoa
+c0000000050A668850000000000006730
+t1353083013
+s26416
+
+N/System/Library/Frameworks/CoreAudio.framework/CoreAudio
+c0000000052404641000000000010BB70
+t1379944001
+s1096560
+
+N/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation
+c0000000051CCD7020000000000656060
+t1372378882
+s6643808
+
+N/System/Library/Frameworks/CoreServices.framework/CoreServices
+c0000000050A66887000000000000D4F0
+t1353083015
+s54512
+
+N/System/Library/Frameworks/CoreVideo.framework/CoreVideo
+c0000000051CCD70F0000000000081CB0
+t1372378895
+s531632
+
+N/System/Library/Frameworks/IOKit.framework/IOKit
+c00000000524046450000000000130950
+t1379944005
+s1247568
+
+N/System/Library/Frameworks/OpenGL.framework/OpenGL
+c0000000052404648000000000002DAD0
+t1379944008
+s187088
+
+N/System/Library/Frameworks/QTKit.framework/QTKit
+c000000005240464800000000004A2E10
+t1379944008
+s4861456
+
+N/System/Library/Frameworks/QuickTime.framework/QuickTime
+c00000000524046490000000000322E20
+t1379944009
+s3288608
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/../../../libs/glut/lib/osx/GLUT.framework
+c00000000533AF70C00000000000000CC
+t1396373260
+s204
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/../../../libs/glut/lib/osx/GLUT.framework/GLUT
+c00000000533AF70C0000000000093570
+t1396373260
+s603504
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app
+t2
+s0
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/Frameworks/GLUT.framework
+t2
+s0
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/Info.plist
+t2
+s0
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/MacOS/hemeshExampleDebug
+t2
+s0
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/PkgInfo
+t2
+s0
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/hemeshExampleDebug.LinkFileList
+c00000000536EC0AC0000000000000143
+t1399767212
+s323
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/main.o
+t2
+s0
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/ofApp.o
+t2
+s0
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Script-E4B6FFFD0C3F9AB9008CF71C.sh
+c00000000536EC0AC00000000000001A5
+t1399767212
+s421
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/main.cpp
+c00000000533AF7300000000000000158
+t1396373296
+s344
+i"ofMain.h"
+i"ofApp.h"
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/ofApp.cpp
+c00000000533AF7300000000000000510
+t1396373296
+s1296
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/ofApp.h
+c00000000533AF73000000000000001D7
+t1396373296
+s471
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/libs/openFrameworks/ofMain.h
+c00000000533AF70C000000000000070A
+t1396373260
+s1802
+
+N/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a
+c00000000536EBE4E00000000020323F8
+t1399766606
+s33760248
+
+NopenFrameworks-Info.plist
+c00000000533AF730000000000000029E
+t1396373296
+s670
+
+CBuild AST from /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/main.cpp
+r0
+
+CBuild AST from /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/ofApp.cpp
+r0
+
+CCheck dependencies
+r0
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependenciesb03c142cf81eb941^ce181a2cf81eb941^---0#1#0#--18"Check dependencies36"8C6F715B-85CD-45F5-9334-6BEA2C2963ED-
+
+CCompileC build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/main.o /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/main.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+s421460012.115521
+e421460014.091857
+r1
+xCompileC
+xbuild/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/main.o
+x/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/main.cpp
+xnormal
+xi386
+xc++
+xcom.apple.compilers.llvm.clang.1_0.compiler
+oclang: warning: -lpthread: 'linker' input unused
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection102"Compile /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/main.cpp0bb61d2cf81eb941^6b83172ef81eb941^-49"clang: warning: -lpthread: 'linker' input unused-0#0#0#-19%DVTDocumentLocation2@110"file://localhost/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/main.cpp0000000000000000^3462"CompileC build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/main.o src/main.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -stdlib=libstdc++ -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wno-unused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Wno-invalid-offsetof -mmacosx-version-min=10.6 -g -mssse3 -Wno-sign-conversion -I/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/hemeshExampleDebug.hmap -I/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/include -I../../../libs/openFrameworks -I../../../libs/openFrameworks/3d -I../../../libs/openFrameworks/app -I../../../libs/openFrameworks/communication -I../../../libs/openFrameworks/events -I../../../libs/openFrameworks/gl -I../../../libs/openFrameworks/graphics -I../../../libs/openFrameworks/math -I../../../libs/openFrameworks/sound -I../../../libs/openFrameworks/types -I../../../libs/openFrameworks/utils -I../../../libs/openFrameworks/video -I../../../libs/poco/include -I../../../libs/freetype/include -I../../../libs/freetype/include/freetype2 -I../../../libs/fmodex/include -I../../../libs/glew/include -I../../../libs/FreeImage/include -I../../../libs/tess2/include -I../../../libs/cairo/include/cairo -I../../../libs/rtAudio/include -I../../../libs/glfw/include -Isrc -I/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/DerivedSources/i386 -I/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/DerivedSources -F/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin -F/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/../../../libs/glut/lib/osx -D__MACOSX_CORE__ -lpthread -mtune=native -MMD -MT dependencies -MF /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/main.d --serialize-diagnostics /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/main.dia -c /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/main.cpp -o /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/main.o36"60C6334B-044A-4ADC-878B-AC9C2A3872F1-
+
+CCompileC build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/ofApp.o /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/ofApp.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+s421460012.115515
+e421460014.076606
+r1
+xCompileC
+xbuild/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/ofApp.o
+x/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/ofApp.cpp
+xnormal
+xi386
+xc++
+xcom.apple.compilers.llvm.clang.1_0.compiler
+oclang: warning: -lpthread: 'linker' input unused
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection103"Compile /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/ofApp.cpp0bb61d2cf81eb941^139b132ef81eb941^-49"clang: warning: -lpthread: 'linker' input unused-0#0#0#-19%DVTDocumentLocation2@111"file://localhost/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/ofApp.cpp0000000000000000^3468"CompileC build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/ofApp.o src/ofApp.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -stdlib=libstdc++ -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wno-unused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Wno-invalid-offsetof -mmacosx-version-min=10.6 -g -mssse3 -Wno-sign-conversion -I/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/hemeshExampleDebug.hmap -I/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/include -I../../../libs/openFrameworks -I../../../libs/openFrameworks/3d -I../../../libs/openFrameworks/app -I../../../libs/openFrameworks/communication -I../../../libs/openFrameworks/events -I../../../libs/openFrameworks/gl -I../../../libs/openFrameworks/graphics -I../../../libs/openFrameworks/math -I../../../libs/openFrameworks/sound -I../../../libs/openFrameworks/types -I../../../libs/openFrameworks/utils -I../../../libs/openFrameworks/video -I../../../libs/poco/include -I../../../libs/freetype/include -I../../../libs/freetype/include/freetype2 -I../../../libs/fmodex/include -I../../../libs/glew/include -I../../../libs/FreeImage/include -I../../../libs/tess2/include -I../../../libs/cairo/include/cairo -I../../../libs/rtAudio/include -I../../../libs/glfw/include -Isrc -I/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/DerivedSources/i386 -I/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/DerivedSources -F/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin -F/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/../../../libs/glut/lib/osx -D__MACOSX_CORE__ -lpthread -mtune=native -MMD -MT dependencies -MF /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/ofApp.d --serialize-diagnostics /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/ofApp.dia -c /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/src/ofApp.cpp -o /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/ofApp.o36"9AF14709-426F-4F4A-BF5C-F181699ACF1C-
+
+CLd /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/MacOS/hemeshExampleDebug normal i386
+s421460014.098599
+e421460020.846448
+r1
+xLd
+x/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/MacOS/hemeshExampleDebug
+xnormal
+xi386
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection147"Link /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/MacOS/hemeshExampleDebug9c53192ef81eb941^a7b2d834f81eb941^---0#0#0#--2327"Ld bin/hemeshExampleDebug.app/Contents/MacOS/hemeshExampleDebug normal i386    cd /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin -F/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin -F/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/../../../libs/glut/lib/osx -filelist /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/hemeshExampleDebug.LinkFileList -mmacosx-version-min=10.6 -dead_strip ../../../libs/poco/lib/osx/PocoCrypto.a ../../../libs/poco/lib/osx/PocoData.a ../../../libs/poco/lib/osx/PocoDataODBC.a ../../../libs/poco/lib/osx/PocoDataSQLite.a ../../../libs/poco/lib/osx/PocoFoundation.a ../../../libs/poco/lib/osx/PocoNet.a ../../../libs/poco/lib/osx/PocoNetSSL.a ../../../libs/poco/lib/osx/PocoUtil.a ../../../libs/poco/lib/osx/PocoXML.a ../../../libs/poco/lib/osx/PocoZip.a ../../../libs/tess2/lib/osx/tess2.a ../../../libs/glew/lib/osx/glew.a ../../../libs/cairo/lib/osx/cairo-script-interpreter.a ../../../libs/cairo/lib/osx/cairo.a ../../../libs/cairo/lib/osx/pixman-1.a ../../../libs/fmodex/lib/osx/libfmodex.dylib ../../../libs/rtAudio/lib/osx/rtAudio.a ../../../libs/openssl/lib/osx/crypto.a ../../../libs/openssl/lib/osx/ssl.a ../../../libs/glfw/lib/osx/libglfw3.a -stdlib=libstdc++ -framework Accelerate -framework QTKit -framework GLUT /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a -framework AGL -framework ApplicationServices -framework AudioToolbox -framework CoreAudio -framework CoreFoundation -framework CoreServices -framework OpenGL -framework QuickTime -framework AppKit -framework Cocoa -framework IOKit -framework CoreVideo -o /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/MacOS/hemeshExampleDebug36"B079068E-4469-4547-B7CA-63CDE1C8FF27-
+
+CPBXCp ../../../libs/glut/lib/osx/GLUT.framework bin/hemeshExampleDebug.app/Contents/Frameworks/GLUT.framework
+s421460021.639169
+e421460021.890350
+r1
+xPBXCp
+x../../../libs/glut/lib/osx/GLUT.framework
+xbin/hemeshExampleDebug.app/Contents/Frameworks/GLUT.framework
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection66"Copy bin/hemeshExampleDebug.app/Contents/Frameworks/GLUT.framework3aada335f81eb941^b7ede335f81eb941^---0#0#0#-19%DVTDocumentLocation2@159"file://localhost/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/Frameworks/GLUT.framework000000000080d041^564"PBXCp ../../../libs/glut/lib/osx/GLUT.framework bin/hemeshExampleDebug.app/Contents/Frameworks/GLUT.framework    cd /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/../../../libs/glut/lib/osx/GLUT.framework /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/Frameworks36"296CF79F-319A-443B-9707-E3F3DA182C66-
+
+CPhaseScriptExecution "Run Script" /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Script-E4B6FFFD0C3F9AB9008CF71C.sh
+s421460020.854897
+e421460021.631165
+r1
+xPhaseScriptExecution
+xRun Script
+x/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Script-E4B6FFFD0C3F9AB9008CF71C.sh
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection36"Run custom shell script 'Run Script'34d5db34f81eb941^1d93a135f81eb941^---0#0#0#--27133"PhaseScriptExecution "Run Script" build/hemeshExample.build/Debug/hemeshExample.build/Script-E4B6FFFD0C3F9AB9008CF71C.sh    cd /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    setenv ACTION build    setenv ALTERNATE_GROUP staff    setenv ALTERNATE_MODE u+w,go-w,a+rX    setenv ALTERNATE_OWNER wesleysmith    setenv ALWAYS_SEARCH_USER_PATHS YES    setenv APPLE_INTERNAL_DEVELOPER_DIR /AppleInternal/Developer    setenv APPLE_INTERNAL_DIR /AppleInternal    setenv APPLE_INTERNAL_DOCUMENTATION_DIR /AppleInternal/Documentation    setenv APPLE_INTERNAL_LIBRARY_DIR /AppleInternal/Library    setenv APPLE_INTERNAL_TOOLS /AppleInternal/Developer/Tools    setenv APPLY_RULES_IN_COPY_FILES NO    setenv ARCHS i386    setenv ARCHS_STANDARD_32_64_BIT "x86_64 i386"    setenv ARCHS_STANDARD_32_BIT i386    setenv ARCHS_STANDARD_64_BIT x86_64    setenv AVAILABLE_PLATFORMS "iphonesimulator macosx iphoneos"    setenv BUILD_COMPONENTS "headers build"    setenv BUILD_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build    setenv BUILD_ROOT /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build    setenv BUILD_STYLE     setenv BUILD_VARIANTS normal    setenv BUILT_PRODUCTS_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin    setenv CACHE_ROOT /var/folders/nf/d8_880m15fj7l9mvb04g_j4w0000gn/C/com.apple.Xcode.501    setenv CCHROOT /var/folders/nf/d8_880m15fj7l9mvb04g_j4w0000gn/C/com.apple.Xcode.501    setenv CHMOD /bin/chmod    setenv CHOWN /usr/sbin/chown    setenv CLANG_CXX_LIBRARY libstdc++    setenv CLASS_FILE_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/JavaClasses    setenv CLEAN_PRECOMPS YES    setenv CLONE_HEADERS NO    setenv CODESIGNING_FOLDER_PATH /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app    setenv CODE_SIGNING_ALLOWED YES    setenv COMBINE_HIDPI_IMAGES YES    setenv COMMAND_MODE legacy    setenv COMPOSITE_SDK_DIRS /var/folders/nf/d8_880m15fj7l9mvb04g_j4w0000gn/C/com.apple.Xcode.501/CompositeSDKs    setenv CONFIGURATION Debug    setenv CONFIGURATION_BUILD_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin    setenv CONFIGURATION_TEMP_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug    setenv CONTENTS_FOLDER_PATH hemeshExampleDebug.app/Contents    setenv COPYING_PRESERVES_HFS_DATA NO    setenv COPY_PHASE_STRIP NO    setenv COPY_RESOURCES_FROM_STATIC_FRAMEWORKS YES    setenv CP /bin/cp    setenv CURRENT_ARCH i386    setenv CURRENT_VARIANT normal    setenv DEAD_CODE_STRIPPING YES    setenv DEBUGGING_SYMBOLS YES    setenv DEBUG_INFORMATION_FORMAT dwarf    setenv DEFAULT_COMPILER com.apple.compilers.llvm.clang.1_0    setenv DEPLOYMENT_LOCATION NO    setenv DEPLOYMENT_POSTPROCESSING NO    setenv DERIVED_FILES_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/DerivedSources    setenv DERIVED_FILE_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/DerivedSources    setenv DERIVED_SOURCES_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/DerivedSources    setenv DEVELOPER_APPLICATIONS_DIR /Applications/Xcode.app/Contents/Developer/Applications    setenv DEVELOPER_BIN_DIR /Applications/Xcode.app/Contents/Developer/usr/bin    setenv DEVELOPER_DIR /Applications/Xcode.app/Contents/Developer    setenv DEVELOPER_FRAMEWORKS_DIR /Applications/Xcode.app/Contents/Developer/Library/Frameworks    setenv DEVELOPER_FRAMEWORKS_DIR_QUOTED "\"/Applications/Xcode.app/Contents/Developer/Library/Frameworks\""    setenv DEVELOPER_LIBRARY_DIR /Applications/Xcode.app/Contents/Developer/Library    setenv DEVELOPER_SDK_DIR /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs    setenv DEVELOPER_TOOLS_DIR /Applications/Xcode.app/Contents/Developer/Tools    setenv DEVELOPER_USR_DIR /Applications/Xcode.app/Contents/Developer/usr    setenv DEVELOPMENT_LANGUAGE English    setenv DOCUMENTATION_FOLDER_PATH hemeshExampleDebug.app/Contents/Resources/English.lproj/Documentation    setenv DO_HEADER_SCANNING_IN_JAM NO    setenv DSTROOT /tmp/hemeshExample.dst    setenv DT_TOOLCHAIN_DIR /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain    setenv DWARF_DSYM_FILE_NAME hemeshExampleDebug.app.dSYM    setenv DWARF_DSYM_FILE_SHOULD_ACCOMPANY_PRODUCT NO    setenv DWARF_DSYM_FOLDER_PATH /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin    setenv EMBEDDED_PROFILE_NAME embedded.provisionprofile    setenv ENABLE_HEADER_DEPENDENCIES YES    setenv EXCLUDED_INSTALLSRC_SUBDIRECTORY_PATTERNS ".DS_Store .svn .git .hg CVS"    setenv EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES "*.nib *.lproj *.framework *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj"    setenv EXECUTABLES_FOLDER_PATH hemeshExampleDebug.app/Contents/Executables    setenv EXECUTABLE_FOLDER_PATH hemeshExampleDebug.app/Contents/MacOS    setenv EXECUTABLE_NAME hemeshExampleDebug    setenv EXECUTABLE_PATH hemeshExampleDebug.app/Contents/MacOS/hemeshExampleDebug    setenv FILE_LIST /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects/LinkFileList    setenv FIXED_FILES_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/FixedFiles    setenv FRAMEWORKS_FOLDER_PATH hemeshExampleDebug.app/Contents/Frameworks    setenv FRAMEWORK_FLAG_PREFIX -framework    setenv FRAMEWORK_SEARCH_PATHS "\"/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin\"  \"/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/../../../libs/glut/lib/osx\""    setenv FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 "\"/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/../../../libs/glut/lib/osx\""    setenv FRAMEWORK_VERSION A    setenv FULL_PRODUCT_NAME hemeshExampleDebug.app    setenv GCC3_VERSION 3.3    setenv GCC_AUTO_VECTORIZATION YES    setenv GCC_DYNAMIC_NO_PIC NO    setenv GCC_ENABLE_SSE3_EXTENSIONS YES    setenv GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS YES    setenv GCC_GENERATE_DEBUGGING_SYMBOLS YES    setenv GCC_INLINES_ARE_PRIVATE_EXTERN NO    setenv GCC_MODEL_TUNING NONE    setenv GCC_OPTIMIZATION_LEVEL 0    setenv GCC_PFE_FILE_C_DIALECTS "c objective-c c++ objective-c++"    setenv GCC_SYMBOLS_PRIVATE_EXTERN NO    setenv GCC_TREAT_WARNINGS_AS_ERRORS NO    setenv GCC_VERSION com.apple.compilers.llvm.clang.1_0    setenv GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS YES    setenv GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO NO    setenv GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL NO    setenv GCC_WARN_UNINITIALIZED_AUTOS NO    setenv GCC_WARN_UNUSED_VALUE NO    setenv GCC_WARN_UNUSED_VARIABLE NO    setenv GENERATE_MASTER_OBJECT_FILE NO    setenv GENERATE_PKGINFO_FILE YES    setenv GENERATE_PROFILING_CODE NO    setenv GID 20    setenv GROUP staff    setenv HEADERMAP_INCLUDES_FLAT_ENTRIES_FOR_TARGET_BEING_BUILT YES    setenv HEADERMAP_INCLUDES_FRAMEWORK_ENTRIES_FOR_ALL_PRODUCT_TYPES YES    setenv HEADERMAP_INCLUDES_NONPUBLIC_NONPRIVATE_HEADERS YES    setenv HEADERMAP_INCLUDES_PROJECT_HEADERS YES    setenv HEADER_CAIRO "\"../../../libs/cairo/include/cairo\""    setenv HEADER_FMODEX "\"../../../libs/fmodex/include\""    setenv HEADER_FREEIMAGE "\"../../../libs/FreeImage/include\""    setenv HEADER_FREETYPE "\"../../../libs/freetype/include\""    setenv HEADER_FREETYPE2 "\"../../../libs/freetype/include/freetype2\""    setenv HEADER_GLEW "\"../../../libs/glew/include\""    setenv HEADER_GLFW "\"../../../libs/glfw/include\""    setenv HEADER_OF "\"../../../libs/openFrameworks/**\""    setenv HEADER_POCO "\"../../../libs/poco/include\""    setenv HEADER_RTAUDIO "\"../../../libs/rtAudio/include\""    setenv HEADER_SEARCH_PATHS "\"/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/include\" \"../../../libs/openFrameworks/**\" \"../../../libs/poco/include\" \"../../../libs/freetype/include\" \"../../../libs/freetype/include/freetype2\" \"../../../libs/fmodex/include\" \"../../../libs/glew/include\" \"../../../libs/FreeImage/include\" \"../../../libs/tess2/include\" \"../../../libs/cairo/include/cairo\" \"../../../libs/rtAudio/include\" \"../../../libs/glfw/include\" src"    setenv HEADER_TESS2 "\"../../../libs/tess2/include\""    setenv ICON icon-debug.icns    setenv ICONV /usr/bin/iconv    setenv ICON_FILE ../../../libs/openFrameworksCompiled/project/osx/icon-debug.icns    setenv ICON_FILE_PATH ../../../libs/openFrameworksCompiled/project/osx/    setenv ICON_NAME_DEBUG icon-debug.icns    setenv ICON_NAME_RELEASE icon.icns    setenv INFOPLIST_EXPAND_BUILD_SETTINGS YES    setenv INFOPLIST_FILE openFrameworks-Info.plist    setenv INFOPLIST_OUTPUT_FORMAT same-as-input    setenv INFOPLIST_PATH hemeshExampleDebug.app/Contents/Info.plist    setenv INFOPLIST_PREPROCESS NO    setenv INFOSTRINGS_PATH hemeshExampleDebug.app/Contents/Resources/English.lproj/InfoPlist.strings    setenv INSTALL_DIR /tmp/hemeshExample.dst/Users/wesleysmith/Applications    setenv INSTALL_GROUP staff    setenv INSTALL_MODE_FLAG u+w,go-w,a+rX    setenv INSTALL_OWNER wesleysmith    setenv INSTALL_PATH /Users/wesleysmith/Applications    setenv INSTALL_ROOT /tmp/hemeshExample.dst    setenv JAVAC_DEFAULT_FLAGS "-J-Xms64m -J-XX:NewSize=4M -J-Dfile.encoding=UTF8"    setenv JAVA_APP_STUB /System/Library/Frameworks/JavaVM.framework/Resources/MacOS/JavaApplicationStub    setenv JAVA_ARCHIVE_CLASSES YES    setenv JAVA_ARCHIVE_TYPE JAR    setenv JAVA_COMPILER /usr/bin/javac    setenv JAVA_FOLDER_PATH hemeshExampleDebug.app/Contents/Resources/Java    setenv JAVA_FRAMEWORK_RESOURCES_DIRS Resources    setenv JAVA_JAR_FLAGS cv    setenv JAVA_SOURCE_SUBDIR .    setenv JAVA_USE_DEPENDENCIES YES    setenv JAVA_ZIP_FLAGS -urg    setenv JIKES_DEFAULT_FLAGS "+E +OLDCSO"    setenv KEEP_PRIVATE_EXTERNS NO    setenv LD_GENERATE_MAP_FILE NO    setenv LD_MAP_FILE_PATH /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/hemeshExampleDebug-LinkMap-normal-i386.txt    setenv LD_NO_PIE NO    setenv LEGACY_DEVELOPER_DIR /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer    setenv LEX lex    setenv LIBRARY_FLAG_NOSPACE YES    setenv LIBRARY_FLAG_PREFIX -l    setenv LIBRARY_SEARCH_PATHS "\"/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin\"                                                              "    setenv LIB_CAIRO1 "\"../../../libs/cairo/lib/osx/cairo-script-interpreter.a\""    setenv LIB_CAIRO2 "\"../../../libs/cairo/lib/osx/cairo.a\""    setenv LIB_CAIRO3 "\"../../../libs/cairo/lib/osx/pixman-1.a\""    setenv LIB_FMODEX "\"../../../libs/fmodex/lib/osx/libfmodex.dylib\""    setenv LIB_FREEIMAGE "\"../../../libs/FreeImage/lib/osx/freeimage.a\""    setenv LIB_FREETYPE "\"../../../libs/freetype/lib/osx/freetype.a\""    setenv LIB_GLEW "\"../../../libs/glew/lib/osx/glew.a\""    setenv LIB_GLFW "\"../../../libs/glfw/lib/osx/libglfw3.a\""    setenv LIB_GLUT "\"../../../libs/glut/lib/osx/GLUT.framework/Versions/A/GLUT\""    setenv LIB_OPENSSL1 "\"../../../libs/openssl/lib/osx/crypto.a\""    setenv LIB_OPENSSL2 "\"../../../libs/openssl/lib/osx/ssl.a\""    setenv LIB_POCO_1 "\"../../../libs/poco/lib/osx/PocoCrypto.a\""    setenv LIB_POCO_10 "\"../../../libs/poco/lib/osx/PocoZip.a\""    setenv LIB_POCO_2 "\"../../../libs/poco/lib/osx/PocoData.a\""    setenv LIB_POCO_3 "\"../../../libs/poco/lib/osx/PocoDataODBC.a\""    setenv LIB_POCO_4 "\"../../../libs/poco/lib/osx/PocoDataSQLite.a\""    setenv LIB_POCO_5 "\"../../../libs/poco/lib/osx/PocoFoundation.a\""    setenv LIB_POCO_6 "\"../../../libs/poco/lib/osx/PocoNet.a\""    setenv LIB_POCO_7 "\"../../../libs/poco/lib/osx/PocoNetSSL.a\""    setenv LIB_POCO_8 "\"../../../libs/poco/lib/osx/PocoUtil.a\""    setenv LIB_POCO_9 "\"../../../libs/poco/lib/osx/PocoXML.a\""    setenv LIB_RTAUDIO "\"../../../libs/rtAudio/lib/osx/rtAudio.a\""    setenv LIB_TESS "\"../../../libs/tess2/lib/osx/tess2.a\""    setenv LINKER_DISPLAYS_MANGLED_NAMES NO    setenv LINK_FILE_LIST_normal_i386 /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal/i386/hemeshExampleDebug.LinkFileList    setenv LINK_WITH_STANDARD_LIBRARIES YES    setenv LOCALIZED_RESOURCES_FOLDER_PATH hemeshExampleDebug.app/Contents/Resources/English.lproj    setenv LOCAL_ADMIN_APPS_DIR /Applications/Utilities    setenv LOCAL_APPS_DIR /Applications    setenv LOCAL_DEVELOPER_DIR /Library/Developer    setenv LOCAL_LIBRARY_DIR /Library    setenv MACH_O_TYPE mh_execute    setenv MACOSX_DEPLOYMENT_TARGET 10.6    setenv MAC_OS_X_PRODUCT_BUILD_VERSION 12F37    setenv MAC_OS_X_VERSION_ACTUAL 1085    setenv MAC_OS_X_VERSION_MAJOR 1080    setenv MAC_OS_X_VERSION_MINOR 0805    setenv NATIVE_ARCH i386    setenv NATIVE_ARCH_32_BIT i386    setenv NATIVE_ARCH_64_BIT x86_64    setenv NATIVE_ARCH_ACTUAL x86_64    setenv NO_COMMON YES    setenv OBJECT_FILE_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects    setenv OBJECT_FILE_DIR_normal /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Objects-normal    setenv OBJROOT /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build    setenv OF_CORE_HEADERS "\"../../../libs/openFrameworks/**\" \"../../../libs/poco/include\" \"../../../libs/freetype/include\" \"../../../libs/freetype/include/freetype2\" \"../../../libs/fmodex/include\" \"../../../libs/glew/include\" \"../../../libs/FreeImage/include\" \"../../../libs/tess2/include\" \"../../../libs/cairo/include/cairo\" \"../../../libs/rtAudio/include\" \"../../../libs/glfw/include\""    setenv OF_CORE_LIBS "\"../../../libs/poco/lib/osx/PocoCrypto.a\" \"../../../libs/poco/lib/osx/PocoData.a\" \"../../../libs/poco/lib/osx/PocoDataODBC.a\" \"../../../libs/poco/lib/osx/PocoDataSQLite.a\" \"../../../libs/poco/lib/osx/PocoFoundation.a\" \"../../../libs/poco/lib/osx/PocoNet.a\" \"../../../libs/poco/lib/osx/PocoNetSSL.a\" \"../../../libs/poco/lib/osx/PocoUtil.a\" \"../../../libs/poco/lib/osx/PocoXML.a\" \"../../../libs/poco/lib/osx/PocoZip.a\" \"../../../libs/tess2/lib/osx/tess2.a\" \"../../../libs/glew/lib/osx/glew.a\" \"../../../libs/cairo/lib/osx/cairo-script-interpreter.a\" \"../../../libs/cairo/lib/osx/cairo.a\" \"../../../libs/cairo/lib/osx/pixman-1.a\" \"../../../libs/fmodex/lib/osx/libfmodex.dylib\" \"../../../libs/rtAudio/lib/osx/rtAudio.a\" \"../../../libs/openssl/lib/osx/crypto.a\" \"../../../libs/openssl/lib/osx/ssl.a\" \"../../../libs/glfw/lib/osx/libglfw3.a\""    setenv OF_PATH ../../..    setenv ONLY_ACTIVE_ARCH NO    setenv OPTIMIZATION_LEVEL 0    setenv OS MACOS    setenv OSAC /usr/bin/osacompile    setenv OTHER_CPLUSPLUSFLAGS "-D__MACOSX_CORE__ -lpthread -mtune=native"    setenv OTHER_LDFLAGS "\"../../../libs/poco/lib/osx/PocoCrypto.a\" \"../../../libs/poco/lib/osx/PocoData.a\" \"../../../libs/poco/lib/osx/PocoDataODBC.a\" \"../../../libs/poco/lib/osx/PocoDataSQLite.a\" \"../../../libs/poco/lib/osx/PocoFoundation.a\" \"../../../libs/poco/lib/osx/PocoNet.a\" \"../../../libs/poco/lib/osx/PocoNetSSL.a\" \"../../../libs/poco/lib/osx/PocoUtil.a\" \"../../../libs/poco/lib/osx/PocoXML.a\" \"../../../libs/poco/lib/osx/PocoZip.a\" \"../../../libs/tess2/lib/osx/tess2.a\" \"../../../libs/glew/lib/osx/glew.a\" \"../../../libs/cairo/lib/osx/cairo-script-interpreter.a\" \"../../../libs/cairo/lib/osx/cairo.a\" \"../../../libs/cairo/lib/osx/pixman-1.a\" \"../../../libs/fmodex/lib/osx/libfmodex.dylib\" \"../../../libs/rtAudio/lib/osx/rtAudio.a\" \"../../../libs/openssl/lib/osx/crypto.a\" \"../../../libs/openssl/lib/osx/ssl.a\" \"../../../libs/glfw/lib/osx/libglfw3.a\""    setenv PACKAGE_TYPE com.apple.package-type.wrapper.application    setenv PASCAL_STRINGS YES    setenv PATH "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/usr/local/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Tools:/usr/bin:/bin:/usr/sbin:/sbin"    setenv PATH_PREFIXES_EXCLUDED_FROM_HEADER_DEPENDENCIES "/usr/include /usr/local/include /System/Library/Frameworks /System/Library/PrivateFrameworks /Applications/Xcode.app/Contents/Developer/Headers /Applications/Xcode.app/Contents/Developer/SDKs /Applications/Xcode.app/Contents/Developer/Platforms"    setenv PBDEVELOPMENTPLIST_PATH hemeshExampleDebug.app/Contents/pbdevelopment.plist    setenv PFE_FILE_C_DIALECTS c++    setenv PKGINFO_FILE_PATH /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/PkgInfo    setenv PKGINFO_PATH hemeshExampleDebug.app/Contents/PkgInfo    setenv PLATFORM_DEVELOPER_APPLICATIONS_DIR /Applications/Xcode.app/Contents/Developer/Applications    setenv PLATFORM_DEVELOPER_BIN_DIR /Applications/Xcode.app/Contents/Developer/usr/bin    setenv PLATFORM_DEVELOPER_LIBRARY_DIR /Applications/Xcode.app/Contents/Developer/Library    setenv PLATFORM_DEVELOPER_SDK_DIR /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs    setenv PLATFORM_DEVELOPER_TOOLS_DIR /Applications/Xcode.app/Contents/Developer/Tools    setenv PLATFORM_DEVELOPER_USR_DIR /Applications/Xcode.app/Contents/Developer/usr    setenv PLATFORM_DIR /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform    setenv PLATFORM_NAME macosx    setenv PLATFORM_PREFERRED_ARCH x86_64    setenv PLATFORM_PRODUCT_BUILD_VERSION 4H1503    setenv PLIST_FILE_OUTPUT_FORMAT same-as-input    setenv PLUGINS_FOLDER_PATH hemeshExampleDebug.app/Contents/PlugIns    setenv PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR YES    setenv PRECOMP_DESTINATION_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/PrefixHeaders    setenv PRESERVE_DEAD_CODE_INITS_AND_TERMS NO    setenv PRIVATE_HEADERS_FOLDER_PATH hemeshExampleDebug.app/Contents/PrivateHeaders    setenv PRODUCT_NAME hemeshExampleDebug    setenv PRODUCT_SETTINGS_PATH /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/openFrameworks-Info.plist    setenv PRODUCT_TYPE com.apple.product-type.application    setenv PROFILING_CODE NO    setenv PROJECT hemeshExample    setenv PROJECT_DERIVED_FILE_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/DerivedSources    setenv PROJECT_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    setenv PROJECT_FILE_PATH /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/hemeshExample.xcodeproj    setenv PROJECT_NAME hemeshExample    setenv PROJECT_TEMP_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build    setenv PROJECT_TEMP_ROOT /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build    setenv PUBLIC_HEADERS_FOLDER_PATH hemeshExampleDebug.app/Contents/Headers    setenv RECURSIVE_SEARCH_PATHS_FOLLOW_SYMLINKS YES    setenv REMOVE_CVS_FROM_RESOURCES YES    setenv REMOVE_GIT_FROM_RESOURCES YES    setenv REMOVE_HG_FROM_RESOURCES YES    setenv REMOVE_SVN_FROM_RESOURCES YES    setenv REZ_COLLECTOR_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/ResourceManagerResources    setenv REZ_OBJECTS_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/ResourceManagerResources/Objects    setenv REZ_SEARCH_PATHS "\"/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin\" "    setenv RUN_CLANG_STATIC_ANALYZER NO    setenv SCAN_ALL_SOURCE_FILES_FOR_INCLUDES NO    setenv SCRIPTS_FOLDER_PATH hemeshExampleDebug.app/Contents/Resources/Scripts    setenv SCRIPT_INPUT_FILE_COUNT 0    setenv SCRIPT_OUTPUT_FILE_COUNT 0    setenv SDKROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk    setenv SDK_DIR /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk    setenv SDK_NAME macosx10.8    setenv SDK_PRODUCT_BUILD_VERSION 12D75    setenv SED /usr/bin/sed    setenv SEPARATE_STRIP NO    setenv SEPARATE_SYMBOL_EDIT NO    setenv SET_DIR_MODE_OWNER_GROUP YES    setenv SET_FILE_MODE_OWNER_GROUP NO    setenv SHARED_DERIVED_FILE_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/DerivedSources    setenv SHARED_FRAMEWORKS_FOLDER_PATH hemeshExampleDebug.app/Contents/SharedFrameworks    setenv SHARED_PRECOMPS_DIR /var/folders/nf/d8_880m15fj7l9mvb04g_j4w0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders    setenv SHARED_SUPPORT_FOLDER_PATH hemeshExampleDebug.app/Contents/SharedSupport    setenv SKIP_INSTALL NO    setenv SOURCE_ROOT /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    setenv SRCROOT /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    setenv STRINGS_FILE_OUTPUT_ENCODING UTF-16    setenv STRIP_INSTALLED_PRODUCT YES    setenv STRIP_STYLE all    setenv SUPPORTED_PLATFORMS macosx    setenv SYMROOT /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build    setenv SYSTEM_ADMIN_APPS_DIR /Applications/Utilities    setenv SYSTEM_APPS_DIR /Applications    setenv SYSTEM_CORE_SERVICES_DIR /System/Library/CoreServices    setenv SYSTEM_DEMOS_DIR /Applications/Extras    setenv SYSTEM_DEVELOPER_APPS_DIR /Applications/Xcode.app/Contents/Developer/Applications    setenv SYSTEM_DEVELOPER_BIN_DIR /Applications/Xcode.app/Contents/Developer/usr/bin    setenv SYSTEM_DEVELOPER_DEMOS_DIR "/Applications/Xcode.app/Contents/Developer/Applications/Utilities/Built Examples"    setenv SYSTEM_DEVELOPER_DIR /Applications/Xcode.app/Contents/Developer    setenv SYSTEM_DEVELOPER_DOC_DIR "/Applications/Xcode.app/Contents/Developer/ADC Reference Library"    setenv SYSTEM_DEVELOPER_GRAPHICS_TOOLS_DIR "/Applications/Xcode.app/Contents/Developer/Applications/Graphics Tools"    setenv SYSTEM_DEVELOPER_JAVA_TOOLS_DIR "/Applications/Xcode.app/Contents/Developer/Applications/Java Tools"    setenv SYSTEM_DEVELOPER_PERFORMANCE_TOOLS_DIR "/Applications/Xcode.app/Contents/Developer/Applications/Performance Tools"    setenv SYSTEM_DEVELOPER_RELEASENOTES_DIR "/Applications/Xcode.app/Contents/Developer/ADC Reference Library/releasenotes"    setenv SYSTEM_DEVELOPER_TOOLS /Applications/Xcode.app/Contents/Developer/Tools    setenv SYSTEM_DEVELOPER_TOOLS_DOC_DIR "/Applications/Xcode.app/Contents/Developer/ADC Reference Library/documentation/DeveloperTools"    setenv SYSTEM_DEVELOPER_TOOLS_RELEASENOTES_DIR "/Applications/Xcode.app/Contents/Developer/ADC Reference Library/releasenotes/DeveloperTools"    setenv SYSTEM_DEVELOPER_USR_DIR /Applications/Xcode.app/Contents/Developer/usr    setenv SYSTEM_DEVELOPER_UTILITIES_DIR /Applications/Xcode.app/Contents/Developer/Applications/Utilities    setenv SYSTEM_DOCUMENTATION_DIR /Library/Documentation    setenv SYSTEM_LIBRARY_DIR /System/Library    setenv TARGETNAME hemeshExample    setenv TARGET_BUILD_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin    setenv TARGET_NAME hemeshExample    setenv TARGET_TEMP_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build    setenv TEMP_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build    setenv TEMP_FILES_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build    setenv TEMP_FILE_DIR /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build    setenv TEMP_ROOT /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build    setenv TEST_AFTER_BUILD NO    setenv TOOLCHAINS com.apple.dt.toolchain.XcodeDefault    setenv UID 501    setenv UNLOCALIZED_RESOURCES_FOLDER_PATH hemeshExampleDebug.app/Contents/Resources    setenv UNSTRIPPED_PRODUCT NO    setenv USER wesleysmith    setenv USER_APPS_DIR /Users/wesleysmith/Applications    setenv USER_LIBRARY_DIR /Users/wesleysmith/Library    setenv USE_DYNAMIC_NO_PIC YES    setenv USE_HEADERMAP YES    setenv USE_HEADER_SYMLINKS NO    setenv VALIDATE_PRODUCT NO    setenv VALID_ARCHS "i386 x86_64"    setenv VERBOSE_PBXCP NO    setenv VERSIONPLIST_PATH hemeshExampleDebug.app/Contents/version.plist    setenv VERSION_INFO_BUILDER wesleysmith    setenv VERSION_INFO_FILE hemeshExampleDebug_vers.c    setenv VERSION_INFO_STRING "\"@(#)PROGRAM:hemeshExampleDebug  PROJECT:hemeshExample-\""    setenv WRAPPER_EXTENSION app    setenv WRAPPER_NAME hemeshExampleDebug.app    setenv WRAPPER_SUFFIX .app    setenv XCODE_APP_SUPPORT_DIR /Applications/Xcode.app/Contents/Developer/Library/Xcode    setenv XCODE_PRODUCT_BUILD_VERSION 4H1503    setenv XCODE_VERSION_ACTUAL 0463    setenv XCODE_VERSION_MAJOR 0400    setenv XCODE_VERSION_MINOR 0460    setenv YACC yacc    /bin/sh -c /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/build/hemeshExample.build/Debug/hemeshExample.build/Script-E4B6FFFD0C3F9AB9008CF71C.sh36"B4AD037E-7272-4419-912A-374AF91B3AEB-
+
+CProcessInfoPlistFile /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/Info.plist openFrameworks-Info.plist
+s421460012.105030
+e421460012.107886
+r1
+xProcessInfoPlistFile
+x/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/Info.plist
+xopenFrameworks-Info.plist
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection33"Process openFrameworks-Info.plistfaf21a2cf81eb941^499e1b2cf81eb941^---0#0#0#-19%DVTDocumentLocation2@123"file://localhost/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/openFrameworks-Info.plist0000000000000000^546"ProcessInfoPlistFile bin/hemeshExampleDebug.app/Contents/Info.plist openFrameworks-Info.plist    cd /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    builtin-infoPlistUtility openFrameworks-Info.plist -genpkginfo /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app/Contents/Info.plist36"E5970957-6207-4DF4-95F0-265FBEE3B264-
+
+CTouch /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app
+s421460021.898667
+e421460021.937444
+r1
+xTouch
+x/Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection114"Touch /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app321de635f81eb941^2ffdef35f81eb941^---0#0#0#--253"Touch bin/hemeshExampleDebug.app    cd /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample    /usr/bin/touch -c /Users/wesleysmith/Documents/libs/of_v0.8.1_osx_release/apps/myApps/hemeshExample/bin/hemeshExampleDebug.app36"5621AEF2-B655-4706-8393-8D7D8890B44A-
+

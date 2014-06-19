@@ -25,8 +25,7 @@ public:
 	friend class ofxHEMeshVertexIterator;
 	typedef std::pair<ofxHEMeshVertex, ofxHEMeshVertex> ExplicitEdge;
 	typedef vector<ofxHEMeshVertex> ExplicitFace;
-
-
+	
 	ofxHEMesh();
 	~ofxHEMesh() {}
 	
@@ -39,7 +38,19 @@ public:
 	typedef ofVec3f Point;
 	typedef ofVec3f Direction;
 	/////////////////////////////////////////////////////////
+
+	class GeometryListener{
+	public:
+		typedef void (GeometryListener::*MemberFn)(ofxHEMeshVertex v);
+		typedef void (GeometryListener::*MemberFnPt)(ofxHEMeshVertex v, Point p);
 	
+		virtual void verticesCleared(ofxHEMeshVertex v) = 0;
+		virtual void vertexAdded(ofxHEMeshVertex v) = 0;
+		virtual void vertexWillBeMovedTo(ofxHEMeshVertex v, Point p) = 0;
+		virtual void vertexWillBeRemoved(ofxHEMeshVertex v) = 0;
+	};
+
+
 	/////////////////////////////////////////////////////////
 	// Mesh-level modifications
 	void remeshLoop();
@@ -86,10 +97,12 @@ public:
 	
 	// Remove combinatorial elements
 	void removeVertex(ofxHEMeshVertex v);
+	void removeAllVertices();
 	bool removeHalfedge(ofxHEMeshHalfedge h);
 	void eraseHalfedge(ofxHEMeshHalfedge h);
 	void removeFace(ofxHEMeshFace f);
 	bool removeFaceIfDegenerate(ofxHEMeshFace f);
+	
 	
 	// Number of combinatorial elements (some could be inactive)
 	int getNumVertices() const;
@@ -163,6 +176,7 @@ public:
 	Point faceCentroid(ofxHEMeshFace f) const;
 	Direction faceNormal(ofxHEMeshFace f) const;
 	void faceQuadric(ofxHEMeshFace f, ofMatrix4x4& Q) const;
+	bool withinFace(ofxHEMeshFace f, const Point& pt) const;
 	
 	Point halfedgeLerp(ofxHEMeshHalfedge h, Scalar t) const;
 	Point halfedgeMidpoint(ofxHEMeshHalfedge h) const;
@@ -228,6 +242,24 @@ public:
 	bool verifyConnectivity() const;
 	/////////////////////////////////////////////////////////
 
+	void addGeometryListener(GeometryListener *listener) {
+		geometryListeners.push_back(listener);
+	}
+	
+	void notifyGeometryListeners(ofxHEMeshVertex v, GeometryListener::MemberFn f) {
+		for(int i=0; i < geometryListeners.size(); ++i) {
+			GeometryListener& listener = *geometryListeners[i];
+			((listener).*(f))(v);
+		}
+	}
+	
+	void notifyGeometryListeners(ofxHEMeshVertex v, Point p, GeometryListener::MemberFnPt f) {
+		for(int i=0; i < geometryListeners.size(); ++i) {
+			GeometryListener& listener = *geometryListeners[i];
+			((listener).*(f))(v, p);
+		}
+	}
+
 
 protected:
 
@@ -243,6 +275,8 @@ protected:
 	ofxHEMeshProperty<Point>* points;
 	bool topologyDirty;
 	bool geometryDirty;
+	
+	vector<GeometryListener *> geometryListeners;
 };
 
 void printExplicitFace(const ofxHEMesh::ExplicitFace& face);

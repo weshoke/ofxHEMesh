@@ -36,6 +36,7 @@ public:
 	~ofxHEMeshDraw();
 	
 	void draw(const ofCamera& camera);
+	void drawFace(ofxHEMeshFace f);
 
 	bool getDrawVertices() const;
 	ofxHEMeshDraw& setDrawVertices(bool v);

@@ -15,7 +15,7 @@ ofxHEMeshDraw::ofxHEMeshDraw(ofxHEMesh& hemesh, NormalType normalType)
 	ownsMaterial(false),
 	normalScale(0.05)
 {
-	setMaterial(RedMaterial);
+	setMaterial(BlackMaterial);
 }
 
 
@@ -73,6 +73,7 @@ void ofxHEMeshDraw::draw(const ofCamera& camera) {
 			glEnable(GL_LIGHT0);		
 			glEnable(GL_POLYGON_OFFSET_FILL);
 				glPolygonOffset(1, 1);
+				glColor3f(0.6, 0.6, 0.6);
 				if(material) {
 					if(ownsMaterial) img.getTextureReference().bind();
 					material->begin();
@@ -124,6 +125,20 @@ void ofxHEMeshDraw::draw(const ofCamera& camera) {
 		ofSetColor(ofColor::red);
 		vertexNormals.draw(GL_LINES, 0, vertexNormals.getNumVertices());
 	}
+}
+
+void ofxHEMeshDraw::drawFace(ofxHEMeshFace f) {
+	ofxHEMeshPolygonSplitter psp = hemesh.splitPolygon(f);
+	ofxHEMeshPolygonSplitter pspe = psp;
+	glBegin(GL_TRIANGLES);
+	do {
+		ofxHEMeshTriangle& tri = *psp;
+		glVertex3fv(hemesh.vertexPoint(tri.v1).getPtr());
+		glVertex3fv(hemesh.vertexPoint(tri.v2).getPtr());
+		glVertex3fv(hemesh.vertexPoint(tri.v3).getPtr());
+		++psp;
+	} while(psp != pspe);
+	glEnd();
 }
 
 bool ofxHEMeshDraw::getDrawVertices() const {
@@ -207,6 +222,7 @@ void ofxHEMeshDraw::setMaterial(MaterialType matType) {
 	
 	material = new ofShader();
 	material->load("SEMShader");
+	//material->load("SEMShaderBlend");
 	ownsMaterial = true;
 	
 	material->begin();
